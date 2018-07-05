@@ -1,0 +1,4 @@
+/Users/finefenng/WorkSpace/cpp/QPSTest/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/finefenng/WorkSpace/cpp/QPSTest/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/finefenng/WorkSpace/cpp/QPSTest/cmake-build-debug/CMakeFiles/Client.dir
+/Users/finefenng/WorkSpace/cpp/QPSTest/cmake-build-debug/CMakeFiles/Server.dir

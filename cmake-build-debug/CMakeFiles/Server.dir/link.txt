@@ -1,0 +1,1 @@
+/Library/Developer/CommandLineTools/usr/bin/c++  -g -Wl,-search_paths_first -Wl,-headerpad_max_install_names  CMakeFiles/Server.dir/EventLoop.cpp.o CMakeFiles/Server.dir/Server.cc.o  -o Server 
