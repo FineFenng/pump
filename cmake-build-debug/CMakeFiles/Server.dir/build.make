@@ -57,9 +57,33 @@ include CMakeFiles/Server.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/Server.dir/flags.make
 
+CMakeFiles/Server.dir/Acceptor.cpp.o: CMakeFiles/Server.dir/flags.make
+CMakeFiles/Server.dir/Acceptor.cpp.o: ../Acceptor.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/finefenng/WorkSpace/cpp/QPSTest/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/Server.dir/Acceptor.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Server.dir/Acceptor.cpp.o -c /Users/finefenng/WorkSpace/cpp/QPSTest/Acceptor.cpp
+
+CMakeFiles/Server.dir/Acceptor.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Server.dir/Acceptor.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/finefenng/WorkSpace/cpp/QPSTest/Acceptor.cpp > CMakeFiles/Server.dir/Acceptor.cpp.i
+
+CMakeFiles/Server.dir/Acceptor.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Server.dir/Acceptor.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/finefenng/WorkSpace/cpp/QPSTest/Acceptor.cpp -o CMakeFiles/Server.dir/Acceptor.cpp.s
+
+CMakeFiles/Server.dir/Acceptor.cpp.o.requires:
+
+.PHONY : CMakeFiles/Server.dir/Acceptor.cpp.o.requires
+
+CMakeFiles/Server.dir/Acceptor.cpp.o.provides: CMakeFiles/Server.dir/Acceptor.cpp.o.requires
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/Acceptor.cpp.o.provides.build
+.PHONY : CMakeFiles/Server.dir/Acceptor.cpp.o.provides
+
+CMakeFiles/Server.dir/Acceptor.cpp.o.provides.build: CMakeFiles/Server.dir/Acceptor.cpp.o
+
+
 CMakeFiles/Server.dir/EventLoop.cpp.o: CMakeFiles/Server.dir/flags.make
 CMakeFiles/Server.dir/EventLoop.cpp.o: ../EventLoop.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/finefenng/WorkSpace/cpp/QPSTest/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/Server.dir/EventLoop.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/finefenng/WorkSpace/cpp/QPSTest/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/Server.dir/EventLoop.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Server.dir/EventLoop.cpp.o -c /Users/finefenng/WorkSpace/cpp/QPSTest/EventLoop.cpp
 
 CMakeFiles/Server.dir/EventLoop.cpp.i: cmake_force
@@ -81,9 +105,33 @@ CMakeFiles/Server.dir/EventLoop.cpp.o.provides: CMakeFiles/Server.dir/EventLoop.
 CMakeFiles/Server.dir/EventLoop.cpp.o.provides.build: CMakeFiles/Server.dir/EventLoop.cpp.o
 
 
+CMakeFiles/Server.dir/Common.cpp.o: CMakeFiles/Server.dir/flags.make
+CMakeFiles/Server.dir/Common.cpp.o: ../Common.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/finefenng/WorkSpace/cpp/QPSTest/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/Server.dir/Common.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Server.dir/Common.cpp.o -c /Users/finefenng/WorkSpace/cpp/QPSTest/Common.cpp
+
+CMakeFiles/Server.dir/Common.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Server.dir/Common.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/finefenng/WorkSpace/cpp/QPSTest/Common.cpp > CMakeFiles/Server.dir/Common.cpp.i
+
+CMakeFiles/Server.dir/Common.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Server.dir/Common.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/finefenng/WorkSpace/cpp/QPSTest/Common.cpp -o CMakeFiles/Server.dir/Common.cpp.s
+
+CMakeFiles/Server.dir/Common.cpp.o.requires:
+
+.PHONY : CMakeFiles/Server.dir/Common.cpp.o.requires
+
+CMakeFiles/Server.dir/Common.cpp.o.provides: CMakeFiles/Server.dir/Common.cpp.o.requires
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/Common.cpp.o.provides.build
+.PHONY : CMakeFiles/Server.dir/Common.cpp.o.provides
+
+CMakeFiles/Server.dir/Common.cpp.o.provides.build: CMakeFiles/Server.dir/Common.cpp.o
+
+
 CMakeFiles/Server.dir/Server.cc.o: CMakeFiles/Server.dir/flags.make
 CMakeFiles/Server.dir/Server.cc.o: ../Server.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/finefenng/WorkSpace/cpp/QPSTest/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/Server.dir/Server.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/finefenng/WorkSpace/cpp/QPSTest/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/Server.dir/Server.cc.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Server.dir/Server.cc.o -c /Users/finefenng/WorkSpace/cpp/QPSTest/Server.cc
 
 CMakeFiles/Server.dir/Server.cc.i: cmake_force
@@ -105,19 +153,75 @@ CMakeFiles/Server.dir/Server.cc.o.provides: CMakeFiles/Server.dir/Server.cc.o.re
 CMakeFiles/Server.dir/Server.cc.o.provides.build: CMakeFiles/Server.dir/Server.cc.o
 
 
+CMakeFiles/Server.dir/SocketAddress.cpp.o: CMakeFiles/Server.dir/flags.make
+CMakeFiles/Server.dir/SocketAddress.cpp.o: ../SocketAddress.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/finefenng/WorkSpace/cpp/QPSTest/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/Server.dir/SocketAddress.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Server.dir/SocketAddress.cpp.o -c /Users/finefenng/WorkSpace/cpp/QPSTest/SocketAddress.cpp
+
+CMakeFiles/Server.dir/SocketAddress.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Server.dir/SocketAddress.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/finefenng/WorkSpace/cpp/QPSTest/SocketAddress.cpp > CMakeFiles/Server.dir/SocketAddress.cpp.i
+
+CMakeFiles/Server.dir/SocketAddress.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Server.dir/SocketAddress.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/finefenng/WorkSpace/cpp/QPSTest/SocketAddress.cpp -o CMakeFiles/Server.dir/SocketAddress.cpp.s
+
+CMakeFiles/Server.dir/SocketAddress.cpp.o.requires:
+
+.PHONY : CMakeFiles/Server.dir/SocketAddress.cpp.o.requires
+
+CMakeFiles/Server.dir/SocketAddress.cpp.o.provides: CMakeFiles/Server.dir/SocketAddress.cpp.o.requires
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/SocketAddress.cpp.o.provides.build
+.PHONY : CMakeFiles/Server.dir/SocketAddress.cpp.o.provides
+
+CMakeFiles/Server.dir/SocketAddress.cpp.o.provides.build: CMakeFiles/Server.dir/SocketAddress.cpp.o
+
+
+CMakeFiles/Server.dir/Socket.cpp.o: CMakeFiles/Server.dir/flags.make
+CMakeFiles/Server.dir/Socket.cpp.o: ../Socket.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/finefenng/WorkSpace/cpp/QPSTest/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/Server.dir/Socket.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Server.dir/Socket.cpp.o -c /Users/finefenng/WorkSpace/cpp/QPSTest/Socket.cpp
+
+CMakeFiles/Server.dir/Socket.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Server.dir/Socket.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/finefenng/WorkSpace/cpp/QPSTest/Socket.cpp > CMakeFiles/Server.dir/Socket.cpp.i
+
+CMakeFiles/Server.dir/Socket.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Server.dir/Socket.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/finefenng/WorkSpace/cpp/QPSTest/Socket.cpp -o CMakeFiles/Server.dir/Socket.cpp.s
+
+CMakeFiles/Server.dir/Socket.cpp.o.requires:
+
+.PHONY : CMakeFiles/Server.dir/Socket.cpp.o.requires
+
+CMakeFiles/Server.dir/Socket.cpp.o.provides: CMakeFiles/Server.dir/Socket.cpp.o.requires
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/Socket.cpp.o.provides.build
+.PHONY : CMakeFiles/Server.dir/Socket.cpp.o.provides
+
+CMakeFiles/Server.dir/Socket.cpp.o.provides.build: CMakeFiles/Server.dir/Socket.cpp.o
+
+
 # Object files for target Server
 Server_OBJECTS = \
+"CMakeFiles/Server.dir/Acceptor.cpp.o" \
 "CMakeFiles/Server.dir/EventLoop.cpp.o" \
-"CMakeFiles/Server.dir/Server.cc.o"
+"CMakeFiles/Server.dir/Common.cpp.o" \
+"CMakeFiles/Server.dir/Server.cc.o" \
+"CMakeFiles/Server.dir/SocketAddress.cpp.o" \
+"CMakeFiles/Server.dir/Socket.cpp.o"
 
 # External object files for target Server
 Server_EXTERNAL_OBJECTS =
 
+Server: CMakeFiles/Server.dir/Acceptor.cpp.o
 Server: CMakeFiles/Server.dir/EventLoop.cpp.o
+Server: CMakeFiles/Server.dir/Common.cpp.o
 Server: CMakeFiles/Server.dir/Server.cc.o
+Server: CMakeFiles/Server.dir/SocketAddress.cpp.o
+Server: CMakeFiles/Server.dir/Socket.cpp.o
 Server: CMakeFiles/Server.dir/build.make
 Server: CMakeFiles/Server.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/finefenng/WorkSpace/cpp/QPSTest/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable Server"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/finefenng/WorkSpace/cpp/QPSTest/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Linking CXX executable Server"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/Server.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -125,8 +229,12 @@ CMakeFiles/Server.dir/build: Server
 
 .PHONY : CMakeFiles/Server.dir/build
 
+CMakeFiles/Server.dir/requires: CMakeFiles/Server.dir/Acceptor.cpp.o.requires
 CMakeFiles/Server.dir/requires: CMakeFiles/Server.dir/EventLoop.cpp.o.requires
+CMakeFiles/Server.dir/requires: CMakeFiles/Server.dir/Common.cpp.o.requires
 CMakeFiles/Server.dir/requires: CMakeFiles/Server.dir/Server.cc.o.requires
+CMakeFiles/Server.dir/requires: CMakeFiles/Server.dir/SocketAddress.cpp.o.requires
+CMakeFiles/Server.dir/requires: CMakeFiles/Server.dir/Socket.cpp.o.requires
 
 .PHONY : CMakeFiles/Server.dir/requires
 

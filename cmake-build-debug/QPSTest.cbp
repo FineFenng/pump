@@ -126,8 +126,20 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/Users/finefenng/WorkSpace/cpp/QPSTest/Acceptor.cpp">
+			<Option target="Server"/>
+		</Unit>
+		<Unit filename="/Users/finefenng/WorkSpace/cpp/QPSTest/Acceptor.h">
+			<Option target="Server"/>
+		</Unit>
 		<Unit filename="/Users/finefenng/WorkSpace/cpp/QPSTest/Client.cc">
 			<Option target="Client"/>
+		</Unit>
+		<Unit filename="/Users/finefenng/WorkSpace/cpp/QPSTest/Common.cpp">
+			<Option target="Server"/>
+		</Unit>
+		<Unit filename="/Users/finefenng/WorkSpace/cpp/QPSTest/Common.h">
+			<Option target="Server"/>
 		</Unit>
 		<Unit filename="/Users/finefenng/WorkSpace/cpp/QPSTest/EventLoop.cpp">
 			<Option target="Server"/>
@@ -135,7 +147,25 @@
 		<Unit filename="/Users/finefenng/WorkSpace/cpp/QPSTest/EventLoop.h">
 			<Option target="Server"/>
 		</Unit>
+		<Unit filename="/Users/finefenng/WorkSpace/cpp/QPSTest/Handle.h">
+			<Option target="Server"/>
+		</Unit>
+		<Unit filename="/Users/finefenng/WorkSpace/cpp/QPSTest/Platform.h">
+			<Option target="Server"/>
+		</Unit>
 		<Unit filename="/Users/finefenng/WorkSpace/cpp/QPSTest/Server.cc">
+			<Option target="Server"/>
+		</Unit>
+		<Unit filename="/Users/finefenng/WorkSpace/cpp/QPSTest/Socket.cpp">
+			<Option target="Server"/>
+		</Unit>
+		<Unit filename="/Users/finefenng/WorkSpace/cpp/QPSTest/Socket.h">
+			<Option target="Server"/>
+		</Unit>
+		<Unit filename="/Users/finefenng/WorkSpace/cpp/QPSTest/SocketAddress.cpp">
+			<Option target="Server"/>
+		</Unit>
+		<Unit filename="/Users/finefenng/WorkSpace/cpp/QPSTest/SocketAddress.h">
 			<Option target="Server"/>
 		</Unit>
 		<Unit filename="/Users/finefenng/WorkSpace/cpp/QPSTest/CMakeLists.txt">

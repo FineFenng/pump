@@ -9,16 +9,24 @@
 #include <map>
 #include <vector>
 
+class Handle;
 class EventLoop
 {
+public:
+    typedef std::function<void(int fd, int revents)> HandleCallBackFunction;
 public:
     EventLoop();
     ~EventLoop();
 
+
+    void registerHandleCallBackFunction(Handle* handle);
+    void updateHandleCallBackFunction(Handle* handle);
+    void cancelHandleCallBackFunction(Handle* handle);
+
+
 private:
     typedef std::vector<int> HandleList;
-    typedef std::function<void()> CallBackFunction;
-    typedef std::map<int, CallBackFunction> EventList;
+    typedef std::map<int, HandleCallBackFunction> EventList;
     HandleList handList_;
     EventList eventList_;
 

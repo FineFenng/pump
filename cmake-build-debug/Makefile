@@ -136,6 +136,33 @@ Server/fast:
 	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/build
 .PHONY : Server/fast
 
+Acceptor.o: Acceptor.cpp.o
+
+.PHONY : Acceptor.o
+
+# target to build an object file
+Acceptor.cpp.o:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/Acceptor.cpp.o
+.PHONY : Acceptor.cpp.o
+
+Acceptor.i: Acceptor.cpp.i
+
+.PHONY : Acceptor.i
+
+# target to preprocess a source file
+Acceptor.cpp.i:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/Acceptor.cpp.i
+.PHONY : Acceptor.cpp.i
+
+Acceptor.s: Acceptor.cpp.s
+
+.PHONY : Acceptor.s
+
+# target to generate assembly for a file
+Acceptor.cpp.s:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/Acceptor.cpp.s
+.PHONY : Acceptor.cpp.s
+
 Client.o: Client.cc.o
 
 .PHONY : Client.o
@@ -162,6 +189,33 @@ Client.s: Client.cc.s
 Client.cc.s:
 	$(MAKE) -f CMakeFiles/Client.dir/build.make CMakeFiles/Client.dir/Client.cc.s
 .PHONY : Client.cc.s
+
+Common.o: Common.cpp.o
+
+.PHONY : Common.o
+
+# target to build an object file
+Common.cpp.o:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/Common.cpp.o
+.PHONY : Common.cpp.o
+
+Common.i: Common.cpp.i
+
+.PHONY : Common.i
+
+# target to preprocess a source file
+Common.cpp.i:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/Common.cpp.i
+.PHONY : Common.cpp.i
+
+Common.s: Common.cpp.s
+
+.PHONY : Common.s
+
+# target to generate assembly for a file
+Common.cpp.s:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/Common.cpp.s
+.PHONY : Common.cpp.s
 
 EventLoop.o: EventLoop.cpp.o
 
@@ -217,6 +271,60 @@ Server.cc.s:
 	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/Server.cc.s
 .PHONY : Server.cc.s
 
+Socket.o: Socket.cpp.o
+
+.PHONY : Socket.o
+
+# target to build an object file
+Socket.cpp.o:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/Socket.cpp.o
+.PHONY : Socket.cpp.o
+
+Socket.i: Socket.cpp.i
+
+.PHONY : Socket.i
+
+# target to preprocess a source file
+Socket.cpp.i:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/Socket.cpp.i
+.PHONY : Socket.cpp.i
+
+Socket.s: Socket.cpp.s
+
+.PHONY : Socket.s
+
+# target to generate assembly for a file
+Socket.cpp.s:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/Socket.cpp.s
+.PHONY : Socket.cpp.s
+
+SocketAddress.o: SocketAddress.cpp.o
+
+.PHONY : SocketAddress.o
+
+# target to build an object file
+SocketAddress.cpp.o:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/SocketAddress.cpp.o
+.PHONY : SocketAddress.cpp.o
+
+SocketAddress.i: SocketAddress.cpp.i
+
+.PHONY : SocketAddress.i
+
+# target to preprocess a source file
+SocketAddress.cpp.i:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/SocketAddress.cpp.i
+.PHONY : SocketAddress.cpp.i
+
+SocketAddress.s: SocketAddress.cpp.s
+
+.PHONY : SocketAddress.s
+
+# target to generate assembly for a file
+SocketAddress.cpp.s:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/SocketAddress.cpp.s
+.PHONY : SocketAddress.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -227,15 +335,27 @@ help:
 	@echo "... edit_cache"
 	@echo "... Client"
 	@echo "... Server"
+	@echo "... Acceptor.o"
+	@echo "... Acceptor.i"
+	@echo "... Acceptor.s"
 	@echo "... Client.o"
 	@echo "... Client.i"
 	@echo "... Client.s"
+	@echo "... Common.o"
+	@echo "... Common.i"
+	@echo "... Common.s"
 	@echo "... EventLoop.o"
 	@echo "... EventLoop.i"
 	@echo "... EventLoop.s"
 	@echo "... Server.o"
 	@echo "... Server.i"
 	@echo "... Server.s"
+	@echo "... Socket.o"
+	@echo "... Socket.i"
+	@echo "... Socket.s"
+	@echo "... SocketAddress.o"
+	@echo "... SocketAddress.i"
+	@echo "... SocketAddress.s"
 .PHONY : help
 
 
