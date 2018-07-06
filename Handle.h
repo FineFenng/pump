@@ -17,7 +17,7 @@ public:
 
     virtual int getFd() = 0;
 
-    virtual int getEvents() = 0;
+    virtual short getFilter() = 0;
 
 
 };

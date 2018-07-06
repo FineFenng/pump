@@ -13,7 +13,8 @@
 
 Acceptor::Acceptor(EventLoop* eventLoop, struct sockaddr_in serverAddr)
         : eventLoop_(eventLoop), serverAddr_(serverAddr),
-          socket_(new Socket(GetInitIPv4StreamSocketFd())), index_(-1)
+          socket_(new Socket(GetInitIPv4StreamSocketFd())), index_(-1),
+          filter_(EVFILT_READ)
 {
 }
 
@@ -63,9 +64,10 @@ int Acceptor::getFd()
     return socket_->getFd();
 }
 
-int Acceptor::getEvents()
+short Acceptor::getFilter()
 {
-    return events_;
+    return filter_;
+
 }
 
 

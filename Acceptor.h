@@ -40,7 +40,7 @@ public:
 
     int getFd() override;
 
-    int getEvents() override;
+    short getFilter() override;
 
 
 private:
@@ -48,7 +48,7 @@ private:
     struct sockaddr_in serverAddr_;
     std::unique_ptr<Socket> socket_;
     int index_;
-    int events_;
+    short filter_;
 };
 
 

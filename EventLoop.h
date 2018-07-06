@@ -8,6 +8,7 @@
 #include <functional>
 #include <map>
 #include <vector>
+#include <sys/event.h>
 
 class Handle;
 class EventLoop
@@ -17,6 +18,7 @@ public:
 public:
     EventLoop();
     ~EventLoop();
+    void run();
 
 
     void registerHandleCallBackFunction(Handle* handle);
@@ -25,10 +27,9 @@ public:
 
 
 private:
-    typedef std::vector<int> HandleList;
-    typedef std::map<int, HandleCallBackFunction> EventList;
+    typedef std::vector<struct kevent> HandleList;
     HandleList handList_;
-    EventList eventList_;
+    HandleList alreadyHandList_;
 
 
 };
