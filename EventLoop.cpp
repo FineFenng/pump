@@ -7,11 +7,6 @@
 #include "Handle.h"
 #include "Acceptor.h"
 
-#ifdef Q_OS_LINUX
-#include <sys/epoll.h>
-#else
-#endif
-
 
 /*
  * struct kevent {
@@ -25,63 +20,97 @@
  */
 
 
-void EventLoop::run()
+thread_local EventLoop* t_eventLoop = nullptr;
+
+EventLoop::EventLoop()
+        : handleList_(), alreadyHandList_(),
+          isLooping_(false), isQuit_(true),
+          threadId_(std::this_thread::get_id())
 {
-
-    int ioHandle;
-
-#ifdef Q_OS_LINUX
-    ioHandle = epoll_create();
-#else
-    ioHandle = kqueue();
-    struct kevent* alreadyHandleAddr = nullptr;
-    int alreadyHandleNum = kevent(ioHandle, handList_.data(), static_cast<int>(handList_.size()),
-                                  alreadyHandleAddr, 0, nullptr);
-    if (alreadyHandleNum)
+    if (t_eventLoop == nullptr)
     {
-        for (int i = 0; i < alreadyHandleNum; ++i)
-        {
-            if ( &alreadyHandleAddr[i]  && alreadyHandleAddr[i].udata)
-            {
-                auto callFunc = static_cast<void(int, int)>(alreadyHandleAddr[i].udata);
-                callFunc()
-            }
-
-
-        }
-
-
+        t_eventLoop = this;
     }
-#endif
-
 
 }
 
-void EventLoop::registerHandleCallBackFunction(Handle* handle)
+void EventLoop::run()
+{
+
+    int ioHandle = kqueue();
+    isLooping_ = true;
+    isQuit_ = false;
+
+    while (!isQuit_)
+    {
+        struct kevent* alreadyHandleAddr = nullptr;
+        int alreadyHandleNum = kevent(ioHandle, handleList_.data(), static_cast<int>(handleList_.size()),
+                                      alreadyHandleAddr, 0, nullptr);
+        if (alreadyHandleNum)
+        {
+            for (int i = 0; i < alreadyHandleNum; ++i)
+            {
+                if (&alreadyHandleAddr[i] && alreadyHandleAddr[i].udata)
+                {
+                    Handle* activeHandle = dynamic_cast<Handle*> (alreadyHandleAddr[i].udata);
+                    activeHandle->handleCallbackFunction(&alreadyHandleAddr[i]);
+                }
+            }
+        }
+    }
+    isLooping_ = false;
+}
+
+void EventLoop::registerHandle(Handle* handle)
 {
     if (handle->getIndex() < 0)
     {
         struct kevent event;
         uintptr_t ident = static_cast<uintptr_t>(handle->getFd());
         short filter = handle->getFilter();
-        auto udata = std::bind(&Acceptor::handleCallbackFunction, handle);
-        EV_SET(&event, ident, filter, 0, 0, 0, static_cast<void*>(&udata));
-        handList_.push_back(event);
-        handle->setIndex(static_cast<int>(handList_.size()));
+        EV_SET(&event, ident, filter, EV_ENABLE, 0, 0, static_cast<void*>(handle));
+        handleList_.push_back(event);
+        handle->setIndex(static_cast<int>(handleList_.size()));
     }
 }
 
-void EventLoop::updateHandleCallBackFunction(Handle* handle)
+void EventLoop::updateHandle(Handle* handle)
 {
-    if (handle->getIndex() >= 0)
+    int index = handle->getIndex();
+    if (index >= 0)
     {
-
-
-
-
-
+        struct kevent& curEvent = handleList_[index];
+        short newFilter = handle->getFilter();
+        EV_SET(&curEvent, curEvent.ident, newFilter, EV_ADD, 0, 0, static_cast<void*>(handle));
     }
 
+}
+
+void EventLoop::disableHandle(Handle* handle)
+{
+    int index = handle->getIndex();
+    if (index >= 0)
+    {
+        struct kevent& curEvent = handleList_[index];
+        EV_SET(&curEvent, curEvent.ident, curEvent.filter, EV_DISABLE, 0, 0, static_cast<void*>(handle));
+    }
+
+}
+
+
+void EventLoop::deleteHandle(Handle* handle)
+{
+    int index = handle->getIndex();
+    if (index >= 0)
+    {
+        struct kevent& curEvent = handleList_[index];
+        EV_SET(&curEvent, curEvent.ident, curEvent.filter, EV_DELETE, 0, 0, static_cast<void*>(handle));
+    }
+}
+
+bool EventLoop::isInInitThread()
+{
+    return threadId_ == std::this_thread::get_id();
 }
 
 

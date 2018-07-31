@@ -9,7 +9,13 @@
 class Handle
 {
 public:
-    virtual void handleCallbackFunction(int fd, int revents) = 0;
+    virtual void handleCallbackFunction(struct kevent* event) = 0;
+
+    virtual void updateCallbackFunction() = 0;
+
+    virtual void disableCallbackFunction() = 0;
+
+    virtual void deleteCallbackFunction() =0;
 
     virtual int getIndex() = 0;
 

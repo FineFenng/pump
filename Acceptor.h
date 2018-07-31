@@ -32,7 +32,10 @@ public:
 
     bool listen();
 
-    void handleCallbackFunction(int fd, int revents) override;
+    void handleCallbackFunction(struct kevent* event) override;
+    void updateCallbackFunction() override ;
+    void disableCallbackFunction() override ;
+    void deleteCallbackFunction() override ;
 
     int getIndex() override;
 

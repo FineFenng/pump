@@ -5,7 +5,6 @@
 #include "SocketAddress.h"
 
 #include <arpa/inet.h>
-#include <netinet/in.h>
 
 
 /*  通用套接字结构
@@ -31,14 +30,14 @@
  */
 
 SocketAddress::SocketAddress(const char* ip, const int& port)
-: ip_(ip), port_(port)
 {
     socketAddress_.sin_family = AF_INET;
     socketAddress_.sin_port = ::htons(port);
     ::inet_aton(ip, &socketAddress_.sin_addr);
 }
 
-SocketAddress::~SocketAddress()
+SocketAddress::SocketAddress(struct sockaddr_in addr)
+        : socketAddress_(addr)
 {
 
 }

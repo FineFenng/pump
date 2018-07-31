@@ -13,14 +13,14 @@ class SocketAddress
 {
 public:
     SocketAddress(const char* ip, const int& port);
+    SocketAddress(struct sockaddr_in addr);
+
 
     ~SocketAddress();
 
     struct sockaddr_in getSocketAddress();
 
 private:
-    const char* ip_;
-    const int port_;
     struct sockaddr_in socketAddress_;
 
 };

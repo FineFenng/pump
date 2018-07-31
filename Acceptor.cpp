@@ -9,7 +9,6 @@
 #include "EventLoop.h"
 
 #include "Socket.h"
-#include "Platform.h"
 
 Acceptor::Acceptor(EventLoop* eventLoop, struct sockaddr_in serverAddr)
         : eventLoop_(eventLoop), serverAddr_(serverAddr),
@@ -28,22 +27,25 @@ bool Acceptor::listen()
     if (::listen(socket_->getFd(), SOMAXCONN) < 0) {
         return false;
     }
+
+    eventLoop_->registerHandle(this);
     return true;
 }
 
-void Acceptor::handleCallbackFunction(int fd, int revents)
+void Acceptor::handleCallbackFunction(struct kevent* event)
 {
-#ifdef Q_OS_LINUX
-    if (revents  |  )
+    int readyQueueLength = static_cast<int>(event->data);
+    for (int i = 0; i < readyQueueLength; ++i)
+    {
+        struct sockaddr_in clientAddr;
+        socklen_t len;
+        bzero(&clientAddr, 0);
 
-#endif
+        ::accept(socket_->getFd(), (struct sockaddr*)&clientAddr, &len);
 
-#ifdef Q_OS_MAC
-    if (revents | ) {
+
 
     }
-
-#endif
 
 
 }
