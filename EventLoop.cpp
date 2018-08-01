@@ -4,9 +4,15 @@
 
 #include "EventLoop.h"
 
+
+#include <boost/noncopyable.hpp>
+#include <sys/epoll.h>
+#include <vector>
+
 #include "Handle.h"
 #include "Acceptor.h"
 
+static const unsigned int MAX_SIZE = 500;
 
 /*
  * struct kevent {
@@ -37,6 +43,7 @@ EventLoop::EventLoop()
 void EventLoop::run()
 {
 
+#ifdef Q_OS_MACOS
     int ioHandle = kqueue();
     isLooping_ = true;
     isQuit_ = false;
@@ -58,6 +65,30 @@ void EventLoop::run()
             }
         }
     }
+#endif
+
+#ifdef Q_OS_LINUX
+    int epfd = epoll_create1(0);
+    isLooping_ = true;
+    isQuit_ = false;
+
+    while (!isQuit_)
+    {
+        std::vector<struct epoll_event> event_list(MAX_SIZE);
+        int ready_event_count = ::epoll_wait(epfd, event_list.data(), MAX_SIZE, 0);
+
+
+
+
+
+    }
+
+
+
+
+
+#endif
+
     isLooping_ = false;
 }
 
@@ -106,6 +137,11 @@ void EventLoop::deleteHandle(Handle* handle)
         struct kevent& curEvent = handleList_[index];
         EV_SET(&curEvent, curEvent.ident, curEvent.filter, EV_DELETE, 0, 0, static_cast<void*>(handle));
     }
+}
+void EventLoop::removeHandle(Handle *handle)
+{
+
+
 }
 
 bool EventLoop::isInInitThread()

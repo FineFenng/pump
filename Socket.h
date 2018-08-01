@@ -6,9 +6,10 @@
 #define QPSTEST_SOCKET_H
 
 #include <boost/noncopyable.hpp>
+#include <boost/functional.hpp>
 
 
-class Socket
+class Socket: public boost::noncopyable
 {
 public:
     Socket(int fd);
