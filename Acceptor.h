@@ -10,6 +10,7 @@
 
 #include "Handle.h"
 #include "SocketAddress.h"
+#include "TcpConnection.h"
 
 #include <memory>
 #include <functional>
@@ -21,10 +22,10 @@ class SocketAddress;
 class TcpConnection;
 
 
-class Acceptor : public Handle
+class Acceptor :
 {
 public:
-    typedef std::function<void(const TcpConnection&)> NewConnectionCallback;
+    typedef std::function<void(int fd, const SocketAddress&)> NewConnectionCallback;
 public:
     Acceptor(EventLoop *event_loop, struct sockaddr_in server_address);
 
@@ -38,12 +39,9 @@ public:
     void handle_callback(struct kevent *event) override;
 #endif
 
-#ifdef Q_OS_LINUX
     void on_new_connection();
-#endif
 
     void set_new_connection_callback(const NewConnectionCallback& cb) { new_connection_callback_ = cb; }
-
 
 private:
     EventLoop* event_loop_;

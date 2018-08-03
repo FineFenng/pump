@@ -15,7 +15,7 @@
 
 
 class EventLoop;
-class TcpConnection
+class TcpConnection: public std::enable_shared_from_this<TcpConnection>
 {
 public:
     typedef std::function<void(std::string& message)> ReadableCallback;
@@ -47,8 +47,9 @@ private:
 private:
     ReadableCallback readable_callback_;
     WritableCallback writable_callback_;
-
 };
+
+typedef std::shared_ptr<TcpConnection> TcpConnection_Ptr;
 
 
 #endif //QPSTEST_TCPCONNECTION_H

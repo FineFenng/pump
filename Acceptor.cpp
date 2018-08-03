@@ -15,7 +15,6 @@
 #include "IO_Handle.h"
 #include "Socket.h"
 #include "SocketAddress.h"
-#include "TcpConnection.h"
 
 Acceptor::Acceptor(EventLoop *event_loop, struct sockaddr_in server_address)
         : event_loop_(event_loop), server_address_(server_address),
@@ -69,8 +68,9 @@ void Acceptor::on_new_connection()
     socklen_t len;
     int connected_fd = ::accept(socket_->get_fd(), (struct sockaddr*)&address, &len);
     SocketAddress client_address(address);
-    TcpConnection new_connection(event_loop_, connected_fd, client_address, server_address_);
-    if (new_connection_callback_) { new_connection_callback_(new_connection); }
+
+
+    if (new_connection_callback_) { new_connection_callback_(connected_fd, client_address); }
 }
 
 #endif
