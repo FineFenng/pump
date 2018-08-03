@@ -8,7 +8,7 @@
 #include <netinet/in.h>
 #include <sys/socket.h>
 
-#include "Handle.h"
+#include "IO_Handle.h"
 #include "SocketAddress.h"
 #include "TcpConnection.h"
 
@@ -50,7 +50,7 @@ private:
     int index_;
     unsigned int events_;
 
-    std::unique_ptr<Handle> handle_;
+    IO_Handle handle_;
 
 
  private:

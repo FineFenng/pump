@@ -12,6 +12,7 @@
 #include "Handle.h"
 #include "Socket.h"
 #include "SocketAddress.h"
+#include "IO_Handle.h"
 
 
 class EventLoop;
@@ -41,7 +42,7 @@ private:
     SocketAddress peer_address_;
     int index_;
     unsigned int events_;
-    std::unique_ptr<Handle> handle_;
+    IO_Handle handle_;
 
 
 private:

@@ -19,11 +19,11 @@
 Acceptor::Acceptor(EventLoop *event_loop, struct sockaddr_in server_address)
         : event_loop_(event_loop), server_address_(server_address),
           socket_(new Socket(GetInitIPv4StreamSocketFd())),
-          handle_(new IO_Handle(event_loop_, socket_->get_fd())),
+          handle_(event_loop_, socket_->get_fd()),
           new_connection_callback_()
 {
-    handle_->enable_readable();
-    handle_->set_readable_callback(std::bind(&Acceptor::on_new_connection, this));
+    handle_.enable_readable();
+    handle_.set_readable_callback(std::bind(&Acceptor::on_new_connection, this));
 }
 
 Acceptor::Acceptor(EventLoop* eventLoop, SocketAddress socketAddress)
@@ -33,13 +33,13 @@ Acceptor::Acceptor(EventLoop* eventLoop, SocketAddress socketAddress)
 
 bool Acceptor::listen()
 {
-    ::bind(get_fd(), (struct sockaddr*)server_address_.getSocketAddress(), sizeof(*server_address_.getSocketAddress()));
+    ::bind(socket_->get_fd(), (struct sockaddr*)server_address_.getSocketAddress(), sizeof(*server_address_.getSocketAddress()));
 
     if (::listen(socket_->get_fd(), SOMAXCONN) < 0) {
         return false;
     }
 
-    event_loop_->add_handle(this);
+    event_loop_->add_handle(&handle_);
     return true;
 }
 

@@ -21,16 +21,17 @@ public:
     TcpServer(EventLoop* loop, const char* ip, int port);
     TcpServer(EventLoop* loop, SocketAddress server_address);
 
-    void add_into_map(int fd, const TcpConnection_Ptr& tcp_connection_ptr) { tcp_connection_map_[fd] = tcp_connection_ptr; }
+    //void add_into_map(int fd, const TcpConnection_Ptr& tcp_connection_ptr) { tcp_connection_map_[fd] = tcp_connection_ptr; }
 
     void on_new_collection(int fd, const SocketAddress& address);
 
     void set_new_connection_callback(const NewConnectionCallback& cb) { new_connection_callback_ = cb; }
 
 
-
-
 public:
+
+
+
 private:
     EventLoop* loop_;
     SocketAddress server_address_;

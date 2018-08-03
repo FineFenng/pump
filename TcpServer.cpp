@@ -26,10 +26,9 @@ void TcpServer::on_new_collection(int fd, const SocketAddress& address)
     TcpConnection_Ptr new_connection_ptr = std::make_shared<TcpConnection>(loop_, fd, address, server_address_);
     tcp_connection_map_[fd] = new_connection_ptr;
     if (new_connection_callback_) { new_connection_callback_(new_connection_ptr); }
-
-
-
 }
+
+
 
 
 
