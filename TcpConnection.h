@@ -48,6 +48,12 @@ private:
 private:
     ReadableCallback readable_callback_;
     WritableCallback writable_callback_;
+
+private:
+    union connection_style
+    {
+        int 
+    };
 };
 
 typedef std::shared_ptr<TcpConnection> TcpConnection_Ptr;

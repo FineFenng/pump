@@ -9,17 +9,18 @@
 
 using namespace std::placeholders;
 
-TcpServer::TcpServer(EventLoop *loop, const char *ip, int port)
-: TcpServer(loop, SocketAddress(ip, port))
-{
 
-}
 TcpServer::TcpServer(EventLoop *loop, SocketAddress server_address)
 : loop_(loop), server_address_(server_address),
   acceptor_(new Acceptor(loop_, server_address_))
 {
     acceptor_->set_new_connection_callback(std::bind(&TcpServer::on_new_collection, this, _1, _2));
 }
+
+TcpServer::TcpServer(EventLoop *loop, const char *ip, int port)
+: TcpServer(loop, SocketAddress(ip, port))
+{ }
+
 
 void TcpServer::on_new_collection(int fd, const SocketAddress& address)
 {
