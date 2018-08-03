@@ -12,7 +12,7 @@ Socket::Socket(int fd)
 
 }
 
-int Socket::getFd() const
+int Socket::get_fd() const
 {
     return fd_;
 }

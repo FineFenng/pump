@@ -29,21 +29,22 @@
  *  }
  */
 
-SocketAddress::SocketAddress(const char* ip, const int& port)
+SocketAddress::SocketAddress(const char* ip, const unsigned short& port)
 {
-    socketAddress_.sin_family = AF_INET;
-    socketAddress_.sin_port = ::htons(port);
-    ::inet_aton(ip, &socketAddress_.sin_addr);
+    socket_address_.sin_family = AF_INET;
+    socket_address_.sin_port = ::htons(port);
+    ::inet_pton(AF_INET, ip, &socket_address_.sin_addr);
 }
 
 SocketAddress::SocketAddress(struct sockaddr_in addr)
-        : socketAddress_(addr)
+        : socket_address_(addr)
 {
 
 }
 
-sockaddr_in SocketAddress::getSocketAddress()
+
+const sockaddr_in* SocketAddress::getSocketAddress() const
 {
-    return socketAddress_;
+    return &socket_address_;
 }
 

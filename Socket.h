@@ -18,7 +18,7 @@ public:
         ::close(fd_);
     }
 
-    int getFd() const;
+    int get_fd() const;
 
 private:
     int fd_;

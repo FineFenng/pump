@@ -5,10 +5,12 @@
 #ifndef QPSTEST_TCPCONNECTION_H
 #define QPSTEST_TCPCONNECTION_H
 
+#include <functional>
 #include <memory>
 #include <string>
 
-#include "Socket.h
+#include "Handle.h"
+#include "Socket.h"
 #include "SocketAddress.h"
 
 
@@ -16,21 +18,35 @@ class EventLoop;
 class TcpConnection
 {
 public:
-    TcpConnection(EventLoop* eventLoop, int fd, SocketAddress& localAddr, SocketAddress& peerAddr);
+    typedef std::function<void(std::string& message)> ReadableCallback;
+    typedef std::function<void(std::string& message)> WritableCallback;
+public:
+    TcpConnection(EventLoop *event_loop, int fd, const SocketAddress &local_address, const SocketAddress &peer_address);
 
     ~TcpConnection();
 
+    void on_readable_callback();
 
-    void sendMessage(const void* message, int len);
+    void on_writable_callback();
 
-    void sendMessage(const std::string& message);
+    void set_readable_callback(const ReadableCallback& cb) { readable_callback_ = cb; }
+
+    void set_writable_callback(const WritableCallback& cb) { writable_callback_ = cb; }
 
 
 private:
-    EventLoop* eventLoop_;
+    EventLoop* event_loop_;
     std::unique_ptr<Socket> socket_;
-    SocketAddress localAddr_;
-    SocketAddress peerAddr_;
+    SocketAddress local_address_;
+    SocketAddress peer_address_;
+    int index_;
+    unsigned int events_;
+    std::unique_ptr<Handle> handle_;
+
+
+private:
+    ReadableCallback readable_callback_;
+    WritableCallback writable_callback_;
 
 };
 

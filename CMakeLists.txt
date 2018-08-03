@@ -11,7 +11,7 @@ add_executable(Server
         Server.cc
         SocketAddress.cpp
         Socket.cpp
-        TcpConnection.cpp)
+        TcpConnection.cpp IO_Handle.cpp IO_Handle.h TcpServer.cpp TcpServer.h Buffer.cpp Buffer.h)
 
 add_executable(Client Client.cc)
 

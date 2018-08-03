@@ -16,15 +16,17 @@
 
 
 class EventLoop;
-
 class Socket;
-
 class SocketAddress;
+class TcpConnection;
+
 
 class Acceptor : public Handle
 {
 public:
-    Acceptor(EventLoop* eventLoop, struct sockaddr_in serverAddr);
+    typedef std::function<void(const TcpConnection&)> NewConnectionCallback;
+public:
+    Acceptor(EventLoop *event_loop, struct sockaddr_in server_address);
 
     Acceptor(EventLoop* eventLoop, SocketAddress socketAddress);
 
@@ -32,26 +34,29 @@ public:
 
     bool listen();
 
-    void handleCallbackFunction(struct kevent* event) override;
-    void updateCallbackFunction() override ;
-    void disableCallbackFunction() override ;
-    void deleteCallbackFunction() override ;
+#ifdef Q_OS_MACOS
+    void handle_callback(struct kevent *event) override;
+#endif
 
-    int getIndex() override;
+#ifdef Q_OS_LINUX
+    void on_new_connection();
+#endif
 
-    int setIndex(int index) override;
-
-    int getFd() override;
-
-    short getFilter() override;
+    void set_new_connection_callback(const NewConnectionCallback& cb) { new_connection_callback_ = cb; }
 
 
 private:
-    EventLoop* eventLoop_;
-    struct sockaddr_in serverAddr_;
+    EventLoop* event_loop_;
+    SocketAddress server_address_;
     std::unique_ptr<Socket> socket_;
     int index_;
-    short filter_;
+    unsigned int events_;
+
+    std::unique_ptr<Handle> handle_;
+
+
+ private:
+    NewConnectionCallback new_connection_callback_;
 };
 
 

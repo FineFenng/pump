@@ -12,17 +12,16 @@
 class SocketAddress
 {
 public:
-    SocketAddress(const char* ip, const int& port);
-    SocketAddress(struct sockaddr_in addr);
+    SocketAddress(const char* ip, const unsigned short& port);
 
+    explicit SocketAddress(struct sockaddr_in addr);
 
-    ~SocketAddress();
+    ~SocketAddress() = default;
 
-    struct sockaddr_in getSocketAddress();
+    const struct sockaddr_in* getSocketAddress() const;
 
 private:
-    struct sockaddr_in socketAddress_;
-
+    struct sockaddr_in socket_address_;
 };
 
 

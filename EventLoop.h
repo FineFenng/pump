@@ -29,8 +29,8 @@ public:
 #ifdef Q_OS_LINUX
     typedef std::function<void(struct event*)> HandleCallBackFunction;
 #endif
-    
-    
+
+
 public:
     EventLoop();
 
@@ -38,30 +38,36 @@ public:
 
     void run();
 
-    void registerHandle(Handle* handle);
+    void add_handle(Handle *handle);
 
-    void updateHandle(Handle* handle);
+    void modify_handle(Handle *handle);
 
-    /*
-    void disableHandle(Handle* handle);
-     */
+    void delete_handle(Handle *handle);
 
-    void deleteHandle(Handle* handle);
-    
-    void removeHandle(Handle* handle);
 
 private:
     bool isInInitThread();
 
 
 private:
-    typedef std::vector<struct kevent> HandleList;
-    HandleList handleList_;
-    HandleList alreadyHandList_;
+#ifdef Q_OS_MACOS
+    typedef std::vector<struct kevent> EventList;
+#endif
+#ifdef Q_OS_LINUX
+    typedef std::vector<struct epoll_event> EventList;
+#endif
+    //typedef std::map<int, Handle*> HandleMap;
+
+    EventList event_list_;
+    EventList already_event_list_;
+
+    //HandleMap handle_map_;
+
 private:
-    bool isLooping_;
-    bool isQuit_;
+    bool is_looping_;
+    bool is_quit_;
 private:
+    int ep_fd_;
     std::thread::id threadId_;
 };
 
