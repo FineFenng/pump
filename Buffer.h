@@ -91,7 +91,7 @@ private:
             readable_index_ = 0;
             writable_index_ = readable_index_ +  bytes_record;
         }
-    };
+    }
 
 
 private:
