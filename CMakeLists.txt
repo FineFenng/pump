@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(QPSTest)
+project(EchoServer)
 
 set(CMAKE_CXX_STANDARD 11)
 
