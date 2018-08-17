@@ -35,7 +35,7 @@ public:
 		init_buffer(left_capacity_, right_capacity_);
 	}
 
-	explicit Packet(const BYTE_P buffer, uint32_t len)
+	explicit Packet(C_BYTE_P buffer, uint32_t len)
 		: buffer_(nullptr),
 		left_capacity_(PACK_INIT_LEFT_CAPACITY),
 		right_capacity_(0),
@@ -44,6 +44,11 @@ public:
 	{
 		init_buffer(left_capacity_, right_capacity_);
 		write(buffer, len);
+	}
+
+	~Packet()
+	{
+		free(buffer_);
 	}
 
 
@@ -56,10 +61,11 @@ public:
 		buffer_ = static_cast<BYTE_P>(malloc(sizeof(BYTE_T) * capacity()));
 	}
 
+
 	void extend_left_buffer_capacity()
 	{
 		left_capacity_ += PACK_INCREMENT_LEFT_SIZE;
-		const BYTE_P new_buffer = static_cast<BYTE_P>(realloc(buffer_, capacity()));
+		auto const new_buffer = static_cast<BYTE_P>(realloc(buffer_, capacity()));
 		buffer_ = new_buffer;
 		const uint32_t new_left = read_index_ + PACK_INCREMENT_LEFT_SIZE;
 		const uint32_t len = get_len();
@@ -71,13 +77,31 @@ public:
 		write_index_ = read_index_ + len;
 	}
 
-
 	void extend_right_buffer_capacity()
 	{
 		right_capacity_ += PACK_INCREMENT_RIGHT_SIZE;
-		const BYTE_P new_buffer = static_cast<BYTE_P>(realloc(buffer_, capacity()));
+		auto const new_buffer = static_cast<BYTE_P>(realloc(buffer_, capacity()));
 		buffer_ = new_buffer;
 	}
+
+	BYTE_P begin() const
+	{
+		return buffer_ + read_index_;
+	}
+
+	BYTE_P end() const
+	{
+		return buffer_ + write_index_;
+	}
+
+	void forward_write_index(const uint32_t& bytes)
+	{
+
+		
+	}
+
+
+
 
 	template <typename T>
 	T read()
@@ -108,7 +132,7 @@ public:
 		return this;
 	}
 
-	Packet* write(const BYTE_P buffer, uint32_t len)
+	Packet* write(C_BYTE_P buffer, uint32_t len)
 	{
 		while (len > left_left_capacity()) {
 			extend_right_buffer_capacity();

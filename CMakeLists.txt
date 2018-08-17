@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-
-project(pump_net)
+project(pump)
 
 set(CMAKE_CXX_STANDARD 11)
 

@@ -14,11 +14,11 @@ class Hlen
 public:
 	//typedef std::function<void(const TcpConnection_Ptr&, Buffer*)> BufferReadableCallback;
 	//typedef std::function<void(const TcpConnection_Ptr&, Buffer*)> BufferWritableCallback;
-	//typedef std::function<void(const TcpConnection_Ptr&, const std::string&)> CompletePackageCallback;
+	//typedef std::function<void(const TcpConnection_Ptr&, const std::string&)> CompletePacketCallback;
 
-	PUMP_DECLAE_CALLBACK_FUNCTIONR(void, const TcpConnection_Ptr&, Buffer*)   BufferReadableCallback;
-	PUMP_DECLAE_CALLBACK_FUNCTIONR(void, const TcpConnection_Ptr&, Buffer*)   BufferWritableCallback;
-	PUMP_DECLAE_CALLBACK_FUNCTIONR(void, const TcpConnection_Ptr&, Package*)  CompletePackageCallback;
+	PUMP_DECLAE_CALLBACK_FUNCTIONR(void, const TcpConnection_Ptr&, Buffer*) BufferReadableCallback;
+	PUMP_DECLAE_CALLBACK_FUNCTIONR(void, const TcpConnection_Ptr&, Buffer*) BufferWritableCallback;
+	PUMP_DECLAE_CALLBACK_FUNCTIONR(void, const TcpConnection_Ptr&, Packet*) CompletePacketCallback;
 
 public:
 	explicit Hlen(TcpServer* server)
@@ -33,7 +33,6 @@ PUMP_DECLARE_NONCOPYABLE(Hlen);
 	{
 		bool is_exit_loop = false;
 		do {
-
 			switch (state_) {
 				case parse_state::k_read_len:
 					if (buffer->get_readable_bytes() > sizeof(HeaderType)) {
@@ -41,7 +40,7 @@ PUMP_DECLARE_NONCOPYABLE(Hlen);
 																	pump::bigendian::Type<HeaderType>());
 						const HeaderType message_size = content_size_ + sizeof(HeaderType);
 						state_ = parse_state::k_read_content;
-                        buffer->retrieve(sizeof(HeaderType));
+						buffer->retrieve(sizeof(HeaderType));
 					}
 					else {
 						is_exit_loop = true;
@@ -50,14 +49,15 @@ PUMP_DECLARE_NONCOPYABLE(Hlen);
 				case parse_state::k_read_content:
 					if (buffer->get_readable_bytes() >= content_size_) {
 						const std::string content = decode_content(buffer->get_readable_address(), content_size_);
-                        package_.read(buffer->get_readable_address(), content_size_);
-						
+						package_.read(buffer->get_readable_address(), content_size_);
+
 						if (complete_package_callback_) {
 							complete_package_callback_(tcp_connection_ptr, &package_);
 						}
 						buffer->retrieve(content_size_);
-					} else {
-                        is_exit_loop = true;
+					}
+					else {
+						is_exit_loop = true;
 						break;
 					}
 					break;
@@ -70,7 +70,7 @@ PUMP_DECLARE_NONCOPYABLE(Hlen);
 		tcp_connection_ptr->send(encode_content(content));
 	}
 
-	static void set_complete_package_callback(const CompletePackageCallback& cb) { complete_package_callback_ = cb; }
+	static void set_complete_package_callback(const CompletePacketCallback& cb) { complete_package_callback_ = cb; }
 
 private :
 	static std::string encode_content(const std::string& content)
@@ -98,17 +98,17 @@ private:
 
 	parse_state state_;
 	HeaderType content_size_;
-	Package package_;
+	Packet package_;
 
 private
 :
-	static CompletePackageCallback complete_package_callback_;
+	static CompletePacketCallback complete_package_callback_;
 	TcpServer* server_;
 };
 
 
 template <typename HeaderType>
-typename Hlen<HeaderType>::CompletePackageCallback Hlen<HeaderType>::
+typename Hlen<HeaderType>::CompletePacketCallback Hlen<HeaderType>::
 	complete_package_callback_ = nullptr;
 }}
 

@@ -3,6 +3,7 @@
 
 #include <pump/net/TcpServer.h>
 #include <pump/net/handle/Hlen.h>
+#include <pump/Packet.h>
 
 
 using namespace std::placeholders;
@@ -19,9 +20,9 @@ public:
 		Hlen<uint32_t>::set_complete_package_callback(on_complete_package);
 	}
 
-	static void on_complete_package(const TcpConnection_Ptr& tcp_connection_ptr, const std::string& content)
+	static void on_complete_package(const TcpConnection_Ptr& tcp_connection_ptr, Packet* packet)
 	{
-        Hlen<uint32_t>::send(tcp_connection_ptr, content);
+        Hlen<uint32_t>::send(tcp_connection_ptr, );
 	}
 
 private:

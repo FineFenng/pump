@@ -100,6 +100,7 @@ inline uint32_t Write_xx_impl(const T& val, DesPtr* des_addr)
 	for (size_t i = sizeof(T) - 1; i >= 0; --i) {
 		*(des_addr + wrote_count) = (val >> (i * 8) && 0xff);
         wrote_count++;
+
 	}
 	return wrote_count;
 }

@@ -6,6 +6,8 @@ namespace pump
 {
     typedef uint8_t BYTE_T;
     typedef BYTE_T* BYTE_P;
+    typedef const BYTE_T* C_BYTE_P;
+    typedef uint8_t* const BYTE_P_C;
 }
 
 #endif
