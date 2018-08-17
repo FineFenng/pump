@@ -1,17 +1,101 @@
-cmake_minimum_required(VERSION 3.10)
-project(EchoServer)
+cmake_minimum_required(VERSION 3.8)
+
+project(pump_net)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(Server
-        Platform.h
-        Acceptor.cpp
-        EventLoop.cpp
-        Common.cpp
-        Server.cc
-        SocketAddress.cpp
-        Socket.cpp
-        TcpConnection.cpp IO_Handle.cpp IO_Handle.h TcpServer.cpp TcpServer.h Buffer.cpp Buffer.h)
+############common_header 
+file(GLOB HEADERS "include/pump/*h")
+############common_header 
 
-add_executable(Client Client.cc)
+
+############config_header
+file(GLOB CONFIG_HEADERS "include/pump/config/*.h")
+############config_header
+
+
+############utility_header
+file(GLOB_RECURSE UTILITY_HEADERS "include/pump/utility/*.h")
+############utility_header
+
+
+############net_header
+file(GLOB NET_HEADERS        "include/pump/net/*.h")
+file(GLOB NET_HANDLE_HEADERS "include/pump/net/handle/*.h")
+file(GLOB NET_PARSER_HEADERS "include/pump/net/parser/*.h")
+file(GLOB NET_SERVER_HEADERS "include/pump/net/server/*.h")
+
+set(NET_BACKEND_HEADERS)
+if(WIN32)
+	file(GLOB NET_BACKEND_HEADERS "include/pump/net/backend/Select.h")
+else(WIN32)
+	if(APPLE)
+		file(GLOB NET_BACKEND_HEADERS "include/pump/net/backend/Select.h" "include/pump/net/backend/Poll.h")
+	endif(APPLE)
+	file(GLOB NET_BACKEND_HEADERS "include/pump/net/backend/Select.h" "include/pump/net/backend/Poll.h" "include/pump/net/backend/Epoll.h")
+endif(WIN32)
+###########net_header
+
+###########utility_src
+set(UTILITY_SRCS 
+	src/utility/log/Logger.cpp 	
+	src/utility/log/LogStream.cpp
+	)
+###########utility_src
+
+
+###########net_src
+set(NET_SRCS
+        src/net/Acceptor.cpp
+        src/net/Buffer.cpp
+        src/net/EventLoop.cpp
+        src/net/SocketAddress.cpp
+        src/net/TcpConnection.cpp
+        src/net/TcpServer.cpp
+        src/net/handle/IO_Handle.cpp 
+		)
+
+
+if(WIN32)
+	list(APPEND NET_SRCS src/net/backend/Select.cpp)
+else(WIN32)
+	if (APPLE)
+		list(APPEND NEt_SRCS src/net/backend/Select.cpp src/net/backend/Poll.cpp)
+	endif(APPLE)
+	list(APPEND NET_SRCS src/net/backend/Select.cpp src/net/backend/Poll.cpp src/net/backend/Epoll.cpp)
+endif(WIN32)
+###########net_src
+
+
+add_library(pump_utiliy STATIC
+						${UTILITY_SRCS} 
+						${UTILITY_HEADERS}
+						)
+
+add_library(pump_net  STATIC
+					 ${NET_SRCS} 
+					 ${HEADERS} 
+					 ${CONFIG_HEADERS} 
+					 ${NET_HEADERS} 
+					 ${NET_HANDLE_HEADERS} 
+					 ${NET_BACKEND_HEADERS} 
+					 ${NET_PARSER_HEADERS}
+					 ${NET_SERVER_HEADERS}
+					 )
+
+target_link_libraries(pump_net pump_utiliy)
+
+target_include_directories(pump_net
+        PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
+
+target_include_directories(pump_utiliy
+        PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
+
+
+add_executable(SelectTest test/SelectTest.cpp)
+target_link_libraries(SelectTest pump_net)
+
+
+
+
 
