@@ -17,7 +17,7 @@
 
 /*
  * ClientPacke Structure
- * struct Package {
+ * struct Packet {
  *    int32_t message_len;
  *    char    message[messages_len]
  * }
