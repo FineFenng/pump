@@ -6,6 +6,7 @@ build
 
 .idea
 .vs
+.vscode
 
 *.a
 *.sw*
