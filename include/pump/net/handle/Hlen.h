@@ -48,8 +48,8 @@ PUMP_DECLARE_NONCOPYABLE(Hlen);
 					}
 				case parse_state::k_read_content:
 					if (buffer->get_readable_bytes() >= content_size_) {
-						const std::string content = decode_content(buffer->get_readable_address(), content_size_);
-						package_.read(buffer->get_readable_address(), content_size_);
+						//const std::string content = decode_content(buffer->get_readable_address(), content_size_);
+                        package_.read(content_size_, buffer->get_readable_address());
 
 						if (complete_package_callback_) {
 							complete_package_callback_(tcp_connection_ptr, &package_);

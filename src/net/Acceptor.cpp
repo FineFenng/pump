@@ -21,7 +21,7 @@ namespace pump { namespace net
 {
 Acceptor::Acceptor(EventLoop* event_loop, struct sockaddr_in server_address)
 	: event_loop_(event_loop), server_address_(server_address),
-	socket_(new Socket(GetInitIPv4StreamSocketFd())),
+	socket_(new Socket(SocketOpen(SOCK_STREAM))),
 	handle_(event_loop_, socket_->get_fd()),
 	is_listening_(false)
 {
@@ -48,11 +48,12 @@ bool Acceptor::listen()
 	bind(fd, reinterpret_cast<const struct sockaddr*>(server_address_.getSocketAddress()),
 		sizeof(*server_address_.getSocketAddress()));
 
-	if (::listen(fd, SOMAXCONN) < 0) {
-		LOG_INFO << "Sever start listening failed";
+	if (SocketListen(fd) < 0) {
+		LOG_INFO << "Sever start listening failed.";
 	}
-
-	LOG_INFO << "Sever start listening success";
+	else {
+		LOG_INFO << "Sever start listening success.";
+	}
 
 
 	is_listening_ = true;

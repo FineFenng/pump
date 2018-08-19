@@ -26,18 +26,13 @@
 #include <vector>
 
 // own define header file
+#include <pump/Common.h>
 #include <pump/BytesHelper.h>
 
 namespace pump { namespace net
 {
 class Buffer
 {
-public:
-	typedef char Byte;
-	typedef std::vector<Byte>::iterator BufferIterator;
-	typedef std::vector<Byte>::const_iterator C_BufferIterator;
-	typedef Byte* BufferAddress;
-	typedef const Byte* C_BufferAddress;
 
 public:
 	Buffer()
@@ -80,7 +75,7 @@ public:
 
 	void retrieve_all() { readable_index_ = writable_index_ = 0; }
 
-	void retrieve_position(const Byte* pos) { retrieve(pos - get_readable_address()); }
+	void retrieve_position(const BYTE_T* pos) { retrieve(pos - get_readable_address()); }
 
 	std::string retrieve_all_to_string()
 	{
@@ -92,17 +87,17 @@ public:
 	size_t get_readable_bytes() const { return writable_index_ - readable_index_; }
 	size_t get_writable_bytes() const { return buffer_capacity_ - writable_index_; }
 
-	char* get_readable_end() { return data_.data() + writable_index_; }
-	const char* get_readable_end() const { return data_.data() + writable_index_; }
+	BYTE_T* get_readable_end() { return data_.data() + writable_index_; }
+	const BYTE_T* get_readable_end() const { return data_.data() + writable_index_; }
 
-	char* get_readable_address() { return data_.data() + readable_index_; }
-	const char* get_readable_address() const { return data_.data() + readable_index_; }
+	BYTE_T* get_readable_address() { return data_.data() + readable_index_; }
+	const BYTE_T* get_readable_address() const { return data_.data() + readable_index_; }
 
-	char* get_writable_end() { return data_.data() + buffer_capacity_; }
-	const char* get_writable_end() const { return data_.data() + buffer_capacity_; }
+	BYTE_T* get_writable_end() { return data_.data() + buffer_capacity_; }
+	const BYTE_T* get_writable_end() const { return data_.data() + buffer_capacity_; }
 
-	char* get_writable_address() { return data_.data() + writable_index_; }
-	const char* get_writable_address() const { return data_.data() + writable_index_; }
+	BYTE_T* get_writable_address() { return data_.data() + writable_index_; }
+	const BYTE_T* get_writable_address() const { return data_.data() + writable_index_; }
 
 	void ensure_capacity(size_t byte_count)
 	{
@@ -124,7 +119,7 @@ private:
 	void set_buffer_capacity(size_t capacity) { buffer_capacity_ = capacity; }
 
 private:
-	std::vector<Byte> data_;
+	std::vector<BYTE_T> data_;
 
 	size_t readable_index_;
 	size_t writable_index_;

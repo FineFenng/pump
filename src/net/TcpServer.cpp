@@ -20,7 +20,7 @@ namespace pump { namespace net
         acceptor_->set_reuseaddr_option();
         acceptor_->set_init_connection_callback(std::bind(&TcpServer::init_connection, this, _1, _2));
         acceptor_->listen();
-        LOG_INFO << "Server Started, ####################################################";
+        LOG_INFO << "Server Started.";
     }
 
     TcpServer::TcpServer(EventLoop* loop, const char* ip, unsigned short port)

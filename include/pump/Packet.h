@@ -35,7 +35,7 @@ public:
 		init_buffer(left_capacity_, right_capacity_);
 	}
 
-	explicit Packet(C_BYTE_P buffer, uint32_t len)
+	explicit Packet(const BYTE_T* buffer , uint32_t len)
 		: buffer_(nullptr),
 		left_capacity_(PACK_INIT_LEFT_CAPACITY),
 		right_capacity_(0),
@@ -58,14 +58,14 @@ public:
 		left_capacity_ = PUMP_MAX2(left, PACK_MIN_LEFT_CAPACITY);
 		right_capacity_ = PUMP_MAX2(right, PACK_MIN_RIGHT_CAPACITY);
 		reset();
-		buffer_ = static_cast<BYTE_P>(malloc(sizeof(BYTE_T) * capacity()));
+		buffer_ = static_cast<BYTE_T*>(malloc(sizeof(BYTE_T) * capacity()));
 	}
 
 
 	void extend_left_buffer_capacity()
 	{
 		left_capacity_ += PACK_INCREMENT_LEFT_SIZE;
-		auto const new_buffer = static_cast<BYTE_P>(realloc(buffer_, capacity()));
+		auto* const new_buffer = static_cast<BYTE_T*>(realloc(buffer_, capacity()));
 		buffer_ = new_buffer;
 		const uint32_t new_left = read_index_ + PACK_INCREMENT_LEFT_SIZE;
 		const uint32_t len = get_len();
@@ -80,25 +80,47 @@ public:
 	void extend_right_buffer_capacity()
 	{
 		right_capacity_ += PACK_INCREMENT_RIGHT_SIZE;
-		auto const new_buffer = static_cast<BYTE_P>(realloc(buffer_, capacity()));
+		auto* const new_buffer = static_cast<BYTE_T*>(realloc(buffer_, capacity()));
 		buffer_ = new_buffer;
 	}
 
-	BYTE_P begin() const
+	BYTE_T* begin() const
 	{
 		return buffer_ + read_index_;
 	}
 
-	BYTE_P end() const
+	BYTE_T* end() const
 	{
 		return buffer_ + write_index_;
 	}
 
 	void forward_write_index(const uint32_t& bytes)
 	{
-
-		
+        write_index_ += bytes;
 	}
+
+	Packet* write_left(const BYTE_T* buffer, uint32_t len)
+	{
+		while (len > (left_left_capacity())) {
+            extend_left_buffer_capacity();
+		}
+        read_index_ -= len;
+        ::memcpy(buffer_ + read_index_, buffer, len);
+        return this;
+	}
+
+	template<typename T>
+	Packet* write_left(const T& t)
+	{
+        uint32_t to_write_length = sizeof(t);
+		while (to_write_length > left_left_capacity()) {
+            extend_left_buffer_capacity();
+		}
+        read_index_ -= sizeof(t);
+        uint32_t wrote_bytes = pump::bigendian::Write_xx_impl(t, buffer_ + read_index_);
+        return this;
+	}
+
 
 
 
@@ -111,7 +133,7 @@ public:
 		return t;
 	}
 
-	uint32_t read(BYTE_P target, uint32_t len)
+	uint32_t read(uint32_t len, BYTE_T* target)
 	{
 		if (target == nullptr || len == 0) { return 0; }
 		const uint32_t c = (get_len() > len ? len : get_len());
@@ -132,7 +154,7 @@ public:
 		return this;
 	}
 
-	Packet* write(C_BYTE_P buffer, uint32_t len)
+	Packet* write(const BYTE_T* buffer, uint32_t len)
 	{
 		while (len > left_left_capacity()) {
 			extend_right_buffer_capacity();
@@ -157,7 +179,7 @@ private:
 	uint32_t right_left_capacity() const { return buffer_ == nullptr ? 0 : capacity() - write_index_; }
 
 private:
-	BYTE_P buffer_;
+	BYTE_T* buffer_;
 	uint32_t left_capacity_;
 	uint32_t right_capacity_;
 	uint32_t read_index_;

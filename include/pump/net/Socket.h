@@ -9,13 +9,14 @@
 #include <cstring>
 
 #include <pump/net/SocketOption.h>
+#include <pump/Common.h>
 
 namespace pump { namespace net
 {
 class Socket
 {
 public:
-	explicit Socket(int fd)
+	explicit Socket(SOCKET fd)
 		: fd_(fd),
 		is_validated_(false)
 	{ }
@@ -46,13 +47,13 @@ public:
 		}
 	}
 
-	int get_fd() const
+	SOCKET get_fd() const
 	{
 		return fd_;
 	}
 
 private:
-	mutable int fd_;
+	mutable  SOCKET fd_;
 	mutable bool is_validated_;
 };
 }}

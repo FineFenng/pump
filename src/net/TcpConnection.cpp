@@ -61,7 +61,7 @@ void TcpConnection::on_writable()
 {
 	assert(handle_.is_writable());
 	int saved_errno = 0;
-	const int wrote_count = Send(get_fd(), output_buffer_.get_readable_address(),
+	const int wrote_count = Send(get_fd(), reinterpret_cast<char*>( output_buffer_.get_readable_address()),
 								output_buffer_.get_readable_bytes(), 0, &saved_errno);
 
 

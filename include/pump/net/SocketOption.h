@@ -13,22 +13,6 @@
 
 namespace pump { namespace net
 {
-inline int GetInitIPv4StreamSocketFd()
-{
-	int fd;
-	do {
-		fd = ::socket(AF_INET, SOCK_STREAM, 0);
-		if (fd < 0) {
-			if (errno == ENOBUFS || ENOMEM) {
-				continue;
-			}
-		}
-		else {
-			break;
-		}
-	} while (true);
-	return fd;
-}
 
 inline int GetIpFromINETAddress(const sockaddr_in& address, char* ip, socklen_t len)
 {
@@ -45,13 +29,18 @@ int GetLastSocketError();
 
 inline SOCKET SocketOpen(const int& type)
 {
+
 	int protocol = 0;
 #ifdef PUMP_PLATFORM_WIN
+    WSADATA wsa;
+	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0) { LOG_FALAL << "Windows socket init failed"; }
 	if (type == SOCK_STREAM) { protocol = IPPROTO_TCP; }
 	if (type == SOCK_DGRAM) { protocol = IPPROTO_UDP; }
 #endif
 
 	const SOCKET fd = socket(AF_INET, type, protocol);
+    LOG_INFO << fd;
+
 	return fd;
 }
 
