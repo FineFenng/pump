@@ -22,7 +22,7 @@ public:
 
 	static void on_complete_package(const TcpConnection_Ptr& tcp_connection_ptr, Packet* packet)
 	{
-        Hlen<uint32_t>::send(tcp_connection_ptr, );
+        
 	}
 
 private:

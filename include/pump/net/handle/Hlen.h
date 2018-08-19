@@ -24,7 +24,7 @@ public:
 	explicit Hlen(TcpServer* server)
 		: state_(parse_state::k_read_len), server_(server)
 	{
-		server_->set_message_readable_callback(on_message);
+		server_->set_message_readable_callback(std::bind(&Hlen::on_message, this, std::placeholders::_1, std::placeholders::_2));
 	}
 
 PUMP_DECLARE_NONCOPYABLE(Hlen);
