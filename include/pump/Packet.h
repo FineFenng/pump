@@ -35,7 +35,7 @@ public:
 		init_buffer(left_capacity_, right_capacity_);
 	}
 
-	explicit Packet(const BYTE_T* buffer , uint32_t len)
+	explicit Packet(const BYTE_T* buffer, uint32_t len)
 		: buffer_(nullptr),
 		left_capacity_(PACK_INIT_LEFT_CAPACITY),
 		right_capacity_(0),
@@ -84,45 +84,42 @@ public:
 		buffer_ = new_buffer;
 	}
 
-	BYTE_T* begin() const
+	const BYTE_T* begin() const
 	{
 		return buffer_ + read_index_;
 	}
 
-	BYTE_T* end() const
+	const BYTE_T* end() const
 	{
 		return buffer_ + write_index_;
 	}
 
 	void forward_write_index(const uint32_t& bytes)
 	{
-        write_index_ += bytes;
+		write_index_ += bytes;
 	}
 
 	Packet* write_left(const BYTE_T* buffer, uint32_t len)
 	{
 		while (len > (left_left_capacity())) {
-            extend_left_buffer_capacity();
+			extend_left_buffer_capacity();
 		}
-        read_index_ -= len;
-        ::memcpy(buffer_ + read_index_, buffer, len);
-        return this;
+		read_index_ -= len;
+		::memcpy(buffer_ + read_index_, buffer, len);
+		return this;
 	}
 
-	template<typename T>
+	template <typename T>
 	Packet* write_left(const T& t)
 	{
-        uint32_t to_write_length = sizeof(t);
+		uint32_t to_write_length = sizeof(t);
 		while (to_write_length > left_left_capacity()) {
-            extend_left_buffer_capacity();
+			extend_left_buffer_capacity();
 		}
-        read_index_ -= sizeof(t);
-        uint32_t wrote_bytes = pump::bigendian::Write_xx_impl(t, buffer_ + read_index_);
-        return this;
+		read_index_ -= sizeof(t);
+		uint32_t wrote_bytes = pump::bigendian::Write_xx_impl(t, buffer_ + read_index_);
+		return this;
 	}
-
-
-
 
 
 	template <typename T>
@@ -160,18 +157,35 @@ public:
 			extend_right_buffer_capacity();
 		}
 		memcpy(buffer_ + write_index_, buffer, len);
+        BYTE_T* pos = buffer_ + write_index_;
+        
+
 		write_index_ += len;
 		return this;
 	}
 
-
-private:
-	void reset()
+	template <typename T>
+	T peek() const
 	{
-		read_index_ = write_index_ = left_capacity_;
+		T t = pump::bigendian::Read_XX_Impl(buffer_ + read_index_, pump::bigendian::Type<T>());
+		return t;
+	}
+
+	uint32_t peek(size_t len, BYTE_T* buffer) const
+	{
+		if (buffer == nullptr || len == 0) { return 0; }
+
+		const uint32_t can_peek_size = len > get_len() ? get_len() : len;
+		memcpy(buffer, buffer_ + read_index_, can_peek_size);
+		return can_peek_size;
 	}
 
 	uint32_t get_len() const { return write_index_ - read_index_; }
+
+	void reset() { read_index_ = write_index_ = left_capacity_; }
+
+private:
+
 
 	uint32_t capacity() const { return left_capacity_ + right_capacity_; }
 

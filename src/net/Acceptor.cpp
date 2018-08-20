@@ -27,7 +27,6 @@ Acceptor::Acceptor(EventLoop* event_loop, struct sockaddr_in server_address)
 {
 	handle_.enable_readable();
 	handle_.set_readable_callback(std::bind(&Acceptor::on_new_connection, this));
-	event_loop->update_handle(handle_);
 }
 
 Acceptor::Acceptor(EventLoop* eventLoop, SocketAddress socketAddress)
@@ -44,7 +43,7 @@ Acceptor::~Acceptor()
 
 bool Acceptor::listen()
 {
-	const int fd = socket_->get_fd();
+	const SOCKET fd = socket_->get_fd();
 	bind(fd, reinterpret_cast<const struct sockaddr*>(server_address_.getSocketAddress()),
 		sizeof(*server_address_.getSocketAddress()));
 
@@ -55,9 +54,7 @@ bool Acceptor::listen()
 		LOG_INFO << "Sever start listening success.";
 	}
 
-
 	is_listening_ = true;
-	event_loop_->update_handle(handle_);
 	return is_listening_;
 }
 
@@ -72,7 +69,7 @@ void Acceptor::on_new_connection() const
 	memset(&address, 0, sizeof(address));
 
 	socklen_t len = sizeof(address);
-	const int connected_fd = accept(socket_->get_fd(), reinterpret_cast<struct sockaddr*>(&address), &len);
+	const SOCKET connected_fd = accept(socket_->get_fd(), reinterpret_cast<struct sockaddr*>(&address), &len);
 
 	if (connected_fd < 0) {
 		const int saved_errno = errno;
@@ -101,6 +98,6 @@ void Acceptor::on_new_connection() const
 
 void Acceptor::set_reuseaddr_option() const
 {
-	int re = SetSocketReuseAddress(socket_->get_fd());
+	SOCKET re = SetSocketReuseAddress(socket_->get_fd());
 }
 }}

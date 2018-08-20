@@ -54,7 +54,7 @@ class TcpServer
   SocketAddress server_address_;
 
  private:
-  std::map<int, TcpConnection_Ptr> tcp_connection_map_;
+  std::map<SOCKET, TcpConnection_Ptr> tcp_connection_map_;
   std::unique_ptr<Acceptor> acceptor_;
 
  private:

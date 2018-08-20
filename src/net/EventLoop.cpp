@@ -4,27 +4,11 @@
 
 #include <pump/net/EventLoop.h>
 
-#include <cassert>
-#include <vector>
-
-#include <pump/net/BackendAbstract.h>
-#include <pump/net/WatchAbstract.h>
 #include <pump/net/Acceptor.h>
-
-#ifdef PUMP_PLATFORM_GNU
-#include <pump/net/backend/Epoll.h>
-#include <pump/net/backend/Poll.h>
-#include <pump/net/backend/Select.h>
-#endif
-
-#ifdef PUMP_PLATFORM_MACX
-#include <pump/net/backend/Kqueue.h>
-#endif
-
-#ifdef PUMP_PLATFORM_WIN
-#include <pump/net/backend/Select.h>
-#endif
-
+#include <pump/net/BackendAbstract.h>
+#include <pump/Common.h>
+#include <pump/net/WatchAbstract.h>
+#include <pump/net/backend/Platform.h>
 
 /*
  * struct kevent {
@@ -54,85 +38,81 @@
 
 namespace pump {namespace net
 {
-    static const unsigned int MAX_SIZE = 500;
+thread_local EventLoop* t_eventLoop = nullptr;
 
-    thread_local EventLoop* t_eventLoop = nullptr;
+EventLoop::EventLoop()
+	: is_looping_(false),
+	backend_(),
+	threadId_(std::this_thread::get_id())
+{
+	if (t_eventLoop == nullptr) {
+		t_eventLoop = this;
+	}
 
-    EventLoop::EventLoop()
-        : is_looping_(false),
-          backend_(),
-          threadId_(std::this_thread::get_id())
-    {
-        if (t_eventLoop == nullptr)
-        {
-            t_eventLoop = this;
-        }
-
-#ifdef PUMP_PLATFORM_WIN
+#if PUMP_PLATFORM == PUMP_PLATFORM_GNU
         backend_.reset(new Select(this));
+#elif PUMP_PLATFORM == PUMP_PLATFORM_LINUX
+	BackendType g_default_backend_type = BackendType::kEpoll;
+        backend_.reset(new Epoll(this));
+#elif  PUMP_PLATFORM == PUMP_PLATFORM_MACX
+        backend_.reset(new KQueue(this));
+#elif  PUMP_PLATFORM == PUMP_PLATFORM_WIN
+	backend_.reset(new Select(this));
+#else
+	#error
 #endif
 
-#ifdef PUMP_PLATFORM_MACX
-  backend_.reset(new Kqueue(this));
-#endif
+	backend_->init_backend();
+}
 
-#ifdef PUMP_PLATFORM_GNU
-  backend_.reset(new Epoll(this));
-#endif
+EventLoop::~EventLoop()
+{
+	LOG_INFO << "Event loop terminate.";
+}
 
-        backend_->init_backend();
-    }
+void EventLoop::run()
+{
+	is_looping_ = true;
 
-    EventLoop::~EventLoop()
-    {
-    }
+	while (is_looping_) {
+		backend_->poll();
+	}
+	assert(!is_looping_);
+	is_looping_ = false;
+}
 
-    void EventLoop::run()
-    {
-        is_looping_ = true;
+void EventLoop::update_handle(const WatchAbstract& handle) const
+{
+	if (handle.get_index() < 0) {
+		add_handle(handle);
+	}
+	else {
+		modify_handle(handle);
+	}
+}
 
-        while (is_looping_)
-        {
-            backend_->poll();
-        }
-        assert(!is_looping_);
-        is_looping_ = false;
-    }
+void EventLoop::remove_handle(const WatchAbstract& handle) const
+{
+	delete_handle(handle);
+}
 
-    void EventLoop::update_handle(const WatchAbstract& handle) const
-    {
-        if (handle.get_index() < 0)
-        {
-            add_handle(handle);
-        }
-        else
-        {
-            modify_handle(handle);
-        }
-    }
+void EventLoop::add_handle(const WatchAbstract& handle) const
+{
+	backend_->add_interests(handle);
+}
 
-    void EventLoop::remove_handle(const WatchAbstract& handle) const
-    {
-        delete_handle(handle);
-    }
+void EventLoop::modify_handle(const WatchAbstract& handle) const
+{
+	backend_->modify_interests(handle);
+}
 
-    void EventLoop::add_handle(const WatchAbstract& handle) const
-    {
-        backend_->add_interests(handle);
-    }
+void EventLoop::delete_handle(const WatchAbstract& handle) const
+{
+	backend_->delete_interests(handle);
+}
 
-    void EventLoop::modify_handle(const WatchAbstract& handle) const
-    {
-        backend_->modify_interests(handle);
-    }
-
-    void EventLoop::delete_handle(const WatchAbstract& handle) const
-    {
-        backend_->delete_interests(handle);
-    }
-
-    bool EventLoop::isInInitThread()
-    {
-        return threadId_ == std::this_thread::get_id();
-    }
+bool EventLoop::isInInitThread()
+{
+	return threadId_ == std::this_thread::get_id();
+}
 }}

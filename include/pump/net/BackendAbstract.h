@@ -14,29 +14,6 @@
 
 namespace pump { namespace net
 {
-enum class Backend
-{
-	kKQueue,
-	kSelect,
-	kEpoll,
-};
-
-
-inline Backend GetBackendType()
-{
-#ifdef PUMP_PLATFORM_MACX
-			return Backend::kKQueue;
-#endif
-
-#ifdef PUMP_PLATFORM_GNU
-			return Backend::kEpoll;
-#endif
-
-#ifdef PUMP_PLATFORM_WIN
-	return Backend::kSelect;
-#endif
-}
-
 
 class WatchAbstract;
 

@@ -35,6 +35,6 @@ LogLine::~LogLine()
 
 void LogLine::finish()
 {
-	log_stream_ << '-' << base_name_ << ":" << line_ << "\n";
+    log_stream_ << '[' << base_name_ << ":" << line_ << "]\n";
 }
 }}

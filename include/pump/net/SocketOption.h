@@ -110,7 +110,7 @@ inline uint32_t SendN(SOCKET fd, const char* const buffer, size_t len, int flags
 {
 	uint32_t re = 0;
 	do {
-		const int r = ::send(fd, buffer + re, len - re, flags); /*send return value equal -1 or the num wrote */
+		const auto r = ::send(fd, buffer + re, len - re, flags); /*send return value equal -1 or the num wrote */
 		if (r > 0) {
 			re += r;
 			*o_errno = 0;

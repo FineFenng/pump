@@ -39,7 +39,7 @@ namespace pump
 
 			virtual void set_index(int index) const = 0;
 
-			virtual int get_fd() const = 0;
+			virtual SOCKET get_fd() const = 0;
 
 			virtual unsigned int get_events() const = 0;
 

@@ -9,14 +9,81 @@
 #ifdef WIN32 || _WIN64
 #define PUMP_PLATFORM_WIN      1
 #define PUMP_PLATFORM          PUMP_PLATFORM_WIN
-#elif defined(__GNUC__)
-    #define PUMP_PLATFORM_GNU      1
-    #define PUMP_PLATFORM          PUMP_PLATFORM_GNU
-#elif defined(__APPLE__ && (__GNUC__ || __CLANG__))
-    #define PUMP_PLATFORM_MACX     1
-    #define PUMP_PLATFORM_MACX      PUMP_PLATFORM_MACX
-#else
-    #error
+#endif
+
+#ifdef __GNUC__
+#define PUMP_PLATFORM_GNU      1
+#define PUMP_PLATFORM          PUMP_PLATFORM_GNU
+#endif
+
+#ifdef __GNUC__ && (__LINUX || __LINUX__)
+#define PUMP_PLATFORM_LINUX      1
+#define PUMP_PLATFORM          PUMP_PLATFORM_LINUX
+#endif
+
+#ifdef __APPLE__ && (__GNUC__ || __CLANG__a)
+
+#define PUMP_PLATFORM_MACX     1
+#define PUMP_PLATFORM      PUMP_PLATFORM_MACX
+#endif
+
+#ifndef PUMP_PLATFORM
+#error
+#endif
+#ifdef PUMP_PLATFORM_GNU
+    #include <sys/time.h>
+    #include <sys/types.h>
+    #include <unistd.h>
+    #include <errno.h>
+
+    #include <netinet/tcp.h>
+    #include <sys/socket.h>
+    #include <fcntl.h>
+    #include <netinet/in.h>
+    #include <netdb.h>
+    #include <arpa/inet.h>
+    #include <sys/un.h> //sockaddr_un
+    #include <sys/uio.h>
+    #include <sys/ioctl.h>
+	#include <sys/select.h>
+	#include <sys/poll.h>
+#endif
+
+
+#ifdef PUMP_PLATFORM_LIUNX
+    #include <sys/time.h>
+    #include <sys/types.h>
+    #include <unistd.h>
+    #include <errno.h>
+    #include <netinet/tcp.h>
+    #include <sys/socket.h>
+    #include <fcntl.h>
+    #include <netinet/in.h>
+    #include <netdb.h>
+    #include <arpa/inet.h>
+    #include <sys/un.h> //sockaddr_un
+    #include <sys/uio.h>
+    #include <sys/ioctl.h>
+    #include <sys/epoll.h>
+#endif
+
+
+#ifdef PUMP_PLATFORM_MACX
+    #include <sys/time.h>
+    #include <sys/types.h>
+    #include <unistd.h>
+    #include <errno.h>
+    #include <netinet/tcp.h>
+    #include <sys/socket.h>
+    #include <fcntl.h>
+    #include <netinet/in.h>
+    #include <netdb.h>
+    #include <arpa/inet.h>
+    #include <sys/un.h> //sockaddr_un
+    #include <sys/uio.h>
+ 	#include <sys/select.h>
+	#include <sys/poll.h>
+    #include <sys/event.h>
 #endif
 
 #ifdef PUMP_PLATFORM_WIN
@@ -33,25 +100,5 @@
 #pragma comment(lib,"ws2_32.lib")
 #pragma comment(lib,"mswsock.lib")
 #endif
-
-
-#ifdef PUMP_PLATFORM_GNU
-    #include <sys/time.h>
-    #include <sys/types.h>
-    #include <unistd.h>
-    #include <errno.h>
-
-    #include <netinet/tcp.h>
-    #include <sys/socket.h>
-    #include <fcntl.h>
-    #include <netinet/in.h>
-    #include <netdb.h>
-    #include <arpa/inet.h>
-    #include <sys/un.h> //sockaddr_un
-    #include <sys/uio.h>
-    #include <sys/ioctl.h>
-    #include <sys/epoll.h>
-#endif
-
 
 #endif //PUMP_CONFIG_PLATFORM_H_

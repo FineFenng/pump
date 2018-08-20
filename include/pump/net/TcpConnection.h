@@ -38,8 +38,7 @@ public:
 	TcpConnection(EventLoop* loop, int fd,
 				const SocketAddress& local_address, const SocketAddress& peer_address);
 
-	TcpConnection(const TcpConnection&) = delete;
-	TcpConnection& operator=(const TcpConnection&) = delete;
+    PUMP_DECLARE_NONCOPYABLE(TcpConnection);
 
 	TcpConnection(TcpConnection&&) = delete;
 	TcpConnection& operator=(TcpConnection&&) = delete;
@@ -86,7 +85,7 @@ public:
 
 	void close_connection();
 
-	int get_fd() const { return socket_->get_fd(); }
+	SOCKET get_fd() const { return socket_->get_fd(); }
 
 private:
 	EventLoop* loop_;

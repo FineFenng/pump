@@ -97,8 +97,8 @@ template <typename T, typename DesPtr>
 inline uint32_t Write_xx_impl(const T& val, DesPtr* des_addr)
 {
 	uint32_t wrote_count = 0;
-	for (size_t i = sizeof(T) - 1; i >= 0; --i) {
-		*(des_addr + wrote_count) = (val >> (i * 8) && 0xff);
+	for (int i = sizeof(val) - 1; i >= 0; --i) {
+		*(des_addr + wrote_count) = (val >> (i * 8) & 0xff);
         wrote_count++;
 
 	}

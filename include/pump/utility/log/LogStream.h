@@ -111,6 +111,13 @@ public:
 	self& operator<<(double val);
 
 	self& operator<<(char ch);
+
+	template<unsigned int N>
+	self& operator<<(const char (&str)[N])
+	{
+		return operator<<(str);
+	}
+
 	self& operator<<(const char* str);
 	self& operator<<(const std::string& str);
 	self& operator<<(const SourceFile& source_file);

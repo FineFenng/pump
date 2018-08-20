@@ -5,6 +5,7 @@
 namespace pump
 {
     typedef uint8_t BYTE_T;
+    typedef int SOCKET;
 }
 
 #endif

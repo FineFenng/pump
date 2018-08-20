@@ -10,7 +10,7 @@
 
 namespace pump { namespace net
 {
-IO_Watcher::IO_Watcher(class EventLoop* loop, int fd)
+IO_Watcher::IO_Watcher(class EventLoop* loop, SOCKET fd)
 	: loop_(loop), fd_(fd), index_(-1), events_(0)
 
 {

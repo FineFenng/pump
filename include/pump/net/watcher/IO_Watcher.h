@@ -25,7 +25,7 @@ class TcpConnection;
 class IO_Watcher : public WatchAbstract
 {
 public:
-    IO_Watcher(EventLoop* loop, int fd);
+    IO_Watcher(EventLoop* loop, SOCKET fd);
 
     void handle_callback(const HandleEvent& handle_event) const override;
 
@@ -37,7 +37,7 @@ public:
 
     void set_events(unsigned int events) override { events_ = events; }
 
-    int get_fd() const override { return fd_; } 
+    SOCKET get_fd() const override { return fd_; } 
 
     bool is_readable() const override { return static_cast<bool>(events_ & IO_Flag::kIOReadable); }
 
@@ -89,7 +89,7 @@ public:
 
 private:
     EventLoop* loop_;
-    int fd_;
+    SOCKET fd_;
     mutable int index_;
     unsigned int events_;
 

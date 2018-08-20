@@ -31,19 +31,24 @@ void Select::poll()
 										&readable_list_, &writable_list_, nullptr, nullptr);
 		const int saved_errno = errno;
 		if (ready_event_count > 0) {
-			for (size_t i = 0; i < event_list_.size() && ready_event_count--; ++i) {
+            LOG_TRACE << "Current ready sockef fd number: " << ready_event_count;
+			for (size_t i = 0; i < event_list_.size() && ready_event_count; ++i) {
 				unsigned int revents = 0;
-				const int fd = event_list_[i].get().get_fd();
+				const SOCKET fd = event_list_[i].get().get_fd();
 				if (FD_ISSET(fd, &readable_list_)) {
 					revents |= static_cast<unsigned int>(IO_Flag::kIOReadable);
+                    LOG_TRACE << "Socket fd:" << fd << " has readable event happen.";
 				}
 				if (FD_ISSET(fd, &writable_list_)) {
 					revents |= static_cast<unsigned int>(IO_Flag::kIOWritable);
+                    LOG_TRACE << "Socket fd:" << fd << " has writable event happen.";
 				}
 				if (revents > 0) {
 					event_list_[i].get().handle_callback(revents);
+                    --ready_event_count;
 				}
 			}
+            init_backend();
 		}
 		else if (ready_event_count == 0) {
 			LOG_DEBUG << "Select call timeout";
@@ -80,6 +85,8 @@ void Select::add_interests(const WatchAbstract& handle)
 			FD_SET(fd, &writable_list_);
 		}
 		event_list_.push_back(std::ref(handle));
+        handle.set_index(event_list_.size() - 1);
+        LOG_TRACE << "Interest new socket fd: " << fd;
 	}
 }
 

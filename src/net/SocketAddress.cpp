@@ -8,7 +8,6 @@
 #include <cstring>
 
 
-
 /*  通用套接字结构
  *  struct sockaddr {
  *     uint8_t       sa_len;
@@ -31,45 +30,41 @@
  *  }
  */
 
-namespace pump
+namespace pump {namespace net
 {
-namespace net
+SocketAddress::SocketAddress(const char* ip, unsigned short port)
 {
-
-SocketAddress::SocketAddress(const char *ip, unsigned short port)
-{
-  socket_address_.sin_family = AF_INET;
-  ::inet_pton(AF_INET, ip, &socket_address_.sin_addr);
-  socket_address_.sin_port = htons(port);
+	socket_address_.sin_family = AF_INET;
+	::inet_pton(AF_INET, ip, &socket_address_.sin_addr);
+	socket_address_.sin_port = htons(port);
 }
 
 SocketAddress::SocketAddress(unsigned short port)
 {
-  socket_address_.sin_family = AF_INET;
-  socket_address_.sin_addr.s_addr = htonl(INADDR_ANY);
-  socket_address_.sin_port = htons(port);
+	socket_address_.sin_family = AF_INET;
+	socket_address_.sin_addr.s_addr = htonl(INADDR_ANY);
+	socket_address_.sin_port = htons(port);
 }
 
 SocketAddress::SocketAddress(struct sockaddr_in address)
 	: socket_address_(address)
-{}
-
-const sockaddr_in *SocketAddress::getSocketAddress() const
 {
-  return &socket_address_;
+}
+
+const sockaddr_in* SocketAddress::getSocketAddress() const
+{
+	return &socket_address_;
 }
 
 std::string SocketAddress::getSocketAddressString() const
 {
-  char address_info[64] = {0};
+	char address_info[64] = {0};
 
-  ::inet_ntop(AF_INET, &socket_address_.sin_addr, address_info, 64);
-  uint16_t host_port = ntohs(socket_address_.sin_port);
-  size_t ip_len = strlen(address_info);
-  snprintf(address_info + ip_len, 64 - ip_len, ":%d", host_port);
+	::inet_ntop(AF_INET, &socket_address_.sin_addr, address_info, 64);
+	uint16_t host_port = ntohs(socket_address_.sin_port);
+	size_t ip_len = strlen(address_info);
+	snprintf(address_info + ip_len, 64 - ip_len, ":%d", host_port);
 
-  return std::string(address_info, address_info + strlen(address_info));
+	return std::string(address_info, address_info + strlen(address_info));
 }
-}
-}
-
+}}

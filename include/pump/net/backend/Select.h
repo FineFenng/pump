@@ -11,6 +11,8 @@
 
 namespace pump {namespace net
 {
+class EventLoop;
+
 class Select : public BackendAbstract
 {
 public:

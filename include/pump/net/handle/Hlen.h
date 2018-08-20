@@ -6,6 +6,7 @@
 #include <pump/net/TcpServer.h>
 #include <pump/Packet.h>
 
+
 namespace pump { namespace net
 {
 template <typename HeaderType>
@@ -24,11 +25,13 @@ public:
 	explicit Hlen(TcpServer* server)
 		: state_(parse_state::k_read_len), server_(server)
 	{
-		server_->set_message_readable_callback(std::bind(&Hlen::on_message, this, std::placeholders::_1, std::placeholders::_2));
+		server_->set_message_readable_callback(std::bind(&Hlen::on_message, this, std::placeholders::_1,
+														std::placeholders::_2));
 	}
 
 PUMP_DECLARE_NONCOPYABLE(Hlen);
 
+public:
 	void on_message(const TcpConnection_Ptr& tcp_connection_ptr, Buffer* buffer)
 	{
 		bool is_exit_loop = false;
@@ -49,12 +52,14 @@ PUMP_DECLARE_NONCOPYABLE(Hlen);
 				case parse_state::k_read_content:
 					if (buffer->get_readable_bytes() >= content_size_) {
 						//const std::string content = decode_content(buffer->get_readable_address(), content_size_);
-                        package_.read(content_size_, buffer->get_readable_address());
+                        recv_packet_.write(buffer->get_readable_address(), content_size_);
 
 						if (complete_package_callback_) {
-							complete_package_callback_(tcp_connection_ptr, &package_);
+							complete_package_callback_(tcp_connection_ptr, &recv_packet_);
 						}
 						buffer->retrieve(content_size_);
+                        state_ = parse_state::k_read_len;
+                        recv_packet_.reset();
 					}
 					else {
 						is_exit_loop = true;
@@ -65,28 +70,27 @@ PUMP_DECLARE_NONCOPYABLE(Hlen);
 		} while (!is_exit_loop);
 	}
 
-	static void send(const TcpConnection_Ptr& tcp_connection_ptr, const std::string& content)
+	void send(const TcpConnection_Ptr& tcp_connection_ptr, const BYTE_T* content, size_t len)
 	{
-		tcp_connection_ptr->send(encode_content(content));
+        send_packet_.reset();
+        encode_content(content, len);
+        tcp_connection_ptr->send(reinterpret_cast<const char*>(send_packet_.begin()), send_packet_.get_len());
 	}
 
-	static void set_complete_package_callback(const CompletePacketCallback& cb) { complete_package_callback_ = cb; }
+	 void set_complete_package_callback(const CompletePacketCallback& cb) { complete_package_callback_ = cb; }
 
 private :
-	static std::string encode_content(const std::string& content)
+	void encode_content(const BYTE_T* content, size_t len)
 	{
-		const int head_size = sizeof(HeaderType);
-		std::string re;
-		re.resize(head_size);
-		pump::bigendian::Write_xx_impl(content.size(), re.c_str());
-		re += content;
-		return re;
+        const HeaderType head_size = len;
+        send_packet_.write_left(head_size);
+        send_packet_.write(content, len);
 	}
 
 
-	static std::string decode_content(const char* message, size_t len)
+	void decode_content(const char* message, size_t len)
 	{
-		return std::string(message + sizeof(HeaderType), len);
+		
 	}
 
 private:
@@ -98,18 +102,14 @@ private:
 
 	parse_state state_;
 	HeaderType content_size_;
-	Packet package_;
-
+	Packet recv_packet_;
+    Packet send_packet_;
 private
 :
-	static CompletePacketCallback complete_package_callback_;
+	CompletePacketCallback complete_package_callback_;
 	TcpServer* server_;
 };
 
-
-template <typename HeaderType>
-typename Hlen<HeaderType>::CompletePacketCallback Hlen<HeaderType>::
-	complete_package_callback_ = nullptr;
 }}
 
 
