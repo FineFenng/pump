@@ -82,7 +82,15 @@ add_library(pump_net  STATIC
 					 ${NET_SERVER_HEADERS}
 					 )
 
-target_link_libraries(pump_net pump_utiliy)
+set(3rd_DIR "${CMAKE_SOURCE_DIR}/3rd")
+
+add_library(node_http_parser STATIC
+				${3rd_DIR}/http-parser/http_parser.c 
+				${3rd_DIR}/http-parser/http_parser.h
+				)
+
+
+target_link_libraries(pump_net pump_utiliy node_http_parser)
 
 target_include_directories(pump_net
         PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
@@ -91,8 +99,8 @@ target_include_directories(pump_utiliy
         PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 
-add_executable(SelectTest test/SelectTest.cpp)
-target_link_libraries(SelectTest pump_net)
+add_executable(EchoTest test/EchoTest.cpp)
+target_link_libraries(EchoTest pump_net)
 
 
 
