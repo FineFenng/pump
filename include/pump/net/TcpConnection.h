@@ -21,9 +21,9 @@ class EventLoop;
 class TcpConnection : public std::enable_shared_from_this<TcpConnection>
 {
 public:
-	PUMP_DECLAE_CALLBACK_FUNCTION(void, const std::shared_ptr<TcpConnection>&, Buffer*) MessageReadableCallback;
-	PUMP_DECLAE_CALLBACK_FUNCTION(void, const std::shared_ptr<TcpConnection>&, int, Buffer*) MessageWritableCallback;
-	PUMP_DECLAE_CALLBACK_FUNCTION(void, const std::shared_ptr<TcpConnection>&) ConnectionCloseCallback;
+	PUMP_DECLARE_CALLBACK_FUNCTION(void, const std::shared_ptr<TcpConnection>&, Buffer*) MessageReadableCallback;
+	PUMP_DECLARE_CALLBACK_FUNCTION(void, const std::shared_ptr<TcpConnection>&, int, Buffer*) MessageWritableCallback;
+	PUMP_DECLARE_CALLBACK_FUNCTION(void, const std::shared_ptr<TcpConnection>&) ConnectionCloseCallback;
 
 public:
 	enum ConnectionStyle
@@ -37,15 +37,14 @@ public:
 	TcpConnection(EventLoop* loop, int fd,
 				const SocketAddress& local_address, const SocketAddress& peer_address);
 
-PUMP_DECLARE_NONCOPYABLE(TcpConnection)
-PUMP_DECLARE_DEFAULTMOVABLE(TcpConnection)
+PUMP_DECLARE_NON_COPYABLE(TcpConnection)
+PUMP_DECLARE_DEFAULT_MOVABLE(TcpConnection)
 
 	~TcpConnection();
 
 	void send(const char* data, size_t len);
 
 	void send(const std::string& message);
-
 
 	void on_readable();
 

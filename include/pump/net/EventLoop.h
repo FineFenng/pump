@@ -24,14 +24,14 @@ class IO_Watcher;
 class EventLoop
 {
 public:
-	PUMP_DECLAE_CALLBACK_FUNCTION(void) Task;
+	PUMP_DECLARE_CALLBACK_FUNCTION(void) Task;
 public:
 	EventLoop();
 
 	~EventLoop();
 
-PUMP_DECLARE_NONCOPYABLE(EventLoop)
-PUMP_DECLARE_NONMOVABLE(EventLoop)
+PUMP_DECLARE_NON_COPYABLE(EventLoop)
+PUMP_DECLARE_NON_MOVABLE(EventLoop)
 
 	void run();
 

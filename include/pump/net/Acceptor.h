@@ -2,8 +2,8 @@
 // Created by finefenng on 2018/7/5.
 //
 
-#ifndef QPSTEST_ACCEPTOR_H
-#define QPSTEST_ACCEPTOR_H
+#ifndef PUMP_NET_ACCEPTOR_H_
+#define PUMP_NET_ACCEPTOR_H_
 
 #include <functional>
 
@@ -25,7 +25,7 @@ class TcpConnection;
 class Acceptor
 {
 public:
-	PUMP_DECLAE_CALLBACK_FUNCTION(void, int, const SocketAddress&) NewConnectionCallback;
+	PUMP_DECLARE_CALLBACK_FUNCTION(void, int, const SocketAddress&) NewConnectionCallback;
 
 public:
 	Acceptor(EventLoop* event_loop, struct sockaddr_in server_address);
@@ -34,9 +34,9 @@ public:
 
 	~Acceptor();
 
-PUMP_DECLARE_NONCOPYABLE(Acceptor)
+PUMP_DECLARE_NON_COPYABLE(Acceptor)
 
-PUMP_DECLARE_DEFAULTMOVABLE(Acceptor)
+PUMP_DECLARE_DEFAULT_MOVABLE(Acceptor)
 
 	bool listen();
 

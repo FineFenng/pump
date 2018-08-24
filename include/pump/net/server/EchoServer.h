@@ -13,7 +13,7 @@ class EchoServer
 {
 public:
 
-	PUMP_DECLAE_CALLBACK_FUNCTION(void, TcpConnection_Ptr&, const std::string&) CompletePackageCallback;
+	PUMP_DECLARE_CALLBACK_FUNCTION(void, TcpConnection_Ptr&, const std::string&) CompletePackageCallback;
 
 public:
 	EchoServer(EventLoop* loop, SocketAddress socket_address)

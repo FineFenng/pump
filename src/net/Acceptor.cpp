@@ -35,7 +35,7 @@ Acceptor::~Acceptor()
 
 bool Acceptor::listen()
 {
-	assert(is_listening_ == false);
+	assert(!is_listening_);
 	const SOCKET fd = socket_.get_fd();
 	if (SocketBind(fd, server_address_.getSocketAddress()) != pump::kSuccess) {
 		LOG_ERROR << " Server bind address failed.";

@@ -94,7 +94,7 @@ inline int SocketGetLastErrno(SOCKET fd)
 {
 #ifdef PUMP_PLATFORM_WIN
 	char optval;
-#elif
+#else
 	int optval;
 #endif
 	auto optlen = static_cast<socklen_t>(sizeof optval);
@@ -142,7 +142,7 @@ inline int32_t SendN(SOCKET fd, const char* const buffer, size_t len, int flags,
 #ifdef PUMP_PLATFORM_WIN
 		const int32_t send_count = ::send(fd, buffer + re, static_cast<int>(len) - re, flags);
 #else
-		const int32_t send_count = ::send_in_bind_thread(fd, buffer + re, len - re, flags);
+		const int32_t send_count = ::send(fd, buffer + re, len - re, flags);
 #endif
 		/*send_in_bind_thread return value equal -1 or the num wrote */
 		if (send_count > 0) {
@@ -181,7 +181,7 @@ inline int32_t Send(SOCKET fd, const char* const buffer, size_t len, int flags, 
 #ifdef PUMP_PLATFORM_WIN
 		const int32_t send_count = ::send(fd, buffer + re, static_cast<int>(len) - re, flags);
 #else
-		const int32_t send_count = ::send_in_bind_thread(fd, buffer + re, len - re, flags);
+		const int32_t send_count = ::send(fd, buffer + re, len - re, flags);
 #endif
 
 		if (send_count > 0) {

@@ -2,8 +2,8 @@
 // Created by fenng on 18-8-3.
 //
 
-#ifndef QPSTEST_BUFFER_H
-#define QPSTEST_BUFFER_H
+#ifndef PUMP_NET_BUFFER_H_
+#define PUMP_NET_BUFFER_H_
 
 
 /*     Netty Buffer Design

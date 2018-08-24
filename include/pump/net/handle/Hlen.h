@@ -17,9 +17,9 @@ public:
 	//typedef std::function<void(const TcpConnection_Ptr&, Buffer*)> BufferWritableCallback;
 	//typedef std::function<void(const TcpConnection_Ptr&, const std::string&)> CompletePacketCallback;
 
-	PUMP_DECLAE_CALLBACK_FUNCTION(void, const TcpConnection_Ptr&, Buffer*) BufferReadableCallback;
-	PUMP_DECLAE_CALLBACK_FUNCTION(void, const TcpConnection_Ptr&, Buffer*) BufferWritableCallback;
-	PUMP_DECLAE_CALLBACK_FUNCTION(void, const TcpConnection_Ptr&, Packet*) CompletePacketCallback;
+	PUMP_DECLARE_CALLBACK_FUNCTION(void, const TcpConnection_Ptr&, Buffer*) BufferReadableCallback;
+	PUMP_DECLARE_CALLBACK_FUNCTION(void, const TcpConnection_Ptr&, Buffer*) BufferWritableCallback;
+	PUMP_DECLARE_CALLBACK_FUNCTION(void, const TcpConnection_Ptr&, Packet*) CompletePacketCallback;
 
 public:
 	explicit Hlen(TcpServer* server)
@@ -30,7 +30,7 @@ public:
 														std::placeholders::_2));
 	}
 
-PUMP_DECLARE_NONCOPYABLE(Hlen)
+PUMP_DECLARE_NON_COPYABLE(Hlen)
 
 public:
 	void on_message(const TcpConnection_Ptr& tcp_connection_ptr, Buffer* buffer)

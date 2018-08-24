@@ -7,10 +7,6 @@
 #include <sstream>
 
 #include <pump/net/Acceptor.h>
-#include <pump/net/PollAbstract.h>
-#include <pump/Common.h>
-#include <pump/net/watcher/IO_Watcher.h>
-#include <pump/net/poll/Platform.h>
 
 #include <pump/utility/thread/ThreadOption.h>
 
@@ -40,8 +36,8 @@
  *
  */
 
-namespace pump { namespace net { namespace
-{
+namespace pump { namespace net {
+namespace {
 /*
 uint64_t GetCurrentThreadId()
 {
@@ -58,12 +54,12 @@ thread_local uint64_t t_thread_id = pump::utility::GetCurrentThreadId();
 }
 
 EventLoop::EventLoop()
-	: thread_id_(t_thread_id)
-	, is_looping_(false)
-	, loop_state_(LoopState::kNormaTasklExecute)
-	, w_wakeup_fd_(-1)
-	, r_wakeup_fd_(-1)
-	, poll_type_(PollType::kDefault)
+	: thread_id_(t_thread_id),
+	  is_looping_(false),
+	  loop_state_(LoopState::kNormaTasklExecute),
+	  w_wakeup_fd_(-1),
+	  r_wakeup_fd_(-1),
+	  poll_type_(PollType::kDefault)
 {
 	if (t_event_loop == nullptr) {
 		t_event_loop = this;
@@ -109,12 +105,12 @@ void EventLoop::run()
 				loop_state_ = LoopState::kIOPolling;
 			}
 			case kIOPolling: {
-				const int wait_time = calc_poll_block_time();
-				struct timeval temp_tv = {0, 0};
+				const int      wait_time = calc_poll_block_time();
+				struct timeval temp_tv   = {0, 0};
 				struct timeval* tv = nullptr;
 
 				if (wait_time == 0) {
-					temp_tv.tv_sec = 0;
+					temp_tv.tv_sec  = 0;
 					temp_tv.tv_usec = 0;
 					tv = &temp_tv;
 				}
@@ -134,7 +130,7 @@ void EventLoop::run()
 				loop_state_ = LoopState::kDelayTaskExecute;
 			}
 			case kDelayTaskExecute: {
-				for(auto& i : delay_task_list_) {
+				for (auto& i : delay_task_list_) {
 					i();
 				}
 				loop_state_ = LoopState::kNormaTasklExecute;
@@ -177,7 +173,7 @@ void EventLoop::wakeup() const
 {
 	char val[5] = {0};
 	//TODO
-	int saved_errno;
+	int  saved_errno;
 	Send(w_wakeup_fd_, val, sizeof(val), 0, &saved_errno);
 }
 
@@ -186,7 +182,6 @@ void EventLoop::init()
 	init_backend();
 	init_notify_watcher();
 }
-
 
 bool EventLoop::is_in_bind_thread() const
 {
@@ -213,17 +208,17 @@ int EventLoop::calc_poll_block_time() const
 void EventLoop::init_backend()
 {
 #if PUMP_PLATFORM == PUMP_PLATFORM_GNU
-			poll_.reset(new Select(this));
-			poll_type_ = PollType::kSelect;
-#elif PUMP_PLATFORM == PUMP_PLATFORM_LINUX
-			poll_.reset(new Epoll(this));
-			poll_type_ = PollType::kEpoll;
-#elif  PUMP_PLATFORM == PUMP_PLATFORM_MACX
-			poll_.reset(new KQueue(this));
-			poll_type_ = PollType::kKQueue;
-#elif  PUMP_PLATFORM == PUMP_PLATFORM_WIN
 	poll_.reset(new Select(this));
 	poll_type_ = PollType::kSelect;
+#elif PUMP_PLATFORM == PUMP_PLATFORM_LINUX
+	poll_.reset(new Epoll(this));
+	poll_type_ = PollType::kEpoll;
+#elif  PUMP_PLATFORM == PUMP_PLATFORM_MACX
+	poll_.reset(new KQueue(this));
+	poll_type_ = PollType::kKQueue;
+#elif  PUMP_PLATFORM == PUMP_PLATFORM_WIN
+poll_.reset(new Select(this));
+poll_type_ = PollType::kSelect;
 #else
 #error
 #endif
