@@ -21,13 +21,13 @@ namespace pump {namespace net
 {
 TcpConnection::TcpConnection(EventLoop* loop, int fd, const SocketAddress& local_address,
 							const SocketAddress& peer_address)
-	: loop_(loop),
-	socket_(new Socket(fd)),
-	local_address_(local_address),
-	peer_address_(peer_address),
-	handle_(loop, socket_->get_fd()),
-	fd_(fd),
-	state_(kDisconnected)
+	: loop_(loop)
+	, socket_(new Socket(fd))
+	, local_address_(local_address)
+	, peer_address_(peer_address)
+	, handle_(loop, socket_->get_fd())
+	, fd_(fd)
+	, state_(kDisconnected)
 
 {
 	handle_.enable_readable();
@@ -54,11 +54,12 @@ void TcpConnection::on_readable()
 		readable_callback_(shared_from_this(), &input_buffer_);
 	}
 	else if (byte_count < 0 && (saved_errno != EWOULDBLOCK || saved_errno != EAGAIN)) {
-		//TODO
-	}
-	else {
+		
+
+	} else {
 		on_erroneous();
 	}
+
 }
 
 void TcpConnection::on_writable()

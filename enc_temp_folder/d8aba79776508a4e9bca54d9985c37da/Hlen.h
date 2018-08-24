@@ -83,7 +83,7 @@ public:
 private :
 	void encode_content(const BYTE_T* content, size_t len)
 	{
-		const auto head_size = static_cast<HeaderType>(len);
+		const HeaderType head_size = len;
 		send_packet_.write_left(head_size);
 		send_packet_.write(content, len);
 	}

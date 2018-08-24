@@ -4,9 +4,10 @@
 #include <string>
 #include <vector>
 
+#include <pump/utility/ThreadOption.h>
+
 namespace pump { namespace utility
 {
-
 static std::vector<std::string> LogLevelMap = {"[TRACE]", "[DEBUG]", "[INFO]", "[WARN]", "[ERROR]", "[FATAL]"};
 
 LogLine::OutputFunction LogLine::g_output_function_ = [](const char* message, size_t len)
@@ -21,9 +22,11 @@ LogLevel LogLine::g_level_ = LogLevel::PUMP_DEBUG;
 
 
 LogLine::LogLine(SourceFile source_file, int line, LogLevel level)
-	: base_name_(source_file), line_(line), level_(level)
+	: base_name_(source_file)
+	, line_(line)
+	, level_(level)
 {
-	log_stream_ << LogLevelMap[level];
+	log_stream_ << LogLevelMap[level] << '[' << GetCurrentThreadId() << ']';
 }
 
 LogLine::~LogLine()
@@ -35,6 +38,6 @@ LogLine::~LogLine()
 
 void LogLine::finish()
 {
-    log_stream_ << '[' << base_name_ << ":" << line_ << "]\n";
+	log_stream_ << '[' << base_name_ << ":" << line_ << "]\n";
 }
 }}

@@ -45,6 +45,10 @@ LogStream::self& LogStream::operator<<(long val)
     format_integet(val);
     return *this;
 }
+LogStream::self& LogStream::operator<<(void* val)
+{
+	return operator<<(reinterpret_cast<unsigned long long>(val));
+}
 
 LogStream::self& LogStream::operator<<(unsigned long long val)
 {

@@ -6,7 +6,8 @@
 #ifndef PUMP_CONFIG_PLATFORM_H_
 #define PUMP_CONFIG_PLATFORM_H_
 
-#ifdef WIN32 || _WIN64
+
+#if defined(WIN32) || defined(_WIN64)
 #define PUMP_PLATFORM_WIN      1
 #define PUMP_PLATFORM          PUMP_PLATFORM_WIN
 #endif
@@ -16,12 +17,12 @@
 #define PUMP_PLATFORM          PUMP_PLATFORM_GNU
 #endif
 
-#ifdef __GNUC__ && (__LINUX || __LINUX__)
+#if defined(__GNUC__) && defined(__LINUX) || defined(__LINUX__) 
 #define PUMP_PLATFORM_LINUX      1
 #define PUMP_PLATFORM          PUMP_PLATFORM_LINUX
 #endif
 
-#ifdef __APPLE__ && (__GNUC__ || __CLANG__a)
+#if defined(__APPLE__) && defined(__GNUC__) || defined(__CLANG__)
 
 #define PUMP_PLATFORM_MACX     1
 #define PUMP_PLATFORM      PUMP_PLATFORM_MACX

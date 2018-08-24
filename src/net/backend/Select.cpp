@@ -7,58 +7,55 @@
 #include <algorithm>
 #include <utility>
 
-#include <pump/net/WatchAbstract.h>
+#include <pump/net/WatcherAbstract.h>
 #include <pump/net/watcher/IO_Watcher.h>
 #include <pump/net/backend/Select.h>
 #include <pump/utility/log/Logger.h>
 
 namespace pump {namespace net
 {
-void Select::poll()
+void Select::poll(const timeval* tv, TaskList* io_task_list)
 {
-	while (is_quit_) {
-		for (size_t i = 0; i < event_list_.size(); ++i) {
+	for (size_t i = 0; i < event_list_.size(); ++i) {
+		const SOCKET fd = event_list_[i].get().get_fd();
+		const unsigned int events = event_list_[i].get().get_events();
+		if (events & static_cast<unsigned int>(IO_Flag::kIOReadable)) {
+			FD_SET(fd, &readable_list_);
+		}
+		if (events & static_cast<unsigned int>(IO_Flag::kIOWritable)) {
+			FD_SET(fd, &writable_list_);
+		}
+	}
+	int ready_event_count = select(max_fd_ + 1, &readable_list_, &writable_list_, nullptr, nullptr);
+	const int saved_errno = errno;
+	if (ready_event_count > 0) {
+		LOG_TRACE << "Current ready sockef fd number: " << ready_event_count;
+		for (size_t i = 0; i < event_list_.size() && ready_event_count; ++i) {
+			unsigned int revents = 0;
 			const SOCKET fd = event_list_[i].get().get_fd();
-			const unsigned int events = event_list_[i].get().get_events();
-			if (events & static_cast<unsigned int>(IO_Flag::kIOReadable)) {
-				FD_SET(fd, &readable_list_);
+			if (FD_ISSET(fd, &readable_list_)) {
+				revents |= static_cast<unsigned int>(IO_Flag::kIOReadable);
+				LOG_TRACE << "Socket fd:" << fd << " has readable event happen.";
 			}
-			if (events & static_cast<unsigned int>(IO_Flag::kIOWritable)) {
-				FD_SET(fd, &writable_list_);
+			if (FD_ISSET(fd, &writable_list_)) {
+				revents |= static_cast<unsigned int>(IO_Flag::kIOWritable);
+				LOG_TRACE << "Socket fd:" << fd << " has writable event happen.";
 			}
-		}
-		int ready_event_count = select(max_fd_ + 1,
-										&readable_list_, &writable_list_, nullptr, nullptr);
-		const int saved_errno = errno;
-		if (ready_event_count > 0) {
-            LOG_TRACE << "Current ready sockef fd number: " << ready_event_count;
-			for (size_t i = 0; i < event_list_.size() && ready_event_count; ++i) {
-				unsigned int revents = 0;
-				const SOCKET fd = event_list_[i].get().get_fd();
-				if (FD_ISSET(fd, &readable_list_)) {
-					revents |= static_cast<unsigned int>(IO_Flag::kIOReadable);
-                    LOG_TRACE << "Socket fd:" << fd << " has readable event happen.";
-				}
-				if (FD_ISSET(fd, &writable_list_)) {
-					revents |= static_cast<unsigned int>(IO_Flag::kIOWritable);
-                    LOG_TRACE << "Socket fd:" << fd << " has writable event happen.";
-				}
-				if (revents > 0) {
-					event_list_[i].get().handle_callback(revents);
-                    --ready_event_count;
-				}
-			}
-            init_backend();
-		}
-		else if (ready_event_count == 0) {
-			LOG_DEBUG << "Select call timeout";
-		}
-		else {
-			if (saved_errno == EINTR) {
-				LOG_WARN << "Select has been interrupt by SIGNAL INTERRUPT";
+			if (revents > 0) {
+				//io_task_list->push_back(std::bind(&WatcherAbstract::handle_callback, event_list_[i].get(), revents));
+				io_task_list->push_back([=]() { event_list_[i].get().handle_callback(revents); });
+				--ready_event_count;
 			}
 		}
-
+		init_backend();
+	}
+	else if (ready_event_count == 0) {
+		LOG_DEBUG << "Select call timeout";
+	}
+	else {
+		if (saved_errno == EINTR) {
+			LOG_WARN << "Select has been interrupt by SIGNAL INTERRUPT";
+		}
 	}
 }
 
@@ -69,7 +66,7 @@ void Select::init_backend()
 }
 
 
-void Select::add_interests(const WatchAbstract& handle)
+void Select::add_interests(const WatcherAbstract& handle)
 {
 	if (handle.get_index() < 0) {
 		const SOCKET fd = handle.get_fd();
@@ -85,12 +82,12 @@ void Select::add_interests(const WatchAbstract& handle)
 			FD_SET(fd, &writable_list_);
 		}
 		event_list_.push_back(std::ref(handle));
-        handle.set_index(event_list_.size() - 1);
-        LOG_TRACE << "Interest new socket fd: " << fd;
+		handle.set_index(event_list_.size() - 1);
+		LOG_TRACE << "Interest new socket fd: " << fd;
 	}
 }
 
-void Select::modify_interests(const WatchAbstract& handle)
+void Select::modify_interests(const WatcherAbstract& handle)
 {
 	const int index = handle.get_index();
 	if (index >= 0) {
@@ -104,13 +101,13 @@ void Select::modify_interests(const WatchAbstract& handle)
 	}
 }
 
-void Select::delete_interests(const WatchAbstract& handle)
+void Select::delete_interests(const WatcherAbstract& handle)
 {
 	const int index = handle.get_index();
 	if (index >= 0) {
-		std::reference_wrapper<const WatchAbstract>& handle_ref = event_list_[index];
+		std::reference_wrapper<const WatcherAbstract>& handle_ref = event_list_[index];
 		if (index != event_list_.size() - 1) {
-			std::reference_wrapper<const WatchAbstract>& back_handle_ref = event_list_.back();
+			std::reference_wrapper<const WatcherAbstract>& back_handle_ref = event_list_.back();
 			back_handle_ref.get().set_index(index);
 			std::swap(handle_ref, back_handle_ref);
 		}

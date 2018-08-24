@@ -49,7 +49,7 @@ PUMP_DECLARE_DEFAULTMOVABLE(TcpConnection)
 	void send(const char* data, size_t len);
 	void send(const std::string& message);
 
-	void on_erroneous() const
+	void on_erroneous()
 	{
 		const int saved_errno = GetSocketErrno(fd_);
 		LOG_ERROR << "TcpConnection::handleError - SO_ERROR = "

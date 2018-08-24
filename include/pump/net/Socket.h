@@ -17,34 +17,27 @@ class Socket
 {
 public:
 	explicit Socket(SOCKET fd)
-		: fd_(fd),
-		is_validated_(false)
+		: fd_(fd)
 	{ }
 
-    Socket(const Socket&) = delete;
-    Socket& operator=(const Socket&) = delete;
-
-    Socket(Socket&&) = delete;
-    Socket& operator=(Socket&&) = delete;
-
-	void close() const
-	{
-        int saved_errno = -1;
-		if (SocketClose(fd_, &saved_errno) == -1) {
-			//TODO How to deal with signal???
-			if (saved_errno == EINTR) {
-                close();
-			}
-		}
-		is_validated_ = false;
-	}
+PUMP_DECLARE_NONCOPYABLE(Socket)
+PUMP_DECLARE_NONMOVABLE(Socket)
 
 
 	~Socket()
 	{
-		if (is_validated_) {
-			close();
-		}
+		int saved_errno;
+		do {
+			if (SocketClose(fd_, &saved_errno) < 0) {
+				if (saved_errno == EWOULDBLOCK || errno == EAGAIN) {
+					continue;
+				}
+				else {
+					LOG_ERROR << "Close Socket: " << fd_ << " failed.";
+					return;
+				}
+			}
+		} while (true);
 	}
 
 	SOCKET get_fd() const
@@ -53,8 +46,7 @@ public:
 	}
 
 private:
-	mutable  SOCKET fd_;
-	mutable bool is_validated_;
+	SOCKET fd_;
 };
 }}
 

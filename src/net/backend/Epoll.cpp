@@ -3,7 +3,7 @@
 //
 
 
-#include <pump/net/WatchAbstract.h>
+#include <pump/net/WatcherAbstract.h>
 #include <pump/net/backend/Epoll.h>
 
 
@@ -13,7 +13,7 @@ namespace net
 {
 
 
-void Epoll::poll()
+void Epoll::poll(timeval tv)
 {
   #define EPOLL_MAX_SIZE 500
   is_quit_ = false;
@@ -24,22 +24,23 @@ void Epoll::poll()
 
 	if (ready_event_count > 0) {
 	  for (size_t i = 0; i < ready_event_count; ++i) {
-		WatchAbstract* handle = static_cast<WatchAbstract*>(event_list[i].data.ptr);
+		WatcherAbstract* handle = static_cast<WatcherAbstract*>(event_list[i].data.ptr);
 		assert(handle);
+		handle->handle_callback(revents);
 	  }
 	}
   }
   is_quit_ = true;
 }
 
-void Epoll::add_interests(const WatchAbstract& handle)
+void Epoll::add_interests(const WatcherAbstract& handle)
 {
 
   if (handle.get_index() < 0) {
 
 	struct epoll_event ev;
 	ev.events = handle.get_events();
-	ev.data.ptr = const_cast<WatchAbstract*>(&handle);
+	ev.data.ptr = const_cast<WatcherAbstract*>(&handle);
 	event_list_.push_back(ev);
 
 	epoll_ctl(backend_fd_, EPOLL_CTL_ADD, handle.get_fd(), &ev);
@@ -48,7 +49,7 @@ void Epoll::add_interests(const WatchAbstract& handle)
   }
 }
 
-void Epoll::modify_interests(const WatchAbstract& handle)
+void Epoll::modify_interests(const WatcherAbstract& handle)
 {
   int index = handle.get_index();
   if (index >= 0) {
@@ -61,14 +62,14 @@ void Epoll::modify_interests(const WatchAbstract& handle)
   }
 }
 
-void Epoll::delete_interests(const WatchAbstract& handle)
+void Epoll::delete_interests(const WatcherAbstract& handle)
 {
   int index = handle.get_index();
   if (index >= 0) {
 
 	struct epoll_event& ev = event_list_[index];
 	if (index != event_list_.size() - 1) {
-	  WatchAbstract* back_handle = static_cast<WatchAbstract*>(event_list_.back().data.ptr);
+	  WatcherAbstract* back_handle = static_cast<WatcherAbstract*>(event_list_.back().data.ptr);
 	  back_handle->set_index(index);
 	  std::swap(event_list_[index], event_list_.back());
 	}

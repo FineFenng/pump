@@ -18,14 +18,7 @@ public:
 	SocketAddress(const char* ip, unsigned short port);
 
 	explicit SocketAddress(unsigned short port);
-	explicit SocketAddress(struct sockaddr_in addr);
-
-	SocketAddress(const SocketAddress&) = default;
-	SocketAddress& operator=(const SocketAddress&) = default;
-	SocketAddress(SocketAddress&&) = default;
-	SocketAddress& operator=(SocketAddress&&) = default;
-
-	~SocketAddress() = default;
+	explicit SocketAddress(struct sockaddr_in address);
 
 	std::string getSocketAddressString() const;
 

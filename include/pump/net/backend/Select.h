@@ -21,14 +21,13 @@ public:
 		max_fd_(-1)
 	{
 	}
-
-	void poll() override;
+	void poll(const timeval* tv, TaskList* io_task_list) override;
 
 	void init_backend() override;
 
-	void add_interests(const WatchAbstract& handle) override;
-	void modify_interests(const WatchAbstract& handle) override;
-	void delete_interests(const WatchAbstract& handle) override;
+	void add_interests(const WatcherAbstract& handle) override;
+	void modify_interests(const WatcherAbstract& handle) override;
+	void delete_interests(const WatcherAbstract& handle) override;
 
 private:
 
@@ -48,7 +47,7 @@ private:
 private:
 	typedef fd_set ReadableList;
 	typedef fd_set WritableList;
-	typedef std::vector<std::reference_wrapper<const WatchAbstract>> EventList;
+	typedef std::vector<std::reference_wrapper<const WatcherAbstract>> EventList;
 
 	ReadableList readable_list_;
 	WritableList writable_list_;

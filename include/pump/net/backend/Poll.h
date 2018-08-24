@@ -22,13 +22,13 @@ class Epoll : public BackendAbstract
 	  : loop_(loop), backend_fd_(-1), is_quit_(true)
   {}
 
-  void poll() override;
+  void poll(timeval tv) override;
 
   void init_backend() override;
 
-  void add_interests(const WatchAbstract &handle) override;
-  void modify_interests(const WatchAbstract &handle) override;
-  void delete_interests(const WatchAbstract &handle) override;
+  void add_interests(const WatcherAbstract &handle) override;
+  void modify_interests(const WatcherAbstract &handle) override;
+  void delete_interests(const WatcherAbstract &handle) override;
 
  private:
 

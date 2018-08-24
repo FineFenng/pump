@@ -14,21 +14,26 @@
 
 namespace pump { namespace net
 {
+//typedef std::vector<WatcherAbstract> HandleList;
 
-class WatchAbstract;
-
-typedef std::vector<WatchAbstract> HandleList;
+class WatcherAbstract;
 
 class BackendAbstract
 {
 public:
+	typedef std::function<void()> Task;
+	typedef std::vector<Task> TaskList;
+public:
 
-	virtual void poll() = 0;
+	virtual ~BackendAbstract() = 0
+	{ }
+
+	virtual void poll(const timeval* tv, TaskList* io_task_list) = 0;
 	virtual void init_backend() = 0;
 
-	virtual void add_interests(const WatchAbstract& handle) = 0;
-	virtual void modify_interests(const WatchAbstract& handle) = 0;
-	virtual void delete_interests(const WatchAbstract& handle) = 0;
+	virtual void add_interests(const WatcherAbstract& handle) = 0;
+	virtual void modify_interests(const WatcherAbstract& handle) = 0;
+	virtual void delete_interests(const WatcherAbstract& handle) = 0;
 };
 }}
 

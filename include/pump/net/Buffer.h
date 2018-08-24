@@ -69,7 +69,7 @@ public:
 	}
 
 
-	int append_from_fd(int fd);
+	int append_from_fd(int fd, int* saved_errno);
 
 	void retrieve(size_t len) { readable_index_ += len; }
 

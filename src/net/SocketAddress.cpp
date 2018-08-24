@@ -51,7 +51,7 @@ SocketAddress::SocketAddress(struct sockaddr_in address)
 {
 }
 
-const sockaddr_in* SocketAddress::getSocketAddress() const
+const struct sockaddr_in* SocketAddress::getSocketAddress() const
 {
 	return &socket_address_;
 }

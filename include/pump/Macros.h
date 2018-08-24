@@ -4,7 +4,6 @@
 //#include <pump/Types.h>
 
 
-
 //#define PUMP_CPLUSPLUS __cplusplus
 
 #define WAWO_MALLOC_H_RESERVE (128)
@@ -18,6 +17,8 @@
 #define PUMP_MIN3(A,B,C)           PUMP_MIN2(PUMP_MIN2(A,B),(C))
 #define PUMP_MAX3(A,B,C)           PUMP_MAX2(PUMP_MAX2(A,B),(C))
 
+#define PUMP_NEGATIVE(A)           ((A<0)?(A):(-(A)))
+
 #ifdef PUMP_NO_CXX11_DELETED_FUNC
 #define PUMP_DECLARE_NONCOPYABLE(__classname__) \
 	private: \
@@ -30,12 +31,23 @@
 	__classname__(const __classname__&) = delete; \
 	__classname__& operator=(const __classname__&) = delete;
 
-#define PUMP_DECLAR_NONMOVABLE(__classname__) \
+#define PUMP_DECLARE_DEFAULTCOPYABLE(__classname__) \
+	public: \
+	__classname__(const __classname__&) = default; \
+	__classname__& operator=(const __classname__&) = default;
+
+#define PUMP_DECLARE_NONMOVABLE(__classname__) \
 	public:\
 	__classname__(__classname__&&) = delete; \
-	__classname__& operator=(__classname__&&) = delete;
+	__classname__&& operator=(__classname__&&) = delete;
 
-#define PUMP_DECLAE_CALLBACK_FUNCTIONR(T,...) typedef std::function<T(__VA_ARGS__)>
+#define PUMP_DECLARE_DEFAULTMOVABLE(__classname__) \
+	public:\
+	__classname__(__classname__&&) = default; \
+	__classname__& operator=(__classname__&&) = default;
+
+
+#define PUMP_DECLAE_CALLBACK_FUNCTION(T,...) typedef std::function<T(__VA_ARGS__)>
 
 
 #endif

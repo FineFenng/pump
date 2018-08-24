@@ -106,6 +106,7 @@ public:
 	self& operator<<(long val);
 	self& operator<<(unsigned long long val);
 	self& operator<<(long long val);
+	self& operator<<(void* val);
 
 	self& operator<<(float val);
 	self& operator<<(double val);
