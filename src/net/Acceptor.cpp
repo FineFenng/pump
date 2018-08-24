@@ -7,48 +7,42 @@
 #include <cerrno>
 #include <cstring>
 
-#include <iostream>
-
-#include <pump/Common.h>
-#include <pump/net/EventLoop.h>
-#include <pump/net/Socket.h>
-#include <pump/net/SocketAddress.h>
-#include <pump/net/SocketOption.h>
-#include <pump/net/watcher/IO_Watcher.h>
-#include <pump/utility/log/Logger.h>
 
 namespace pump { namespace net
 {
 Acceptor::Acceptor(EventLoop* event_loop, struct sockaddr_in server_address)
-	: event_loop_(event_loop), server_address_(server_address),
-	socket_(new Socket(SocketOpen(SOCK_STREAM))),
-	handle_(event_loop_, socket_->get_fd()),
+	: event_loop_(event_loop),
+	server_address_(server_address),
+	socket_(SocketOpen(AF_INET, SOCK_STREAM, 0)),
+	watcher_(event_loop_, socket_.get_fd()),
 	is_listening_(false)
 {
-	handle_.enable_readable();
-	handle_.set_readable_callback(std::bind(&Acceptor::on_new_connection, this));
+	watcher_.enable_readable();
+	watcher_.set_readable_callback(std::bind(&Acceptor::on_new_connection, this));
 }
 
 Acceptor::Acceptor(EventLoop* eventLoop, SocketAddress socketAddress)
 	: Acceptor(eventLoop, *socketAddress.getSocketAddress())
-{
-}
+{}
 
 Acceptor::~Acceptor()
 {
 	if (is_listening_) {
 		is_listening_ = false;
+		watcher_.disable_all();
 	}
 }
 
 bool Acceptor::listen()
 {
-	const SOCKET fd = socket_->get_fd();
-	bind(fd, reinterpret_cast<const struct sockaddr*>(server_address_.getSocketAddress()),
-		sizeof(*server_address_.getSocketAddress()));
+	assert(is_listening_ == false);
+	const SOCKET fd = socket_.get_fd();
+	if (SocketBind(fd, server_address_.getSocketAddress()) != pump::kSuccess) {
+		LOG_ERROR << " Server bind address failed.";
+	}
 
-	if (SocketListen(fd) < 0) {
-		LOG_INFO << "Sever start listening failed.";
+	if (SocketListen(fd) != pump::kSuccess) {
+		LOG_ERROR << "Sever start listening failed.";
 	}
 	else {
 		LOG_INFO << "Sever start listening success.";
@@ -61,30 +55,29 @@ bool Acceptor::listen()
 
 void Acceptor::on_new_connection() const
 {
-	if (!is_listening_) {
-		return;
-	}
-
 	struct sockaddr_in address;
 	memset(&address, 0, sizeof(address));
 
-	socklen_t len = sizeof(address);
-	const SOCKET connected_fd = accept(socket_->get_fd(), reinterpret_cast<struct sockaddr*>(&address), &len);
+	SOCKET conn_fd;
+	do {
+		conn_fd = SocketAccept(socket_.get_fd(), &address);
 
-	if (connected_fd < 0) {
-		const int saved_errno = errno;
-
-		if (saved_errno == EBADF) {
-			LOG_FALAL << "Socket fd is not an open file descriptor";
-			abort();
+		if (!SocketIsValid(conn_fd)) {
+			if (errno == EWOULDBLOCK || errno == EAGAIN) {
+				return;
+			}
+			else if (errno == EINTR) {
+				continue;
+			}
+			else {
+				//TODO ??? how to resolve other errno.
+				return;
+			}
 		}
-
-		if (saved_errno == ECONNABORTED) {
-			LOG_ERROR << "A connection has been aborted";
-			return;
+		else {
+			break;
 		}
-	}
-
+	} while (true);
 
 	SocketAddress client_address(address);
 
@@ -92,12 +85,12 @@ void Acceptor::on_new_connection() const
  << ']';
 
 	if (new_connection_callback_) {
-		new_connection_callback_(connected_fd, client_address);
+		new_connection_callback_(conn_fd, client_address);
 	}
 }
 
-void Acceptor::set_reuseaddr_option() const
+void Acceptor::set_reuse_address_option() const
 {
-	SOCKET re = SetSocketReuseAddress(socket_->get_fd());
+	SOCKET re = SocketSetReuseAddress(socket_.get_fd());
 }
 }}

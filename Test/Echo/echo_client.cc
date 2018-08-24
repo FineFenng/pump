@@ -121,11 +121,11 @@ int main(int argc, char* argv[])
 
     int conn_fd = ConnectServer(ip, port, &client_address, &server_address);
 
-    /* Client send a package firstly...*/
+    /* Client send_in_bind_thread a package firstly...*/
 
     write(conn_fd, package.data(), package.size());
 
-    /* Client start revice and send package in loop...*/
+    /* Client start revice and send_in_bind_thread package in loop...*/
 
 
     int32_t count = 0;

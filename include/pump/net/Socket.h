@@ -21,15 +21,13 @@ public:
 	{ }
 
 PUMP_DECLARE_NONCOPYABLE(Socket)
-PUMP_DECLARE_NONMOVABLE(Socket)
-
+PUMP_DECLARE_DEFAULTMOVABLE(Socket)
 
 	~Socket()
 	{
-		int saved_errno;
 		do {
-			if (SocketClose(fd_, &saved_errno) < 0) {
-				if (saved_errno == EWOULDBLOCK || errno == EAGAIN) {
+			if (SocketClose(fd_) == pump::kFail) {
+				if (errno == EWOULDBLOCK || errno == EAGAIN) {
 					continue;
 				}
 				else {

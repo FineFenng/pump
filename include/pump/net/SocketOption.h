@@ -22,31 +22,35 @@ inline int GetIpFromINETAddress(const sockaddr_in& address, char* ip, socklen_t 
 }
 
 
-inline bool SocketIsValid(SOCKET socket) { return socket >= 0; }
-
-
-inline SOCKET SocketOpen(int type)
+inline bool SocketIsValid(SOCKET socket)
 {
-	int protocol = 0;
 #ifdef PUMP_PLATFORM_WIN
-	WSADATA wsa;
-	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0) { LOG_FALAL << "Windows socket init failed"; }
-	if (type == SOCK_STREAM) { protocol = IPPROTO_TCP; }
-	if (type == SOCK_DGRAM) { protocol = IPPROTO_UDP; }
+	return socket != INVALID_SOCKET;
+#else
+	return socket > 0;
 #endif
-
-	const SOCKET fd = socket(AF_INET, type, protocol);
-
-	return fd;
 }
 
 
-inline int SocketBind(SOCKET fd, const struct sockaddr_in& peer_address)
+inline SOCKET SocketOpen(int af, int type, int protocol)
 {
-	if (bind(fd, reinterpret_cast<const struct sockaddr*>(&peer_address), sizeof(peer_address)) == 0) {
-		return pump::Contants::kSuccess;
+	int tmp_protocol = protocol;
+#ifdef PUMP_PLATFORM_WIN
+	WSADATA wsa;
+	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0) { LOG_FALAL << "Windows socket init failed"; }
+	if (type == SOCK_STREAM) { tmp_protocol = IPPROTO_TCP; }
+	if (type == SOCK_DGRAM) { tmp_protocol = IPPROTO_UDP; }
+#endif
+	return socket(AF_INET, type, tmp_protocol);
+}
+
+
+inline int SocketBind(SOCKET fd, const struct sockaddr_in* peer_address)
+{
+	if (bind(fd, reinterpret_cast<const struct sockaddr*>(peer_address), sizeof(peer_address)) == 0) {
+		return pump::kSuccess;
 	}
-	return pump::Contants::kFail;
+	return pump::kFail;
 }
 
 
@@ -60,68 +64,33 @@ inline int SocketBind(SOCKET fd, const struct sockaddr_in& peer_address)
 
 inline int SocketListen(SOCKET fd, int backlog = MAX_BACK_LOG)
 {
-	return listen(fd, backlog) == 0 ? pump::Contants::kSuccess : pump::Contants::kFail;
+	return listen(fd, backlog) == 0 ? pump::kSuccess : pump::kFail;
 }
 
-inline SOCKET SocketAccept(SOCKET fd, sockaddr_in* address)
+inline SOCKET SocketAccept(SOCKET fd, struct sockaddr_in* address)
 {
-	socklen_t len = sizeof(*address);
-	const SOCKET conn_fd = accept(fd, reinterpret_cast<struct sockaddr*>(address), &len);
-	return SocketIsValid(conn_fd) ? conn_fd : -1;
+	socklen_t len = sizeof(struct sockaddr_in);
+	return ::accept(fd, reinterpret_cast<struct sockaddr*>(address), &len);
 }
 
-inline int SocketClose(SOCKET fd, int* saved_errno)
+inline int SocketClose(SOCKET fd)
 {
 #if PUMP_PLATFORM_WIN
 	if (closesocket(fd) < 0) {
-		*saved_errno = errno;
-		return -1;
+		return pump::kFail;
 	}
 #else
 	if (close(fd) < 0 ) {
-		*saved_errno = errno;
-		return -1;
+		return pump::kFail;
 	}
 #endif
-	return 0;
+	return pump::kSuccess;
 }
 
-inline int GetSocketpair(int type, SOCKET sv[2])
-{
-	const SOCKET listenfd = SocketOpen(type);
+int SocketGetInetStreamPair(const int& type, SOCKET o_sv[2]);
 
-	struct sockaddr_in addr_listen, addr_connect, addr_accept;
 
-	::memset(&addr_listen, 0, sizeof(addr_listen));
-
-	socklen_t socklen = sizeof(addr_connect);
-
-	addr_listen.sin_family = AF_INET;
-	addr_listen.sin_addr.s_addr = ::htonl(INADDR_LOOPBACK);
-	addr_listen.sin_port = 0;
-
-	int re = SocketBind(listenfd, addr_listen);
-
-	re = ::listen(listenfd, 1);
-
-	re = ::getsockname(listenfd, reinterpret_cast<struct sockaddr*>(&addr_connect), &socklen);
-
-	const SOCKET conn_fd = SocketOpen(type);
-
-	re = ::connect(conn_fd, reinterpret_cast<struct sockaddr*>(&addr_connect), sizeof(addr_connect));
-
-	const SOCKET accept_fd = ::accept(listenfd, reinterpret_cast<struct sockaddr*>(&addr_accept), &socklen);
-
-	sv[0] = accept_fd;
-	sv[1] = conn_fd;
-
-	int saved_errno;
-
-	SocketClose(listenfd, &saved_errno);
-	return re;
-}
-
-inline int GetSocketErrno(SOCKET fd)
+inline int SocketGetLastErrno(SOCKET fd)
 {
 #ifdef PUMP_PLATFORM_WIN
 	char optval;
@@ -139,37 +108,52 @@ inline int GetSocketErrno(SOCKET fd)
 }
 
 
-inline void SetSocketNoblocking(SOCKET fd)
+inline void SocketSetNoblocking(SOCKET fd)
 {
 #if PUMP_PLATFORM_WIN
 	u_long val = 1;
 	ioctlsocket(fd, FIONBIO, &val);
 #else
-        fcntl(fd, F_SETFL, O_NONBLOCK);
+    fcntl(fd, F_SETFL, O_NONBLOCK);
 #endif
 }
 
-inline int SetSocketReuseAddress(int fd)
+inline int SocketSetReuseAddress(int fd)
 {
+#ifdef PUMP_PLATFORM_WIN
 	char opt_val = 1;
+#else
+	int opt_val = 1;
+#endif
 	return setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &opt_val, sizeof(opt_val));
 }
 
-inline uint32_t SendN(SOCKET fd, const char* const buffer, size_t len, int flags, int* o_errno)
+/* 
+ * whether in blocking or nonblocking model, 
+ * error num will be set, if errno happend.
+ */
+inline int32_t SendN(SOCKET fd, const char* const buffer, size_t len, int flags, int* o_errno)
 {
-	uint32_t re = 0;
+	//TODO
+
+	int32_t re = 0;
 	do {
-		const int r = ::send(fd, buffer + re, static_cast<int>(len) - re, flags);
-		/*send return value equal -1 or the num wrote */
-		if (r > 0) {
-			re += r;
+
+#ifdef PUMP_PLATFORM_WIN
+		const int32_t send_count = ::send(fd, buffer + re, static_cast<int>(len) - re, flags);
+#else
+		const int32_t send_count = ::send_in_bind_thread(fd, buffer + re, len - re, flags);
+#endif
+		/*send_in_bind_thread return value equal -1 or the num wrote */
+		if (send_count > 0) {
+			re += send_count;
 			*o_errno = 0;
-			if (re == len) {
+			if (re == static_cast<int>(len)) {
 				break;
 			}
 		}
 		else {
-			assert(r == -1);
+			assert(send_count < 0);
 			if (errno == EWOULDBLOCK || errno == EAGAIN) {
 				*o_errno = errno;
 				break;
@@ -184,23 +168,29 @@ inline uint32_t SendN(SOCKET fd, const char* const buffer, size_t len, int flags
 			}
 		}
 	} while (true);
-
-	LOG_TRACE << fd << " send; to send:" << len << "; sent:" << re << "; error code " << *o_errno;
+	LOG_TRACE << fd << " send_in_bind_thread; to send_in_bind_thread:" << len << "; sent:" << re << "; error code " << *o_errno;
 	return re;
 }
 
-inline uint32_t Send(SOCKET fd, const char* const buffer, size_t len, int flags, int* o_errno)
+inline int32_t Send(SOCKET fd, const char* const buffer, size_t len, int flags, int* o_errno)
 {
-	uint32_t re = 0;
+	//TODO
+
+	int32_t re = 0;
 	do {
-		const int r = ::send(fd, buffer + re, static_cast<int>(len) - re, flags);
-		if (r > 0) {
-			re += r;
+#ifdef PUMP_PLATFORM_WIN
+		const int32_t send_count = ::send(fd, buffer + re, static_cast<int>(len) - re, flags);
+#else
+		const int32_t send_count = ::send_in_bind_thread(fd, buffer + re, len - re, flags);
+#endif
+
+		if (send_count > 0) {
+			re += send_count;
 			*o_errno = 0;
 			break;
 		}
 		else {
-			assert( r == -1);
+			assert( send_count < 0);
 			if (errno == EWOULDBLOCK || errno == EAGAIN) {
 				*o_errno = errno;
 				break;
@@ -215,29 +205,33 @@ inline uint32_t Send(SOCKET fd, const char* const buffer, size_t len, int flags,
 			}
 		}
 	} while (true);
-	LOG_TRACE << fd << " send; to send:" << len << "; sent:" << re << "; error code " << *o_errno;
+	LOG_TRACE << fd << " send_in_bind_thread; to send_in_bind_thread:" << len << "; sent:" << re << "; error code " << *o_errno;
 	return re;
 }
 
-inline uint32_t RecvN(SOCKET fd, char* const buffer, size_t len, int flags, int* o_errno)
+inline int32_t RecvN(SOCKET fd, char* const buffer, size_t len, int flags, int* o_errno)
 {
-	uint32_t re = 0;
+	int re = 0;
 	do {
-		const int r = ::recv(fd, buffer + re, static_cast<int>(len) - re, flags);
-		if (r > 0) {
-			re += r;
+#ifdef PUMP_PLATFORM_WIN
+		const int32_t recv_count = ::recv(fd, buffer + re, static_cast<int>(len) - re, flags);
+#else
+		const int32_t recv_count = ::recv(fd, buffer + re, len - re, flags);
+#endif
+		if (recv_count > 0) {
+			re += recv_count;
 			*o_errno = 0;
-			if (re == len) {
+			if (re == static_cast<int>(len)) {
 				break;
 			}
 		}
-		else if (r == 0) {
+		else if (recv_count == 0) {
 			LOG_TRACE << fd << " socket closed by remote side gracefully[detected by recv]";
 			*o_errno = 0;
 			break;
 		}
 		else {
-			assert(r == -1);
+			assert(recv_count == -1);
 			if (errno == EWOULDBLOCK || errno == EAGAIN) {
 				*o_errno = errno;
 				break;
@@ -256,23 +250,26 @@ inline uint32_t RecvN(SOCKET fd, char* const buffer, size_t len, int flags, int*
 	return re;
 }
 
-
-inline uint32_t Recv(SOCKET fd, char* const buffer, size_t len, int flags, int* o_errno)
+inline int Recv(SOCKET fd, char* const buffer, size_t len, int flags, int* o_errno)
 {
-	uint32_t re = 0;
+	int re = 0;
 	do {
-		const int r = ::recv(fd, buffer + re, len - re, flags);
-		if (r > 0) {
-			re += r;
+#ifdef PUMP_PLATFORM_WIN
+		const int32_t recv_count = ::recv(fd, buffer + re, static_cast<int>(len) - re, flags);
+#else
+		const int32_t recv_count = ::recv(fd, buffer + re, len - re, flags);
+#endif
+		if (recv_count > 0) {
+			re += recv_count;
 			*o_errno = 0;
 		}
-		else if (r == 0) {
+		else if (recv_count == 0) {
 			LOG_TRACE << fd << " socket closed by remote side gracefully[detected by recv]";
 			*o_errno = 0;
 			break;
 		}
 		else {
-			assert(r == -1);
+			assert(recv_count == -1);
 			if (errno == EWOULDBLOCK || errno == EAGAIN) {
 				*o_errno = errno;
 				break;

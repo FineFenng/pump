@@ -8,7 +8,7 @@
 #include <pump/Common.h>
 #include <cassert>
 #include <cerrno>
-#include <pump/net/BackendAbstract.h>
+#include <pump/net/PollAbstract.h>
 
 namespace pump
 {
@@ -18,7 +18,7 @@ namespace net
 
 class EventLoop;
 
-class Epoll : public BackendAbstract
+class Epoll : public PollAbstract
 {
  public:
   explicit Epoll(EventLoop *loop)

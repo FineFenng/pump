@@ -5,13 +5,12 @@
 #ifndef QPSTEST_ACCEPTOR_H
 #define QPSTEST_ACCEPTOR_H
 
+#include <functional>
 
+#include <pump/Common.h>
 #include <pump/net/watcher/IO_Watcher.h>
 #include <pump/net/SocketAddress.h>
 #include <pump/net/TcpConnection.h>
-
-#include <memory>
-#include <functional>
 
 namespace pump {namespace net
 {
@@ -26,7 +25,8 @@ class TcpConnection;
 class Acceptor
 {
 public:
-	typedef std::function<void(int fd, const SocketAddress&)> NewConnectionCallback;
+	PUMP_DECLAE_CALLBACK_FUNCTION(void, int, const SocketAddress&) NewConnectionCallback;
+
 public:
 	Acceptor(EventLoop* event_loop, struct sockaddr_in server_address);
 
@@ -34,15 +34,13 @@ public:
 
 	~Acceptor();
 
-	Acceptor(const Acceptor&) = delete;
-	Acceptor& operator=(const Acceptor&) = delete;
+PUMP_DECLARE_NONCOPYABLE(Acceptor)
 
-	Acceptor(Acceptor&&) = delete;
-	Acceptor& operator=(Acceptor&&) = delete;
+PUMP_DECLARE_DEFAULTMOVABLE(Acceptor)
 
 	bool listen();
 
-	void set_reuseaddr_option() const;
+	void set_reuse_address_option() const;
 
 	void on_new_connection() const;
 
@@ -51,9 +49,9 @@ public:
 private:
 	EventLoop* event_loop_;
 	SocketAddress server_address_;
-	std::unique_ptr<Socket> socket_;
+	Socket socket_;
 
-	IO_Watcher handle_;
+	IO_Watcher watcher_;
 	bool is_listening_;
 private:
 	NewConnectionCallback new_connection_callback_;

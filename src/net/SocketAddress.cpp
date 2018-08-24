@@ -33,6 +33,7 @@
 namespace pump {namespace net
 {
 SocketAddress::SocketAddress(const char* ip, unsigned short port)
+	:socket_address_()
 {
 	socket_address_.sin_family = AF_INET;
 	::inet_pton(AF_INET, ip, &socket_address_.sin_addr);
@@ -40,6 +41,7 @@ SocketAddress::SocketAddress(const char* ip, unsigned short port)
 }
 
 SocketAddress::SocketAddress(unsigned short port)
+	:socket_address_()
 {
 	socket_address_.sin_family = AF_INET;
 	socket_address_.sin_addr.s_addr = htonl(INADDR_ANY);
@@ -61,10 +63,9 @@ std::string SocketAddress::getSocketAddressString() const
 	char address_info[64] = {0};
 
 	::inet_ntop(AF_INET, &socket_address_.sin_addr, address_info, 64);
-	uint16_t host_port = ntohs(socket_address_.sin_port);
-	size_t ip_len = strlen(address_info);
+	const uint16_t host_port = ntohs(socket_address_.sin_port);
+	const size_t ip_len = strlen(address_info);
 	snprintf(address_info + ip_len, 64 - ip_len, ":%d", host_port);
-
 	return std::string(address_info, address_info + strlen(address_info));
 }
 }}

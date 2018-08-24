@@ -19,9 +19,11 @@
 // reply on os header file
 
 
+// standard c header file
+#include <cstring>
+
 // standard c++  header file
 #include <algorithm>
-#include <cstring>
 #include <string>
 #include <vector>
 
@@ -33,17 +35,14 @@ namespace pump { namespace net
 {
 class Buffer
 {
-
 public:
 	Buffer()
 		: data_(kInitBufferSize_),
 		readable_index_(0),
 		writable_index_(0),
 		buffer_capacity_(kInitBufferSize_)
-	{
-	}
+	{ }
 
-	~Buffer() = default;
 
 
 	void append_string(const char* message, size_t len)
@@ -69,7 +68,7 @@ public:
 	}
 
 
-	int append_from_fd(int fd, int* saved_errno);
+	int recv_from_fd(int fd, int* saved_errno);
 
 	void retrieve(size_t len) { readable_index_ += len; }
 
@@ -115,7 +114,6 @@ public:
 	}
 
 private:
-
 	void set_buffer_capacity(size_t capacity) { buffer_capacity_ = capacity; }
 
 private:

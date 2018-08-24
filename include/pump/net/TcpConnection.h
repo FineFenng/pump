@@ -22,7 +22,7 @@ class TcpConnection : public std::enable_shared_from_this<TcpConnection>
 {
 public:
 	PUMP_DECLAE_CALLBACK_FUNCTION(void, const std::shared_ptr<TcpConnection>&, Buffer*) MessageReadableCallback;
-	PUMP_DECLAE_CALLBACK_FUNCTION(void, const std::shared_ptr<TcpConnection>&, Buffer*) MessageWritableCallback;
+	PUMP_DECLAE_CALLBACK_FUNCTION(void, const std::shared_ptr<TcpConnection>&, int, Buffer*) MessageWritableCallback;
 	PUMP_DECLAE_CALLBACK_FUNCTION(void, const std::shared_ptr<TcpConnection>&) ConnectionCloseCallback;
 
 public:
@@ -42,16 +42,18 @@ PUMP_DECLARE_DEFAULTMOVABLE(TcpConnection)
 
 	~TcpConnection();
 
+	void send(const char* data, size_t len);
+
+	void send(const std::string& message);
+
+
 	void on_readable();
 
 	void on_writable();
 
-	void send(const char* data, size_t len);
-	void send(const std::string& message);
-
 	void on_erroneous() const
 	{
-		const int saved_errno = GetSocketErrno(fd_);
+		const int saved_errno = SocketGetLastErrno(fd_);
 		LOG_ERROR << "TcpConnection::handleError - SO_ERROR = "
 			<< saved_errno;
 	}
@@ -75,18 +77,20 @@ PUMP_DECLARE_DEFAULTMOVABLE(TcpConnection)
 		close_callback_ = cb;
 	}
 
-
 	int get_connection_style() const { return state_; }
 
 	void set_connection_style(const ConnectionStyle& state) { state_ = state; }
 
 	void close_connection();
 
-	SOCKET get_fd() const { return socket_->get_fd(); }
+	void send_in_bind_thread(const char* data, size_t len);
+
+private:
+	SOCKET get_fd() const { return socket_.get_fd(); }
 
 private:
 	EventLoop* loop_;
-	std::unique_ptr<Socket> socket_;
+	Socket socket_;
 	SocketAddress local_address_;
 	SocketAddress peer_address_;
 	IO_Watcher handle_;

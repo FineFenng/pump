@@ -5,7 +5,7 @@
 #ifndef PUMP_SELECT_H
 #define PUMP_SELECT_H
 
-#include <pump/net/BackendAbstract.h>
+#include <pump/net/PollAbstract.h>
 
 #include <functional>
 
@@ -13,7 +13,7 @@ namespace pump {namespace net
 {
 class EventLoop;
 
-class Select : public BackendAbstract
+class Select : public PollAbstract
 {
 public:
 	explicit Select(EventLoop* loop)

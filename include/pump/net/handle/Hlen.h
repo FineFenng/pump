@@ -75,7 +75,7 @@ public:
 	{
 		send_packet_.reset();
 		encode_content(content, len);
-		tcp_connection_ptr->send(reinterpret_cast<const char*>(send_packet_.begin()), send_packet_.get_len());
+		tcp_connection_ptr->send_in_bind_thread(reinterpret_cast<const char*>(send_packet_.begin()), send_packet_.get_len());
 	}
 
 	void set_complete_package_callback(const CompletePacketCallback& cb) { complete_package_callback_ = cb; }

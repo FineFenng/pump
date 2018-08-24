@@ -21,13 +21,13 @@
 #endif
 
 #ifdef PUMP_PLATFORM_WIN
-#include <pump/net/backend/Select.h>
+#include <pump/net/poll/Select.h>
 #endif
 
 namespace pump {namespace net
 {
 
-    enum class BackendType
+    enum class PollType
     {
         kDefault,
         kSelect,

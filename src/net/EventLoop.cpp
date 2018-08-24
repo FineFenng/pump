@@ -7,12 +7,12 @@
 #include <sstream>
 
 #include <pump/net/Acceptor.h>
-#include <pump/net/BackendAbstract.h>
+#include <pump/net/PollAbstract.h>
 #include <pump/Common.h>
 #include <pump/net/watcher/IO_Watcher.h>
-#include <pump/net/backend/Platform.h>
+#include <pump/net/poll/Platform.h>
 
-#include <pump/utility/ThreadOption.h>
+#include <pump/utility/thread/ThreadOption.h>
 
 /*
  * struct kevent {
@@ -61,9 +61,9 @@ EventLoop::EventLoop()
 	: thread_id_(t_thread_id)
 	, is_looping_(false)
 	, loop_state_(LoopState::kNormaTasklExecute)
-	, wakeup_w_fd_(-1)
-	, wakeup_r_fd_(-1)
-	, backend_type_(BackendType::kDefault)
+	, w_wakeup_fd_(-1)
+	, r_wakeup_fd_(-1)
+	, poll_type_(PollType::kDefault)
 {
 	if (t_event_loop == nullptr) {
 		t_event_loop = this;
@@ -80,9 +80,8 @@ EventLoop::EventLoop()
 EventLoop::~EventLoop()
 {
 	assert(!is_looping_);
-	int saved_errno_1, saved_errno_2;
-	SocketClose(wakeup_w_fd_, &saved_errno_1);
-	SocketClose(wakeup_r_fd_, &saved_errno_2);
+	SocketClose(w_wakeup_fd_);
+	SocketClose(r_wakeup_fd_);
 
 	//TODO if there exits tasks in normal, delay or io task list. 
 
@@ -110,7 +109,7 @@ void EventLoop::run()
 				loop_state_ = LoopState::kIOPolling;
 			}
 			case kIOPolling: {
-				const int wait_time = calculate_block_time();
+				const int wait_time = calc_poll_block_time();
 				struct timeval temp_tv = {0, 0};
 				struct timeval* tv = nullptr;
 
@@ -125,7 +124,7 @@ void EventLoop::run()
 				}
 
 				clear_wakup_fd_buffer();
-				backend_->poll(tv, &io_task_list_);
+				poll_->poll(tv, &io_task_list_);
 				loop_state_ = LoopState::kIOTaskExecute;
 			}
 			case kIOTaskExecute: {
@@ -135,7 +134,9 @@ void EventLoop::run()
 				loop_state_ = LoopState::kDelayTaskExecute;
 			}
 			case kDelayTaskExecute: {
-				//todo
+				for(auto& i : delay_task_list_) {
+					i();
+				}
 				loop_state_ = LoopState::kNormaTasklExecute;
 			}
 		}
@@ -159,17 +160,17 @@ void EventLoop::remove_watcher(const WatcherAbstract& watcher) const
 
 void EventLoop::add_watcher(const WatcherAbstract& watcher) const
 {
-	backend_->add_interests(watcher);
+	poll_->add_interests(watcher);
 }
 
 void EventLoop::modify_watcher(const WatcherAbstract& watcher) const
 {
-	backend_->modify_interests(watcher);
+	poll_->modify_interests(watcher);
 }
 
 void EventLoop::delete_watcher(const WatcherAbstract& watcher) const
 {
-	backend_->delete_interests(watcher);
+	poll_->delete_interests(watcher);
 }
 
 void EventLoop::wakeup() const
@@ -177,7 +178,7 @@ void EventLoop::wakeup() const
 	char val[5] = {0};
 	//TODO
 	int saved_errno;
-	Send(wakeup_w_fd_, val, sizeof(val), 0, &saved_errno);
+	Send(w_wakeup_fd_, val, sizeof(val), 0, &saved_errno);
 }
 
 void EventLoop::init()
@@ -187,12 +188,12 @@ void EventLoop::init()
 }
 
 
-bool EventLoop::is_in_init_thread() const
+bool EventLoop::is_in_bind_thread() const
 {
 	return thread_id_ == t_thread_id;
 }
 
-int EventLoop::calculate_block_time() const
+int EventLoop::calc_poll_block_time() const
 {
 	if (!delay_task_list_.empty()) {
 		//TODO
@@ -212,32 +213,32 @@ int EventLoop::calculate_block_time() const
 void EventLoop::init_backend()
 {
 #if PUMP_PLATFORM == PUMP_PLATFORM_GNU
-			backend_.reset(new Select(this));
-			backend_type_ = BackType::kSelect;
+			poll_.reset(new Select(this));
+			poll_type_ = PollType::kSelect;
 #elif PUMP_PLATFORM == PUMP_PLATFORM_LINUX
-			backend_.reset(new Epoll(this));
-			backend_type_ = BackType::kEpoll;
+			poll_.reset(new Epoll(this));
+			poll_type_ = PollType::kEpoll;
 #elif  PUMP_PLATFORM == PUMP_PLATFORM_MACX
-			backend_.reset(new KQueue(this));
-			backend_type_ = BackType::kKQueue;
+			poll_.reset(new KQueue(this));
+			poll_type_ = PollType::kKQueue;
 #elif  PUMP_PLATFORM == PUMP_PLATFORM_WIN
-	backend_.reset(new Select(this));
-	backend_type_ = BackendType::kSelect;
+	poll_.reset(new Select(this));
+	poll_type_ = PollType::kSelect;
 #else
 #error
 #endif
-	backend_->init_backend();
+	poll_->init_backend();
 }
 
 void EventLoop::init_notify_watcher()
 {
 	SOCKET sv[2];
 	//TODO
-	GetSocketpair(SOCK_STREAM, sv);
-	wakeup_w_fd_ = sv[0];
-	wakeup_r_fd_ = sv[1];
-	SetSocketNoblocking(wakeup_r_fd_);
-	wakeup_watcher_.reset(new IO_Watcher(this, wakeup_r_fd_));
+	SocketGetInetStreamPair(SOCK_STREAM, sv);
+	w_wakeup_fd_ = sv[0];
+	r_wakeup_fd_ = sv[1];
+	SocketSetNoblocking(r_wakeup_fd_);
+	wakeup_watcher_.reset(new IO_Watcher(this, r_wakeup_fd_));
 	wakeup_watcher_->set_readable_callback(std::bind(&EventLoop::clear_wakup_fd_buffer, this));
 	wakeup_watcher_->enable_readable();
 }
@@ -246,6 +247,6 @@ void EventLoop::clear_wakup_fd_buffer() const
 {
 	//TODO
 	char recv_buffer[1024] = {0};
-	::recv(wakeup_r_fd_, recv_buffer, sizeof(recv_buffer), 0);
+	::recv(r_wakeup_fd_, recv_buffer, sizeof(recv_buffer), 0);
 }
 }}

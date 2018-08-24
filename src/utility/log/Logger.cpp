@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include <pump/utility/ThreadOption.h>
+#include <pump/utility/thread/ThreadOption.h>
 
 namespace pump { namespace utility
 {

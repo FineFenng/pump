@@ -13,7 +13,7 @@ namespace pump { namespace net
 static constexpr unsigned int kDefaultBufferSize = 64 * 1024; // 64Kbytes
 
 
-int Buffer::append_from_fd(int fd, int* saved_errno)
+int Buffer::recv_from_fd(int fd, int* saved_errno)
 {
 	char extra_buffer[kDefaultBufferSize] = {0};
 	size_t count = 0;
