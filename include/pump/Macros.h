@@ -19,6 +19,9 @@
 
 #define PUMP_NEGATIVE(A)           ((A<0)?(A):(-(A)))
 
+#define PUMP_TV_SET(tv,t) do { tv.tv_sec = static<long>(t); tv.tv_usec = static_cast<long>((t - tv.tv_sec) * 1e6); } while (0)
+#define PUMP_TS_SET(tv,t) do { tv.tv_sec = static<long>(t); tv.tv_usec = static_cast<long>((t - tv.tv_sec) * 1e9); } while (0)
+
 #ifdef PUMP_NO_CXX11_DELETED_FUNC
 #define PUMP_DECLARE_NON_COPYABLE(__classname__) \
 	private: \

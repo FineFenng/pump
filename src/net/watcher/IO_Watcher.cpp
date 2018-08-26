@@ -18,11 +18,11 @@ IO_Watcher::IO_Watcher(class EventLoop* loop, SOCKET fd)
 
 void IO_Watcher::handle_callback(const HandleEvent& handle_event) const
 {
-	if (handle_event & IO_Flag::kIOReadable) {
+	if (handle_event & EventFlag::kIOReadable) {
 		if (readable_callback_) { readable_callback_(); }
 	}
 
-	if (handle_event & IO_Flag::kIOWritable) {
+	if (handle_event & EventFlag::kIOWritable) {
 		if (writable_callback_) { writable_callback_(); }
 	}
 

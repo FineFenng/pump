@@ -6,7 +6,7 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -o3")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -o3")
 
 ############common_header 
-file(GLOB HEADERS "include/pump/*h")
+file(GLOB HEADERS "include/pump/*.h")
 ############common_header 
 
 
@@ -26,14 +26,14 @@ file(GLOB NET_HANDLE_HEADERS "include/pump/net/handle/*.h")
 file(GLOB NET_PARSER_HEADERS "include/pump/net/parser/*.h")
 file(GLOB NET_SERVER_HEADERS "include/pump/net/server/*.h")
 
-set(NET_BACKEND_HEADERS)
+set(NET_POLL_HEADERS)
 if(WIN32)
-	file(GLOB NET_BACKEND_HEADERS "include/pump/net/backend/Select.h")
+	file(GLOB NET_POLL_HEADERS "include/pump/net/poll/Select.h")
 else(WIN32)
 	if(APPLE)
-		file(GLOB NET_BACKEND_HEADERS "include/pump/net/backend/Select.h" "include/pump/net/backend/Poll.h")
+		file(GLOB NET_POLL_HEADERS "include/pump/net/poll/Select.h" "include/pump/net/poll/Poll.h")
 	endif(APPLE)
-	file(GLOB NET_BACKEND_HEADERS "include/pump/net/backend/Select.h" "include/pump/net/backend/Poll.h" "include/pump/net/backend/Epoll.h")
+	file(GLOB NET_POLL_HEADERS "include/pump/net/poll/Select.h" "include/pump/net/poll/Poll.h" "include/pump/net/poll/Epoll.h")
 endif(WIN32)
 ###########net_header
 
@@ -47,23 +47,23 @@ set(UTILITY_SRCS
 
 ###########net_src
 set(NET_SRCS
-        src/net/Acceptor.cpp
-        src/net/Buffer.cpp
-        src/net/EventLoop.cpp
-        src/net/SocketAddress.cpp
-        src/net/TcpConnection.cpp
-        src/net/TcpServer.cpp
-		src/net/watcher/IO_Watcher.cpp
-		)
+    src/net/Acceptor.cpp
+    src/net/Buffer.cpp
+    src/net/EventLoop.cpp
+    src/net/SocketAddress.cpp
+    src/net/TcpConnection.cpp
+    src/net/TcpServer.cpp
+    src/net/watcher/IO_Watcher.cpp
+    )
 
 
 if(WIN32)
-	list(APPEND NET_SRCS src/net/backend/Select.cpp)
+	list(APPEND NET_SRCS src/net/poll/Select.cpp)
 else(WIN32)
 	if (APPLE)
-		list(APPEND NEt_SRCS src/net/backend/Select.cpp src/net/backend/Poll.cpp)
+		list(APPEND NET_SRCS src/net/poll/Select.cpp src/net/poll/Poll.cpp src/net/poll/Kqueue.cpp)
 	endif(APPLE)
-	list(APPEND NET_SRCS src/net/backend/Select.cpp src/net/backend/Poll.cpp src/net/backend/Epoll.cpp)
+	list(APPEND NET_SRCS src/net/poll/Select.cpp src/net/poll/Poll.cpp src/net/poll/Epoll.cpp)
 endif(WIN32)
 ###########net_src
 
@@ -79,7 +79,7 @@ add_library(pump_net  STATIC
 					 ${CONFIG_HEADERS} 
 					 ${NET_HEADERS} 
 					 ${NET_HANDLE_HEADERS} 
-					 ${NET_BACKEND_HEADERS} 
+					 ${NET_POLL_HEADERS} 
 					 ${NET_PARSER_HEADERS}
 					 ${NET_SERVER_HEADERS}
 					 )

@@ -26,7 +26,7 @@ public:
 
 	virtual ~PollAbstract() { }
 
-	virtual void poll(const timeval* tv, TaskList* io_task_list) = 0;
+	virtual void poll(timeval* const tv, TaskList* io_task_list) = 0;
 	virtual void init_backend() = 0;
 	virtual void add_interests(const WatcherAbstract& handle) = 0;
 	virtual void modify_interests(const WatcherAbstract& handle) = 0;

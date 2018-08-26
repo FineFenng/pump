@@ -37,37 +37,37 @@ public:
 
 	SOCKET get_fd() const override { return fd_; }
 
-	bool is_readable() const override { return static_cast<bool>(events_ & IO_Flag::kIOReadable); }
+	bool is_readable() const override { return static_cast<bool>(events_ & EventFlag::kIOReadable); }
 
-	bool is_writable() const override { return static_cast<bool>(events_ & IO_Flag::kIOWritable); }
+	bool is_writable() const override { return static_cast<bool>(events_ & EventFlag::kIOWritable); }
 
 	void enable_readable() override
 	{
-		events_ |= IO_Flag::kIOReadable;
+		events_ |= EventFlag::kIOReadable;
 		loop_->update_watcher(*this);
 	}
 
 	void enable_writable() override
 	{
-		events_ |= IO_Flag::kIOWritable;
+		events_ |= EventFlag::kIOWritable;
 		loop_->update_watcher(*this);
 	}
 
 	void enable_readable_and_writable()
 	{
-		events_ = IO_Flag::kIReadableAndWritalbe;
+		events_ = EventFlag::kIO;
 		loop_->update_watcher(*this);
 	}
 
 	void disable_readable() override
 	{
-		events_ &= ~IO_Flag::kIOWritable;
+		events_ &= ~EventFlag::kIOWritable;
 		loop_->update_watcher(*this);
 	}
 
 	void disable_writable() override
 	{
-		events_ &= ~IO_Flag::kIOWritable;
+		events_ &= ~EventFlag::kIOWritable;
 		loop_->update_watcher(*this);
 	}
 

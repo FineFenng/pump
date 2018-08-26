@@ -5,7 +5,7 @@
 #ifndef PUMP_POLL_H
 #define PUMP_POLL_H
 
-#include <pump/net/BackendAbstract.h>
+#include <pump/net/PollAbstract.h>
 
 namespace pump
 {
@@ -15,7 +15,7 @@ namespace net
 
 class EventLoop;
 
-class Epoll : public BackendAbstract
+class Epoll : public PollAbstract
 {
  public:
   Epoll(EventLoop *loop)

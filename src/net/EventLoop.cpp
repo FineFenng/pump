@@ -110,14 +110,20 @@ void EventLoop::run()
 				struct timeval* tv = nullptr;
 
 				if (wait_time == 0) {
-					temp_tv.tv_sec  = 0;
-					temp_tv.tv_usec = 0;
+					temp_tv.tv_sec  = 0L;
+					temp_tv.tv_usec = 0L;
 					tv = &temp_tv;
 				}
 
 				if (wait_time > 0) {
-					//TODO
+
+
 				}
+
+				/*
+				if (wait_time < 0) {
+				    temp_tv = nullptr;
+				*/
 
 				clear_wakup_fd_buffer();
 				poll_->poll(tv, &io_task_list_);
@@ -217,10 +223,10 @@ void EventLoop::init_backend()
 	poll_.reset(new KQueue(this));
 	poll_type_ = PollType::kKQueue;
 #elif  PUMP_PLATFORM == PUMP_PLATFORM_WIN
-poll_.reset(new Select(this));
-poll_type_ = PollType::kSelect;
+	poll_.reset(new Select(this));
+	poll_type_ = PollType::kSelect;
 #else
-#error
+	#error
 #endif
 	poll_->init_backend();
 }
@@ -234,7 +240,7 @@ void EventLoop::init_notify_watcher()
 	r_wakeup_fd_ = sv[1];
 	SocketSetNoblocking(r_wakeup_fd_);
 	wakeup_watcher_.reset(new IO_Watcher(this, r_wakeup_fd_));
-	wakeup_watcher_->set_readable_callback(std::bind(&EventLoop::clear_wakup_fd_buffer, this));
+	//wakeup_watcher_->set_readable_callback([](){});
 	wakeup_watcher_->enable_readable();
 }
 

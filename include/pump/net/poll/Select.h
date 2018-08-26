@@ -19,15 +19,21 @@ public:
 	explicit Select(EventLoop* loop)
 		: loop_(loop), is_quit_(true),
 		max_fd_(-1)
+	{ }
+
+	~Select() override
 	{
+		assert(event_list_.empty());
 	}
-	void poll(const timeval* tv, TaskList* io_task_list) override;
+
+
+	void poll(timeval* const tv, TaskList* io_task_list) override;
 
 	void init_backend() override;
 
-	void add_interests(const WatcherAbstract& handle) override;
-	void modify_interests(const WatcherAbstract& handle) override;
-	void delete_interests(const WatcherAbstract& handle) override;
+	void add_interests(const WatcherAbstract& watcher) override;
+	void modify_interests(const WatcherAbstract& watcher) override;
+	void delete_interests(const WatcherAbstract& watcher) override;
 
 private:
 

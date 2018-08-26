@@ -15,12 +15,7 @@ typedef unsigned int HandleEvent;
 
 namespace pump { namespace net
 {
-enum IO_Flag : unsigned int
-{
-	kIOReadable = 0x01,
-	kIOWritable = 0x02,
-	kIReadableAndWritalbe = 0x04,
-};
+
 
 
 class WatcherAbstract
@@ -31,9 +26,7 @@ public:
 	typedef std::function<void()> WritableCallback;
 	typedef std::function<void()> ErroneousCallback;
 
-
-	virtual ~WatcherAbstract() = 0
-	{ }
+	virtual ~WatcherAbstract() { }
 
 	virtual void handle_callback(const HandleEvent& handle_event) const = 0;
 

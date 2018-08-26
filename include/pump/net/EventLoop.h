@@ -12,7 +12,7 @@
 
 #include <pump/Common.h>
 #include <pump/net/PollAbstract.h>
-#include <pump/net/poll/Platform.h>
+#include <pump/net/Platform.h>
 #include <pump/net/SocketOption.h>
 
 namespace pump {namespace net
