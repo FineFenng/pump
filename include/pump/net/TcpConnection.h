@@ -84,7 +84,6 @@ PUMP_DECLARE_DEFAULT_MOVABLE(TcpConnection)
 
 	void send_in_bind_thread(const char* data, size_t len);
 
-private:
 	SOCKET get_fd() const { return socket_.get_fd(); }
 
 private:

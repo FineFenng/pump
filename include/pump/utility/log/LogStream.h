@@ -8,6 +8,7 @@
 #include <cstddef>
 #include <cstring>
 
+#include <algorithm>
 #include <memory>
 #include <string>
 

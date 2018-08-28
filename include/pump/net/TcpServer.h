@@ -19,7 +19,7 @@ public:
 
 	typedef std::function<void(const TcpConnection_Ptr&)> NewConnectionCallback;
 	typedef std::function<void(const TcpConnection_Ptr&, Buffer*)> MessageReadableCallback;
-	typedef std::function<void(const TcpConnection_Ptr&, Buffer*)> MessageWritableCallback;
+	typedef std::function<void(const TcpConnection_Ptr&, int, Buffer*)> MessageWritableCallback;
 
 public:
 	TcpServer(EventLoop* loop, SocketAddress server_address, uint32_t sub_loop_num = 0);
@@ -32,7 +32,7 @@ public:
 
 	void on_message_readable(const TcpConnection_Ptr& connection_ptr, Buffer* buffer) const;
 
-	void on_message_writable(const TcpConnection_Ptr& connection_ptr, Buffer* buffer) const;
+	void on_message_writable(const TcpConnection_Ptr& connection_ptr, int count, Buffer* buffer) const;
 
 	void set_new_connection_callback(const NewConnectionCallback& cb)
 	{

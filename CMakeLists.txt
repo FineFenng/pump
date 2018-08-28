@@ -104,6 +104,15 @@ target_include_directories(pump_utiliy
 add_executable(EchoTest test/EchoTest.cpp)
 target_link_libraries(EchoTest pump_net)
 
+add_executable(LogTest test/LogTest.cpp)
+target_link_libraries(LogTest pump_utiliy)
+
+add_executable(ChronoTest test/ChronoTest.cpp)
+
+
+
+
+
 
 
 

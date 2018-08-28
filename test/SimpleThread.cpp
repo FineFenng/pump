@@ -4,30 +4,63 @@
 
 using namespace std;
 typedef int MySocket;
+typedef std::function<void()> Task;
+typedef std::vector<Task> TaskList;
+
+void callback() { }
+
+Task task = callback;
+task();
+
+
+
+class event_loop {
+
+public:
+	void register_fd(int fd);
+	void remove_fd(int fd);
+
+	void poll();
+
+private:
+	std::mutex mutex_;
+	TaskList task_list;
+};
+
+
 
 vector<std::vector<MySocket>> fd_list;
-
-int
 
 
 void WorkThread(int list_num)
 {
-	do {
+	read_list, write_list;
+	std::mutex  mutex_; //  main, sub
+	TaskList task_list; //  main, sub
 
-		struct timeval tv = {0, 0};
-		vector<MySocket>& my_fd_list = fd_list[list_num];
+	Tasklist tmp_task_list;
 
-		fd_set read_set;
+	std::unique_guard<std::mutex> lk(mutex_);
+	std::swap(tmp_task_list, task_list);
+	lk.unlock
 
-		for (size_t i = 0; i < my_fd_list.size(); ++i) {
-			FD_SET(my_fd_list[i], &read_set);
-		}
-		int re = select(0, &read_set, nullptr, nullptr, &tv);
 
-		if (re > 0) {
+	// 1 execute task in tasklist;
+	for (auto& i tmp_task_list)
+	{
+		i();
+	}
+
+	// 2 init fd_set	
+	FD_SET(fd, ....);
+
+	//3
+	int re = select(0, &read_set, nullptr, nullptr, nullptr);
+
+	//4 execute task in io_task_list;
+	if (re > 0) {
 			//TODO
-		}
-	} while ()
+	}
 }
 
 int main()

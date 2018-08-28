@@ -44,9 +44,9 @@ void TcpServer::on_message_readable(const TcpConnection_Ptr& connection_ptr, Buf
 	if (message_readable_callback_) { message_readable_callback_(connection_ptr, buffer); }
 }
 
-void TcpServer::on_message_writable(const TcpConnection_Ptr& connection_ptr,int len, Buffer* buffer) const
+void TcpServer::on_message_writable(const TcpConnection_Ptr& connection_ptr,int count, Buffer* buffer) const
 {
-	if (message_writable_callback_) { message_writable_callback_(connection_ptr, buffer); }
+	if (message_writable_callback_) { message_writable_callback_(connection_ptr, count, buffer); }
 }
 
 void TcpServer::init_connection(int fd, const SocketAddress& client_address)

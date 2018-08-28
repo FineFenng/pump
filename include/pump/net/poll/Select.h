@@ -8,6 +8,7 @@
 #include <pump/net/PollAbstract.h>
 
 #include <functional>
+#include <cassert>
 
 namespace pump {namespace net
 {

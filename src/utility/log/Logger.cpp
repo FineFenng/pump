@@ -4,11 +4,12 @@
 #include <string>
 #include <vector>
 
+#include <pump/Timestamp.h>
 #include <pump/utility/thread/ThreadOption.h>
 
 namespace pump { namespace utility
 {
-static std::vector<std::string> LogLevelMap = {"[TRACE]", "[DEBUG]", "[INFO]", "[WARN]", "[ERROR]", "[FATAL]"};
+static std::vector<std::string> LogLevelMap = {"T", "D", "I", "W", "E", "F"};
 
 LogLine::OutputFunction LogLine::g_output_function_ = [](const char* message, size_t len)
 {
@@ -22,11 +23,15 @@ LogLevel LogLine::g_level_ = LogLevel::PUMP_DEBUG;
 
 
 LogLine::LogLine(SourceFile source_file, int line, LogLevel level)
-	: base_name_(source_file)
-	, line_(line)
-	, level_(level)
+	: base_name_(source_file),
+	line_(line),
+	level_(level)
 {
-	log_stream_ << LogLevelMap[level] << '[' << GetCurrentThreadId() << ']';
+	auto a = Timestamp::now();
+
+	log_stream_ << '[' << Timestamp::now().get_time_point_string() << ']'
+				<< '[' << LogLevelMap[level] << ']'
+				<< '[' << GetCurrentThreadId() << ']';
 }
 
 LogLine::~LogLine()
