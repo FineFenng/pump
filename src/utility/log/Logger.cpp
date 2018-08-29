@@ -27,11 +27,12 @@ LogLine::LogLine(SourceFile source_file, int line, LogLevel level)
 	line_(line),
 	level_(level)
 {
-	auto a = Timestamp::now();
+	char thread_id_str[16] = {0};
+	snprintf(thread_id_str, sizeof(thread_id_str), "0x%llX", GetCurrentThreadId());
 
 	log_stream_ << '[' << Timestamp::now().get_time_point_string() << ']'
-				<< '[' << LogLevelMap[level] << ']'
-				<< '[' << GetCurrentThreadId() << ']';
+		<< '[' << LogLevelMap[level] << ']'
+		<< '[' << thread_id_str << ']';
 }
 
 LogLine::~LogLine()

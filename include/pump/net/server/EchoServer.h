@@ -17,7 +17,9 @@ public:
 
 public:
 	EchoServer(EventLoop* loop, SocketAddress socket_address)
-		: loop_(loop), server_(loop_, socket_address, 3), handler_(&server_)
+		: loop_(loop),
+		server_(loop_, socket_address, 1),
+		handler_(&server_)
 	{
 		handler_.set_complete_package_callback(std::bind(&EchoServer::on_complete_package, this, _1, _2));
 		server_.set_message_readable_callback(std::bind(&Hlen<uint32_t>::on_message, &handler_, _1, _2));
@@ -26,8 +28,8 @@ public:
 	void on_complete_package(const TcpConnection_Ptr& tcp_connection_ptr, Packet* packet)
 	{
 		BYTE_T temp[1024] = {0};
-        const uint32_t read_num = packet->peek(1024, temp);
-        handler_.send(tcp_connection_ptr, temp, read_num);
+		const uint32_t read_num = packet->peek(1024, temp);
+		handler_.send(tcp_connection_ptr, temp, read_num);
 	}
 
 private:

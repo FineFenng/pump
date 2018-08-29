@@ -24,7 +24,7 @@ public:
 
 	~Select() override
 	{
-		assert(event_list_.empty());
+		assert(watcher_list_.empty());
 	}
 
 
@@ -37,6 +37,7 @@ public:
 	void delete_interests(const WatcherAbstract& watcher) override;
 
 private:
+	
 
 	enum Select_Flag
 	{
@@ -54,11 +55,11 @@ private:
 private:
 	typedef fd_set ReadableList;
 	typedef fd_set WritableList;
-	typedef std::vector<std::reference_wrapper<const WatcherAbstract>> EventList;
+	typedef std::vector<std::reference_wrapper<const WatcherAbstract>> WatcherList;
 
 	ReadableList readable_list_;
 	WritableList writable_list_;
-	EventList event_list_;
+	WatcherList watcher_list_;
 };
 }}
 #endif //PUMP_SELECT_H

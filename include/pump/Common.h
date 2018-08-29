@@ -4,5 +4,7 @@
 #include <pump/Macros.h>
 #include <pump/Types.h>
 #include <pump/config/Platform.h>
+#include <pump/config/Constants.h>
+
 
 #endif //PUMP_COMMON_H_

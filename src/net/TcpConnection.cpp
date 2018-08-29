@@ -144,8 +144,8 @@ void TcpConnection::send_in_bind_thread(const char* data, size_t len)
 
 void TcpConnection::close_connection()
 {
-	handle_.disable_all();
-	loop_->remove_watcher(handle_);
+	//handle_.disable_all();
+	loop_->remove_watcher_sync(handle_);
 	close_callback_(shared_from_this());
 }
 }}

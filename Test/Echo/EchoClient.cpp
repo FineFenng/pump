@@ -123,7 +123,7 @@ int main(int argc, char* argv[])
 
     /* Client send_in_bind_thread a package firstly...*/
 
-    //write(conn_fd, package.data(), package.size());
+    write(conn_fd, package.data(), package.size());
 
     /* Client start revice and send_in_bind_thread package in loop...*/
 

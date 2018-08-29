@@ -51,9 +51,11 @@ set(NET_SRCS
     src/net/Buffer.cpp
     src/net/EventLoop.cpp
     src/net/SocketAddress.cpp
+	src/net/SocketOption.cpp
     src/net/TcpConnection.cpp
     src/net/TcpServer.cpp
     src/net/watcher/IO_Watcher.cpp
+	src/net/EventLoopThread.cpp
     )
 
 

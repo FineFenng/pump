@@ -12,6 +12,7 @@
 #include <pump/net/Socket.h>
 #include <pump/net/SocketAddress.h>
 #include <pump/net/watcher/IO_Watcher.h>
+#include <pump/net/SocketOption.h>
 
 
 namespace pump {namespace net

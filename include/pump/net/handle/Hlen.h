@@ -13,18 +13,14 @@ template <typename HeaderType>
 class Hlen
 {
 public:
-	//typedef std::function<void(const TcpConnection_Ptr&, Buffer*)> BufferReadableCallback;
-	//typedef std::function<void(const TcpConnection_Ptr&, Buffer*)> BufferWritableCallback;
-	//typedef std::function<void(const TcpConnection_Ptr&, const std::string&)> CompletePacketCallback;
-
 	PUMP_DECLARE_CALLBACK_FUNCTION(void, const TcpConnection_Ptr&, Buffer*) BufferReadableCallback;
 	PUMP_DECLARE_CALLBACK_FUNCTION(void, const TcpConnection_Ptr&, Buffer*) BufferWritableCallback;
 	PUMP_DECLARE_CALLBACK_FUNCTION(void, const TcpConnection_Ptr&, Packet*) CompletePacketCallback;
 
 public:
 	explicit Hlen(TcpServer* server)
-		: state_(parse_state::k_read_len)
-		, server_(server)
+		: state_(parse_state::k_read_len),
+		server_(server)
 	{
 		server_->set_message_readable_callback(std::bind(&Hlen::on_message, this, std::placeholders::_1,
 														std::placeholders::_2));
@@ -75,7 +71,8 @@ public:
 	{
 		send_packet_.reset();
 		encode_content(content, len);
-		tcp_connection_ptr->send_in_bind_thread(reinterpret_cast<const char*>(send_packet_.begin()), send_packet_.get_len());
+		tcp_connection_ptr->send_in_bind_thread(reinterpret_cast<const char*>(send_packet_.begin()),
+												send_packet_.get_len());
 	}
 
 	void set_complete_package_callback(const CompletePacketCallback& cb) { complete_package_callback_ = cb; }

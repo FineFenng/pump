@@ -7,6 +7,7 @@
 #include <sstream>
 
 #include <pump/net/Acceptor.h>
+#include <pump/net/SocketOption.h>
 
 #include <pump/utility/thread/ThreadOption.h>
 
@@ -36,8 +37,8 @@
  *
  */
 
-namespace pump { namespace net {
-namespace {
+namespace pump { namespace net {namespace
+{
 /*
 uint64_t GetCurrentThreadId()
 {
@@ -55,18 +56,18 @@ thread_local uint64_t t_thread_id = pump::utility::GetCurrentThreadId();
 
 EventLoop::EventLoop()
 	: thread_id_(t_thread_id),
-	  is_looping_(false),
-	  loop_state_(LoopState::kNormaTasklExecute),
-	  w_wakeup_fd_(-1),
-	  r_wakeup_fd_(-1),
-	  poll_type_(PollType::kDefault)
+	is_looping_(false),
+	loop_state_(LoopState::kNormaTasklExecute),
+	w_wakeup_fd_(-1),
+	r_wakeup_fd_(-1),
+	poll_type_(PollType::kDefault)
 {
 	if (t_event_loop == nullptr) {
 		t_event_loop = this;
 	}
 	else {
 		LOG_FALAL << "There exites an eventLoop Object in thread " << thread_id_;;
-		//abort();
+		abort();
 	}
 	LOG_INFO << "EventLoop: " << this << " has been built in thread " << thread_id_;
 
@@ -82,7 +83,6 @@ EventLoop::~EventLoop()
 	//TODO if there exits tasks in normal, delay or io task list. 
 
 	LOG_INFO << "Event loop terminate.";
-	init();
 }
 
 void EventLoop::run()
@@ -98,6 +98,10 @@ void EventLoop::run()
 					if (!normal_task_list_.empty()) {
 						std::swap(normal_task_list_, backup_task_list);
 					}
+					else {
+						loop_state_ = LoopState::kIOPolling;
+						continue;
+					}
 				}
 				for (auto& i : backup_task_list) {
 					i();
@@ -105,20 +109,17 @@ void EventLoop::run()
 				loop_state_ = LoopState::kIOPolling;
 			}
 			case kIOPolling: {
-				const int      wait_time = calc_poll_block_time();
-				struct timeval temp_tv   = {0, 0};
+				const int wait_time = calc_poll_block_time();
+				struct timeval temp_tv = {0, 0};
 				struct timeval* tv = nullptr;
 
 				if (wait_time == 0) {
-					temp_tv.tv_sec  = 0L;
+					temp_tv.tv_sec = 0L;
 					temp_tv.tv_usec = 0L;
 					tv = &temp_tv;
 				}
 
-				if (wait_time > 0) {
-
-
-				}
+				if (wait_time > 0) { }
 
 				/*
 				if (wait_time < 0) {
@@ -126,6 +127,8 @@ void EventLoop::run()
 				*/
 
 				clear_wakup_fd_buffer();
+				
+				
 				poll_->poll(tv, &io_task_list_);
 				loop_state_ = LoopState::kIOTaskExecute;
 			}
@@ -133,6 +136,7 @@ void EventLoop::run()
 				for (auto& i : io_task_list_) {
 					i();
 				}
+				io_task_list_.clear();
 				loop_state_ = LoopState::kDelayTaskExecute;
 			}
 			case kDelayTaskExecute: {
@@ -145,17 +149,22 @@ void EventLoop::run()
 	} while (is_looping_);
 }
 
-void EventLoop::update_watcher(const WatcherAbstract& watcher) const
+void EventLoop::update_watcher(const WatcherAbstract& watcher)
 {
 	if (watcher.get_index() < 0) {
-		add_watcher(watcher);
+		push_back_task(std::bind(&EventLoop::add_watcher, this, std::ref(watcher)));
 	}
 	else {
-		modify_watcher(watcher);
+		push_back_task(std::bind(&EventLoop::modify_watcher, this, std::ref(watcher)));
 	}
 }
 
-void EventLoop::remove_watcher(const WatcherAbstract& watcher) const
+void EventLoop::remove_watcher(const WatcherAbstract& watcher)
+{
+	push_back_task(std::bind(&EventLoop::delete_watcher, this, std::ref(watcher)));
+}
+
+void EventLoop::remove_watcher_sync(const WatcherAbstract& watcher) const
 {
 	delete_watcher(watcher);
 }
@@ -175,11 +184,13 @@ void EventLoop::delete_watcher(const WatcherAbstract& watcher) const
 	poll_->delete_interests(watcher);
 }
 
+
+// always called by main thread.
 void EventLoop::wakeup() const
 {
 	char val[5] = {0};
 	//TODO
-	int  saved_errno;
+	int saved_errno;
 	Send(w_wakeup_fd_, val, sizeof(val), 0, &saved_errno);
 }
 
@@ -231,6 +242,7 @@ void EventLoop::init_backend()
 	poll_->init_backend();
 }
 
+// execute in binded thread.
 void EventLoop::init_notify_watcher()
 {
 	SOCKET sv[2];
@@ -248,6 +260,6 @@ void EventLoop::clear_wakup_fd_buffer() const
 {
 	//TODO
 	char recv_buffer[1024] = {0};
-	::recv(r_wakeup_fd_, recv_buffer, sizeof(recv_buffer), 0);
+	int re = ::recv(r_wakeup_fd_, recv_buffer, sizeof(recv_buffer), 0);
 }
 }}

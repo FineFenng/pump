@@ -1,13 +1,27 @@
 #include <thread>
 #include <vector>
+#include <iostream>
 #include <pump/Common.h>
 
 using namespace std;
-typedef int MySocket;
-typedef std::function<void()> Task;
-typedef std::vector<Task> TaskList;
 
-void callback() { }
+typedef std::function<void()> Task;
+
+
+void do_something(int a)
+{
+	std::cout << a << '\n';
+}
+
+
+
+
+
+
+
+
+
+
 
 Task task = callback;
 task();
@@ -40,9 +54,10 @@ void WorkThread(int list_num)
 
 	Tasklist tmp_task_list;
 
-	std::unique_guard<std::mutex> lk(mutex_);
-	std::swap(tmp_task_list, task_list);
-	lk.unlock
+	{
+		std::lock_guard<std::mutex> lk(mutex_);
+		std::swap(tmp_task_list, task_list);
+	}
 
 
 	// 1 execute task in tasklist;
@@ -77,6 +92,7 @@ int main()
 		std::thread th(WorkThread(i));
 		thread_list.push_back(std::move(th));
 	}
+void bind()
 
 	const int listenfd = ::socket(AF_INET, SOCK_STREAM, 0);
 	struct sockaddr_in server_addr{0, 0, 0, 0};
@@ -103,4 +119,28 @@ int main()
 			thread_list[i].join();
 		}
 	}
+}
+
+
+int main()
+{
+	std::vector<Task> tasks;
+
+
+
+
+	
+	auto other_task = std::bind(do_something, 3);
+
+	std::function<void()> a = other_task;
+
+
+	Task new_task = std::bind(do_something, 3);
+
+	
+
+
+
+
+	
 }

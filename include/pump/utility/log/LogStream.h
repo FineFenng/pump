@@ -18,26 +18,26 @@ namespace pump { namespace utility
 {
 static const int kSmallBuffer = 4000;
 static const int kLargeBuffer = 4000 * 1000;
-
 static const char digits[] = {
-	'9', '8', '7', '6', '5', '4', '3', '2', '1',
-	'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
+	'F', 'E', 'D', 'C', 'B', 'A', '9', '8', '7', '6', '5', '4', '3', '2', '1',
+	'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
 };
 
-static const char* zero = digits + 9;
+
 
 template <typename T>
-inline size_t ConvertNumToString(const T& t, char* buffer)
+inline size_t ConvertNumToString(const T& t, char* buffer, int base)
 {
 	T i = t;
 	char* p = buffer;
 
+	const char* const zero = digits + 15;
+
 	do {
-		const int lsd = static_cast<int>(i % 10);
-		i /= 10;
+		const auto lsd = static_cast<int>(i % base);
+		i /= base;
 		*p++ = zero[lsd];
-	}
-	while (i != 0);
+	} while (i != 0);
 
 	if (t < 0) {
 		*p++ = '-';
@@ -49,14 +49,14 @@ inline size_t ConvertNumToString(const T& t, char* buffer)
 	return p - buffer;
 }
 
-template <unsigned int SiZE>
+template <unsigned int SIZE>
 class FixedBuffer
 {
 public:
 	FixedBuffer()
-		: data_{0}, cur_(data_)
-	{
-	}
+		: data_{0},
+		cur_(data_)
+	{ }
 
 
 	void append(const char* buf, size_t len)
@@ -86,7 +86,7 @@ private:
 
 	const char* end() const { return data_ + sizeof(data_); }
 
-	char data_[SiZE];
+	char data_[SIZE];
 	char* cur_;
 };
 
@@ -114,7 +114,7 @@ public:
 
 	self& operator<<(char ch);
 
-	template<unsigned int N>
+	template <unsigned int N>
 	self& operator<<(const char (&str)[N])
 	{
 		return operator<<(str);
@@ -137,7 +137,7 @@ private:
 	inline void format_integet(T v)
 	{
 		if (buffer().avail() > max_numeric_size) {
-			size_t len = ConvertNumToString(v, buffer_.current());
+			size_t len = ConvertNumToString(v, buffer_.current(), 10);
 			buffer_.add(len);
 		}
 	}

@@ -34,6 +34,8 @@ PUMP_DECLARE_DEFAULT_MOVABLE(Socket)
 					LOG_ERROR << "Close Socket: " << fd_ << " failed.";
 					return;
 				}
+			} else {
+				break;
 			}
 		} while (true);
 	}

@@ -13,7 +13,6 @@
 #include <pump/Common.h>
 #include <pump/net/PollAbstract.h>
 #include <pump/net/Platform.h>
-#include <pump/net/SocketOption.h>
 
 namespace pump {namespace net
 {
@@ -35,9 +34,11 @@ PUMP_DECLARE_NON_MOVABLE(EventLoop)
 
 	void run();
 
-	void update_watcher(const WatcherAbstract& watcher) const;
+	void update_watcher(const WatcherAbstract& watcher);
 
-	void remove_watcher(const WatcherAbstract& watcher) const;
+	void remove_watcher(const WatcherAbstract& watcher);
+
+	void remove_watcher_sync(const WatcherAbstract& watcher) const;
 
 	void push_back_task(const Task& task)
 	{
@@ -53,12 +54,12 @@ PUMP_DECLARE_NON_MOVABLE(EventLoop)
 		}
 	}
 
-private:
 	void add_watcher(const WatcherAbstract& watcher) const;
 
 	void modify_watcher(const WatcherAbstract& watcher) const;
 
 	void delete_watcher(const WatcherAbstract& watcher) const;
+
 
 	void wakeup() const;
 

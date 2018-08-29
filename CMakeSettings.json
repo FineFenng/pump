@@ -15,15 +15,15 @@
     },
     {
       "name": "x86-Release",
-      "generator": "Ninja",
-      "configurationType": "RelWithDebInfo",
+      "generator": "Visual Studio 15 2017 Win64",
+      "configurationType": "Debug",
       "inheritEnvironments": [
         "msvc_x86"
       ],
       "buildRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\build\\${name}",
       "installRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\install\\${name}",
       "cmakeCommandArgs": "",
-      "buildCommandArgs": "-v",
+      //"buildCommandArgs": "",
       "ctestCommandArgs": ""
     },
     {
