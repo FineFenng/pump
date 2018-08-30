@@ -151,7 +151,7 @@ public:
 		return this;
 	}
 
-	Packet* write(const BYTE_T* buffer, uint32_t len)
+	Packet* write(const BYTE_T* buffer, uint32_t len) 
 	{
 		while (len > left_left_capacity()) {
 			extend_right_buffer_capacity();

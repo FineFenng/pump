@@ -20,7 +20,7 @@ void Select::poll(struct timeval* tv, TaskList* io_task_list)
 	::memcpy(&readable_list_vr, &readable_list_, sizeof(readable_list_));
 	::memcpy(&writable_list_vr, &writable_list_, sizeof(writable_list_));
 
-	int ready_event_count = ::select(max_fd_ + 1, &readable_list_vr, &writable_list_vr, nullptr, tv);
+	int ready_event_count = ::select(max_fd_ + 1, &readable_list_vr, &writable_list_vr, nullptr, nullptr);
 	const int saved_errno = errno;
 	if (ready_event_count > 0) {
 		LOG_TRACE << "Current ready socket fd number: " << ready_event_count;

@@ -261,6 +261,7 @@ int Recv(SOCKET fd, char* const buffer, size_t len, int flags, int* o_errno)
 		if (recv_count > 0) {
 			re += recv_count;
 			*o_errno = 0;
+			break;
 		}
 		else if (recv_count == 0) {
 			LOG_TRACE << fd << " socket closed by remote side gracefully[detected by recv]";
@@ -268,7 +269,7 @@ int Recv(SOCKET fd, char* const buffer, size_t len, int flags, int* o_errno)
 			break;
 		}
 		else {
-			assert(recv_count == -1);
+			assert(recv_count < 0);
 			if (errno == EWOULDBLOCK || errno == EAGAIN) {
 				*o_errno = errno;
 				break;

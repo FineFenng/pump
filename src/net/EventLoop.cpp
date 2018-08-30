@@ -54,13 +54,14 @@ thread_local EventLoop* t_event_loop = nullptr;
 thread_local uint64_t t_thread_id = pump::utility::GetCurrentThreadId();
 }
 
-EventLoop::EventLoop()
+EventLoop::EventLoop(int event_loop_id)
 	: thread_id_(t_thread_id),
 	is_looping_(false),
 	loop_state_(LoopState::kNormaTasklExecute),
 	w_wakeup_fd_(-1),
 	r_wakeup_fd_(-1),
-	poll_type_(PollType::kDefault)
+	poll_type_(PollType::kDefault),
+	event_loop_id_(event_loop_id)
 {
 	if (t_event_loop == nullptr) {
 		t_event_loop = this;

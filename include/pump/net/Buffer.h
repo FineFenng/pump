@@ -20,6 +20,7 @@
 
 
 // standard c header file
+#include <cassert>
 #include <cstring>
 
 // standard c++  header file
@@ -70,7 +71,11 @@ public:
 
 	int recv_from_fd(int fd, int* saved_errno);
 
-	void retrieve(size_t len) { readable_index_ += len; }
+	void retrieve(size_t len)
+	{
+		readable_index_ += len;
+		assert(readable_index_ <= writable_index_);
+	}
 
 	void retrieve_all() { readable_index_ = writable_index_ = 0; }
 

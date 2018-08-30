@@ -34,7 +34,7 @@ private :
 	void init_pool()
 	{
 		for (int i = 0; i < event_loop_num_; ++i) {
-			std::unique_ptr<EventLoopThread> event_loop_thread(new EventLoopThread(this));
+			std::unique_ptr<EventLoopThread> event_loop_thread(new EventLoopThread(this, i+1));
 			event_loop_threads_.push_back(std::move(event_loop_thread));
 		}
 		count_down_latch_.wait();

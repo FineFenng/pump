@@ -25,7 +25,7 @@ class EventLoop
 public:
 	PUMP_DECLARE_CALLBACK_FUNCTION(void) Task;
 public:
-	EventLoop();
+	EventLoop(int event_loop_id = 0);
 
 	~EventLoop();
 
@@ -60,8 +60,9 @@ PUMP_DECLARE_NON_MOVABLE(EventLoop)
 
 	void delete_watcher(const WatcherAbstract& watcher) const;
 
-
 	void wakeup() const;
+
+	int get_event_loop_id() const { return event_loop_id_; }
 
 private:
 	void init();
@@ -104,6 +105,7 @@ private:
 	TaskList delay_task_list_;
 	TaskList io_task_list_;
 	std::mutex mutex_;
+	int event_loop_id_;
 };
 }}
 

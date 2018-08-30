@@ -5,12 +5,14 @@
 #include <pump/BytesHelper.h>
 #include <pump/net/TcpServer.h>
 #include <pump/Packet.h>
+#include <pump/net/Handler.h>
 
 
 namespace pump { namespace net
 {
+
 template <typename HeaderType>
-class Hlen
+class Hlen : public Handler
 {
 public:
 	PUMP_DECLARE_CALLBACK_FUNCTION(void, const TcpConnection_Ptr&, Buffer*) BufferReadableCallback;
@@ -18,18 +20,23 @@ public:
 	PUMP_DECLARE_CALLBACK_FUNCTION(void, const TcpConnection_Ptr&, Packet*) CompletePacketCallback;
 
 public:
-	explicit Hlen(TcpServer* server)
+	explicit Hlen(TcpServer* server, const TcpConnection_Ptr tcp_connection_ptr)
 		: state_(parse_state::k_read_len),
-		server_(server)
+		server_(server),
+		tcp_connection_ptr_(tcp_connection_ptr)
 	{
 		server_->set_message_readable_callback(std::bind(&Hlen::on_message, this, std::placeholders::_1,
 														std::placeholders::_2));
 	}
 
-PUMP_DECLARE_NON_COPYABLE(Hlen)
+	~Hlen() = default;
+
+
+PUMP_DECLARE_DEFAULT_COPYABLE(Hlen)
+PUMP_DECLARE_DEFAULT_MOVABLE(Hlen)
 
 public:
-	void on_message(const TcpConnection_Ptr& tcp_connection_ptr, Buffer* buffer)
+	void on_message(const TcpConnection_Ptr& tcp_connection_ptr, Buffer* buffer) override
 	{
 		bool is_exit_loop = false;
 		do {
@@ -44,50 +51,44 @@ public:
 					}
 					else {
 						is_exit_loop = true;
-						break;
 					}
 				case parse_state::k_read_content:
 					if (buffer->get_readable_bytes() >= content_size_) {
 						//const std::string content = decode_content(buffer->get_readable_address(), content_size_);
-						recv_packet_.write(buffer->get_readable_address(), content_size_);
+						tcp_connection_ptr->get_packet_address()->write(buffer->get_readable_address(), content_size_);
 
 						if (complete_package_callback_) {
-							complete_package_callback_(tcp_connection_ptr, &recv_packet_);
+							complete_package_callback_(tcp_connection_ptr, tcp_connection_ptr->get_packet_address());
 						}
 						buffer->retrieve(content_size_);
+						tcp
+
 						state_ = parse_state::k_read_len;
-						recv_packet_.reset();
 					}
 					else {
 						is_exit_loop = true;
-						break;
 					}
-					break;
 			}
 		} while (!is_exit_loop);
 	}
 
-	void send(const TcpConnection_Ptr& tcp_connection_ptr, const BYTE_T* content, size_t len)
+	void send(const TcpConnection_Ptr& tcp_connection_ptr, const BYTE_T* content, size_t len) override
 	{
-		send_packet_.reset();
-		encode_content(content, len);
-		tcp_connection_ptr->send_in_bind_thread(reinterpret_cast<const char*>(send_packet_.begin()),
-												send_packet_.get_len());
-	}
-
-	void set_complete_package_callback(const CompletePacketCallback& cb) { complete_package_callback_ = cb; }
-
-private :
-	void encode_content(const BYTE_T* content, size_t len)
-	{
+		Packet send_packet;
 		const auto head_size = static_cast<HeaderType>(len);
-		send_packet_.write_left(head_size);
-		send_packet_.write(content, len);
+		send_packet.write_left(head_size);
+		send_packet.write(content, len);
+
+		tcp_connection_ptr->send_in_bind_thread(reinterpret_cast<const char*>(send_packet.begin()),
+												send_packet.get_len());
 	}
 
+	void set_complete_package_callback(const CompletePacketCallback& cb) override { complete_package_callback_ = cb; }
 
-	void decode_content(const char* message, size_t len)
-	{ }
+	Handler* clone() override
+	{
+		return new Hlen(*this);
+	}
 
 private:
 	enum parse_state
@@ -96,16 +97,20 @@ private:
 		k_read_content,
 	};
 
+
 	parse_state state_;
 	HeaderType content_size_;
-	Packet recv_packet_;
-	Packet send_packet_;
-private
-:
+private:
+
 	CompletePacketCallback complete_package_callback_;
 	TcpServer* server_;
+	TcpConnection_Ptr tcp_connection_ptr_;
 };
+
+
+
 }}
+
 
 
 #endif

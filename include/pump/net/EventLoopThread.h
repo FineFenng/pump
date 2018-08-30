@@ -14,10 +14,12 @@ class EventLoopThreadPool;
 class EventLoopThread
 {
 public:
-	EventLoopThread(EventLoopThreadPool* event_loop_thread_pool)
+	EventLoopThread(EventLoopThreadPool* event_loop_thread_pool, int work_num)
 		: loop_(nullptr),
 		event_loop_thread_pool_(event_loop_thread_pool),
-		is_finish_init_(false)
+		is_finish_init_(false),
+		work_num_(work_num)
+
 	{
 		std::thread th(std::bind(&EventLoopThread::run, this));
 		thread_ = std::move(th);
@@ -46,6 +48,7 @@ private:
 	EventLoopThreadPool* event_loop_thread_pool_;
 	mutable std::thread thread_;
 	bool is_finish_init_;
+	int work_num_;
 };
 }}
 

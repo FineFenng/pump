@@ -42,7 +42,7 @@ int Buffer::recv_from_fd(int fd, int* saved_errno)
 #endif
 
 #ifdef PUMP_PLATFORM_WIN
-	count = RecvN(fd, extra_buffer, kDefaultBufferSize, 0, saved_errno);
+	count = Recv(fd, extra_buffer, kDefaultBufferSize, 0, saved_errno);
 
 	if (count > 0 && count <= get_writable_bytes()) {
 		append_string(extra_buffer, count);

@@ -13,11 +13,13 @@
 #include <pump/net/SocketAddress.h>
 #include <pump/net/watcher/IO_Watcher.h>
 #include <pump/net/SocketOption.h>
+#include <pump/Packet.h>
 
 
 namespace pump {namespace net
 {
 class EventLoop;
+class Handler;
 
 class TcpConnection : public std::enable_shared_from_this<TcpConnection>
 {
@@ -44,8 +46,6 @@ PUMP_DECLARE_DEFAULT_MOVABLE(TcpConnection)
 	~TcpConnection();
 
 	void send(const char* data, size_t len);
-
-	void send(const std::string& message);
 
 	void on_readable();
 
@@ -102,7 +102,6 @@ private:
 
 private:
 	ConnectionStyle state_;
-
 	Buffer input_buffer_;
 	Buffer output_buffer_;
 };

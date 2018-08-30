@@ -15,6 +15,7 @@
 #include <pump/net/SocketAddress.h>
 #include <pump/net/SocketOption.h>
 #include <pump/utility/log/Logger.h>
+#include <pump/net/handle/Hlen.h>
 
 
 namespace pump {namespace net
@@ -30,10 +31,10 @@ TcpConnection::TcpConnection(EventLoop* loop, int fd, const SocketAddress& local
 	state_(kDisconnected)
 
 {
-	handle_.enable_readable();
 	handle_.set_readable_callback(std::bind(&TcpConnection::on_readable, this));
 	handle_.set_writable_callback(std::bind(&TcpConnection::on_writable, this));
 	handle_.set_erroneous_callback(std::bind(&TcpConnection::on_erroneous, this));
+	handle_.enable_readable();
 }
 
 TcpConnection::~TcpConnection()
@@ -95,6 +96,7 @@ void TcpConnection::on_writable()
 		}
 		else {
 			on_erroneous();
+			break;
 		}
 	} while (true);
 	if (writable_callback_) {
@@ -104,6 +106,7 @@ void TcpConnection::on_writable()
 
 void TcpConnection::send_in_bind_thread(const char* data, size_t len)
 {
+	
 	size_t remain_count = len;
 	int wrote_count = 0;
 
@@ -115,6 +118,7 @@ void TcpConnection::send_in_bind_thread(const char* data, size_t len)
 
 			if (wrote_count > 0) {
 				remain_count -= wrote_count;
+				break;
 			}
 			else if (errno == EWOULDBLOCK || errno == EAGAIN) {
 				// when socket is nonblocking.

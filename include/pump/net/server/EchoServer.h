@@ -2,8 +2,8 @@
 #define PUMP_NET_ECHOSERVER_H_
 
 #include <pump/net/TcpServer.h>
-#include <pump/net/handle/Hlen.h>
 #include <pump/Packet.h>
+#include <pump/net/handle/Hlen.h>
 
 
 using namespace std::placeholders;
@@ -18,11 +18,16 @@ public:
 public:
 	EchoServer(EventLoop* loop, SocketAddress socket_address)
 		: loop_(loop),
-		server_(loop_, socket_address, 1),
-		handler_(&server_)
+		server_(loop_, socket_address, 2)
 	{
-		handler_.set_complete_package_callback(std::bind(&EchoServer::on_complete_package, this, _1, _2));
-		server_.set_message_readable_callback(std::bind(&Hlen<uint32_t>::on_message, &handler_, _1, _2));
+		server_.set_new_connection_callback(std::bind(&EchoServer::on_new_connection, this, _1));
+	}
+
+	void on_new_connection(const TcpConnection_Ptr& tcp_connection_ptr)
+	{
+		Handler* handler = new Hlen<uint32_t>(&server_, tcp_connection_ptr);
+		handler->set_complete_package_callback(std::bind(&EchoServer::on_complete_package, this, _1, _2));
+		tcp_connection_ptr->set_handler(handler);
 	}
 
 	void on_complete_package(const TcpConnection_Ptr& tcp_connection_ptr, Packet* packet)
@@ -35,7 +40,6 @@ public:
 private:
 	EventLoop* loop_;
 	TcpServer server_;
-	Hlen<uint32_t> handler_;
 };
 }}
 #endif
