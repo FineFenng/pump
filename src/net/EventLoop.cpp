@@ -197,7 +197,7 @@ void EventLoop::wakeup() const
 
 void EventLoop::init()
 {
-	init_backend();
+	init_poll();
 	init_notify_watcher();
 }
 
@@ -223,7 +223,7 @@ int EventLoop::calc_poll_block_time() const
 	return -1;
 }
 
-void EventLoop::init_backend()
+void EventLoop::init_poll()
 {
 #if PUMP_PLATFORM == PUMP_PLATFORM_GNU
 	poll_.reset(new Select(this));

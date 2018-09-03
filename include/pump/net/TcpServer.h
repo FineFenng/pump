@@ -30,39 +30,27 @@ public:
 
 	TcpServer(EventLoop* loop, unsigned short port, Handler* handler = nullptr, uint32_t sub_loop_num = 0);
 
-	void on_new_collection(const TcpConnection_Ptr& connection_ptr) const;
+	void on_new_connection(const TcpConnection_Ptr& connection_ptr) const;
 
 	void on_message_readable(const TcpConnection_Ptr& connection_ptr, Buffer* buffer);
 
 	void on_message_writable(const TcpConnection_Ptr& connection_ptr, int count, Buffer* buffer) const;
 
-	void set_new_connection_callback(const NewConnectionCallback& cb)
-	{
-		new_connection_callback_ = cb;
-	}
+	void set_new_connection_callback(const NewConnectionCallback& cb) { new_connection_callback_ = cb; }
 
-	void set_message_readable_callback(const MessageReadableCallback& cb)
-	{
-		message_readable_callback_ = cb;
-	}
+	void set_message_readable_callback(const MessageReadableCallback& cb) { message_readable_callback_ = cb; }
 
-	void set_message_writable_callback(const MessageWritableCallback& cb)
-	{
-		message_writable_callback_ = cb;
-	}
+	void set_message_writable_callback(const MessageWritableCallback& cb) { message_writable_callback_ = cb; }
 
 	void init_connection(int fd, const SocketAddress& client_address);
 
-	void destroy_connection(const TcpConnection_Ptr& connection_ptr);
+	void deinit_connection(const TcpConnection_Ptr& connection_ptr);
 
-	void modify_connection_handler(SOCKET fd, Handler* hanler)
-	{
-		tcp_connection_map_[fd].second.reset(hanler);
-	}
+	void modify_connection_handler(SOCKET fd, Handler* hanler) { tcp_connection_map_[fd].second.reset(hanler); }
 
 
 private:
-	static void run(EventLoop* loop);
+	static void run(EventLoop* loop) { loop->run(); }
 
 private:
 	EventLoop* main_loop_;

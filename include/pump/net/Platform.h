@@ -44,7 +44,7 @@ enum EventFlag : unsigned int {
     kNone       = 0x00,
     kIOReadable = 0x01,
     kIOWritable = 0x02,
-    kIO         = kIOReadable | kIOWritable,
+    kIO         = (kIOReadable | kIOWritable),
     kTimerout   = 0x04,
 };
 

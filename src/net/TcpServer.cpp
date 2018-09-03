@@ -35,7 +35,7 @@ TcpServer::TcpServer(EventLoop* loop, unsigned short port, Handler* handler, uin
 	: TcpServer(loop, SocketAddress(port), handler, sub_loop_num)
 {}
 
-void TcpServer::on_new_collection(const TcpConnection_Ptr& connection_ptr) const
+void TcpServer::on_new_connection(const TcpConnection_Ptr& connection_ptr) const
 {
 	if (new_connection_callback_) { new_connection_callback_(connection_ptr); }
 }
@@ -65,18 +65,17 @@ void TcpServer::init_connection(int fd, const SocketAddress& client_address)
 
 	new_connection_ptr->set_readable_callback(std::bind(&TcpServer::on_message_readable, this, _1, _2));
 	new_connection_ptr->set_writable_callback(std::bind(&TcpServer::on_message_writable, this, _1, _2, _3));
-	new_connection_ptr->set_closed_callback(std::bind(&TcpServer::destroy_connection, this, _1));
+	new_connection_ptr->set_closed_callback(std::bind(&TcpServer::deinit_connection, this, _1));
 	new_connection_ptr->set_connection_style(TcpConnection::kEstablishing);
 	tcp_connection_map_[fd].first = new_connection_ptr;
 
-	Handler* de
 
 	tcp_connection_map_[fd].second.reset();
 
-	loop->push_back_task(std::bind(&TcpServer::on_new_collection, this, new_connection_ptr));
+	loop->push_back_task(std::bind(&TcpServer::on_new_connection, this, new_connection_ptr));
 }
 
-void TcpServer::destroy_connection(const TcpConnection_Ptr& connection_ptr)
+void TcpServer::deinit_connection(const TcpConnection_Ptr& connection_ptr)
 {
 	connection_ptr->set_connection_style(connection_ptr->kDisconnected);
 

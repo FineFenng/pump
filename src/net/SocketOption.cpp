@@ -44,7 +44,7 @@ SOCKET SocketOpen(int af, int type, int protocol)
 
 int SocketBind(SOCKET fd, const struct sockaddr_in* peer_address)
 {
-	if (bind(fd, reinterpret_cast<const struct sockaddr*>(peer_address), sizeof(*peer_address)) == 0) {
+	if (bind(fd, reinterpret_cast<const struct sockaddr*>(peer_address), sizeof(struct sockaddr_in)) == 0) {
 		return pump::kSuccess;
 	}
 	return pump::kFail;

@@ -8,7 +8,6 @@
 #include <chrono>
 #include <string>
 #include <ctime>
-#include <iostream>
 
 #include <pump/Common.h>
 
@@ -36,7 +35,7 @@ public:
 	std::string get_time_point_string() const
 	{
 		char time_buffer[64] = {0};
-		struct tm time;
+		struct tm time{};
 
 		const auto seconds = time_point_.time_since_epoch().count() / 1000000;
 
@@ -56,16 +55,6 @@ private:
 	TimePoint time_point_;
 };
 
-/*
-inline Timestamp operator+(const Timestamp& lhs, double add_second)
-{
-	const auto tmp_time = static_cast<long>(add_second);
-	const auto nano_seconds = static_cast<long long>(add_second * 1e9) + static_cast<long long>((add_second -
-		tmp_time) * 1e9);
-	const Timestamp::TimePoint::duration nano_duration(nano_seconds);
-	return Timestamp{lhs.get_time_point() + nano_duration};
-}
-*/
 }
 
 #endif //PUMP_TIMESTAMP_H_

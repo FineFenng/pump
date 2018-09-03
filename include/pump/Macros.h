@@ -1,9 +1,12 @@
 #ifndef PUMP_MACROS_H_
 #define PUMP_MACROS_H_
 
-//#include <pump/Types.h>
+#include <pump/config/Platform.h>
 
+namespace pump
+{
 
+void assert_failed(const char* error, const char* file, int line, const char* function, ...);
 //#define PUMP_CPLUSPLUS __cplusplus
 
 #define PUMP_MALLOC_H_RESERVE (128)
@@ -19,8 +22,10 @@
 
 #define PUMP_NEGATIVE(A)           ((A<0)?(A):(-(A)))
 
-#define PUMP_TV_SET(tv,t) do { tv.tv_sec = static<long>(t); tv.tv_usec = static_cast<long>((t - tv.tv_sec) * 1e6); } while (0)
-#define PUMP_TS_SET(tv,t) do { tv.tv_sec = static<long>(t); tv.tv_usec = static_cast<long>((t - tv.tv_sec) * 1e9); } while (0)
+#define PUMP_TV_SET(tv,t) \
+	do { tv.tv_sec = static<long>(t); tv.tv_usec = static_cast<long>((t - tv.tv_sec) * 1e6); } while (0)
+#define PUMP_TS_SET(tv,t) \
+	do { tv.tv_sec = static<long>(t); tv.tv_usec = static_cast<long>((t - tv.tv_sec) * 1e9); } while (0)
 
 #ifdef PUMP_NO_CXX11_DELETED_FUNC
 #define PUMP_DECLARE_NON_COPYABLE(__classname__) \
@@ -50,7 +55,17 @@
 	__classname__& operator=(__classname__&&) = default;
 
 
-#define PUMP_DECLARE_CALLBACK_FUNCTION(T,...) typedef std::function<T(__VA_ARGS__)>
+#define PUMP_DECLARE_CALLBACK_FUNCTION(T,...)  typedef std::function<T(__VA_ARGS__)>
+
+#ifdef _DEBUG
+#if PUMP_PLATFORM_WIN
+#define PUMP_ASSERT(x, ...) \
+	((void) (x)? (void)0: pump::assert_failed(#x, __FILE__, __LINE__, __FUNCTION__, "" __VA_ARGS__))
+#else
+#define PUMP_ASSERT assert(x)
+#endif
+#endif
+}
 
 
 #endif

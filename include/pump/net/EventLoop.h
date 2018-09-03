@@ -5,7 +5,6 @@
 #ifndef PUMP_NET_EVENTLOOP_H_
 #define PUMP_NET_EVENTLOOP_H_
 
-#include <map>
 #include <memory>
 #include <mutex>
 #include <thread>
@@ -24,8 +23,9 @@ class EventLoop
 {
 public:
 	PUMP_DECLARE_CALLBACK_FUNCTION(void) Task;
+
 public:
-	EventLoop(int event_loop_id = 0);
+	explicit EventLoop(int event_loop_id = 0);
 
 	~EventLoop();
 
@@ -73,7 +73,7 @@ private:
 
 	void init_notify_watcher();
 
-	void init_backend();
+	void init_poll();
 
 	void clear_wakup_fd_buffer() const;
 
