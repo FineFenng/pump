@@ -8,7 +8,7 @@
 #include <functional>
 
 #include <pump/Common.h>
-#include <pump/net/watcher/IO_Watcher.h>
+#include <pump/net/watcher/IOWatcher.h>
 #include <pump/net/SocketAddress.h>
 #include <pump/net/TcpConnection.h>
 
@@ -51,7 +51,7 @@ private:
 	SocketAddress server_address_;
 	Socket socket_;
 
-	IO_Watcher watcher_;
+	IOWatcher watcher_;
 	bool is_listening_;
 private:
 	NewConnectionCallback new_connection_callback_;

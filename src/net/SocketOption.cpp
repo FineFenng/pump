@@ -24,7 +24,7 @@ bool SocketIsValid(SOCKET socket)
 #ifdef PUMP_PLATFORM_WIN
 	return socket != INVALID_SOCKET;
 #else
-			return socket > 0;
+	return socket > 0;
 #endif
 }
 
@@ -79,9 +79,9 @@ int SocketClose(SOCKET fd)
 	}
 	WSACleanup();
 #else
-			if (close(fd) < 0) {
-				re = pump::kFail;
-			}
+	if (close(fd) < 0) {
+		re = pump::kFail;
+	}
 #endif
 	return pump::kSuccess;
 }
@@ -92,7 +92,7 @@ int SocketGetLastErrno(SOCKET fd)
 #ifdef PUMP_PLATFORM_WIN
 	char optval;
 #else
-			int optval;
+	int optval;
 #endif
 	auto optlen = static_cast<socklen_t>(sizeof optval);
 
@@ -111,7 +111,7 @@ void SocketSetNoblocking(SOCKET fd)
 	u_long val = 1;
 	ioctlsocket(fd, FIONBIO, &val);
 #else
-			fcntl(fd, F_SETFL, O_NONBLOCK);
+	fcntl(fd, F_SETFL, O_NONBLOCK);
 #endif
 }
 
@@ -120,7 +120,7 @@ int SocketSetReuseAddress(int fd)
 #ifdef PUMP_PLATFORM_WIN
 	char opt_val = 1;
 #else
-			int opt_val = 1;
+	int opt_val = 1;
 #endif
 	return setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &opt_val, sizeof(opt_val));
 }
@@ -139,7 +139,7 @@ int32_t SendN(SOCKET fd, const char* const buffer, size_t len, int flags, int* o
 #ifdef PUMP_PLATFORM_WIN
 		const int32_t send_count = ::send(fd, buffer + re, static_cast<int>(len) - re, flags);
 #else
-				const int32_t send_count = ::send(fd, buffer + re, len - re, flags);
+		const int32_t send_count = ::send(fd, buffer + re, len - re, flags);
 #endif
 		/*send_in_bind_thread return value equal -1 or the num wrote */
 		if (send_count > 0) {
@@ -179,7 +179,7 @@ int32_t Send(SOCKET fd, const char* const buffer, size_t len, int flags, int* o_
 #ifdef PUMP_PLATFORM_WIN
 		const int32_t send_count = ::send(fd, buffer + re, static_cast<int>(len) - re, flags);
 #else
-				const int32_t send_count = ::send(fd, buffer + re, len - re, flags);
+		const int32_t send_count = ::send(fd, buffer + re, len - re, flags);
 #endif
 
 		if (send_count > 0) {
@@ -215,7 +215,7 @@ int32_t RecvN(SOCKET fd, char* const buffer, size_t len, int flags, int* o_errno
 #ifdef PUMP_PLATFORM_WIN
 		const int32_t recv_count = ::recv(fd, buffer + re, static_cast<int>(len) - re, flags);
 #else
-				const int32_t recv_count = ::recv(fd, buffer + re, len - re, flags);
+		const int32_t recv_count = ::recv(fd, buffer + re, len - re, flags);
 #endif
 		if (recv_count > 0) {
 			re += recv_count;

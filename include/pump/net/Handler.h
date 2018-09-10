@@ -3,8 +3,11 @@
 
 #include <pump/net/TcpConnection.h>
 
+namespace pump {
+}
 namespace pump { namespace net
 {
+
 class Handler
 {
 public:

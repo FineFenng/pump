@@ -37,21 +37,12 @@
  *
  */
 
-namespace pump { namespace net {namespace
-{
-/*
-uint64_t GetCurrentThreadId()
-{
-	std::ostringstream out_stream;
-	out_stream << std::this_thread::get_id();
-	const uint64_t current_thread_id = std::strtoll(out_stream.str().c_str(), nullptr, 16);
+namespace pump { namespace net {
 
-	return current_thread_id;
-}
-*/
-
+namespace { 
 thread_local EventLoop* t_event_loop = nullptr;
 thread_local uint64_t t_thread_id = pump::utility::GetCurrentThreadId();
+
 }
 
 EventLoop::EventLoop(int event_loop_id)
@@ -150,7 +141,7 @@ void EventLoop::run()
 	} while (is_looping_);
 }
 
-void EventLoop::update_watcher(const WatcherAbstract& watcher)
+void EventLoop::update_watcher(const watcher& watcher)
 {
 	if (watcher.get_index() < 0) {
 		push_back_task(std::bind(&EventLoop::add_watcher, this, std::ref(watcher)));
@@ -160,27 +151,27 @@ void EventLoop::update_watcher(const WatcherAbstract& watcher)
 	}
 }
 
-void EventLoop::remove_watcher(const WatcherAbstract& watcher)
+void EventLoop::remove_watcher(const watcher& watcher)
 {
 	push_back_task(std::bind(&EventLoop::delete_watcher, this, std::ref(watcher)));
 }
 
-void EventLoop::remove_watcher_sync(const WatcherAbstract& watcher) const
+void EventLoop::remove_watcher_sync(const watcher& watcher) const
 {
 	delete_watcher(watcher);
 }
 
-void EventLoop::add_watcher(const WatcherAbstract& watcher) const
+void EventLoop::add_watcher(const watcher& watcher) const
 {
 	poll_->add_interests(watcher);
 }
 
-void EventLoop::modify_watcher(const WatcherAbstract& watcher) const
+void EventLoop::modify_watcher(const watcher& watcher) const
 {
 	poll_->modify_interests(watcher);
 }
 
-void EventLoop::delete_watcher(const WatcherAbstract& watcher) const
+void EventLoop::delete_watcher(const watcher& watcher) const
 {
 	poll_->delete_interests(watcher);
 }
@@ -252,7 +243,7 @@ void EventLoop::init_notify_watcher()
 	w_wakeup_fd_ = sv[0];
 	r_wakeup_fd_ = sv[1];
 	SocketSetNoblocking(r_wakeup_fd_);
-	wakeup_watcher_.reset(new IO_Watcher(this, r_wakeup_fd_));
+	wakeup_watcher_.reset(new IOWatcher(this, r_wakeup_fd_));
 	//wakeup_watcher_->set_readable_callback([](){});
 	wakeup_watcher_->enable_readable();
 }

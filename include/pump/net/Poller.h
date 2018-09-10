@@ -15,7 +15,7 @@ namespace pump { namespace net
 {
 
 
-class watcher;
+class WatcherAbstract;
 
 class PollAbstract
 {
@@ -28,9 +28,9 @@ public:
 
 	virtual void poll(timeval* const tv, TaskList* io_task_list) = 0;
 	virtual void init_backend() = 0;
-	virtual void add_interests(const watcher& handle) = 0;
-	virtual void modify_interests(const watcher& handle) = 0;
-	virtual void delete_interests(const watcher& handle) = 0;
+	virtual void add_interests(const WatcherAbstract& handle) = 0;
+	virtual void modify_interests(const WatcherAbstract& handle) = 0;
+	virtual void delete_interests(const WatcherAbstract& handle) = 0;
 };
 }
 }

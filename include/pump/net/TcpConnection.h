@@ -11,7 +11,7 @@
 #include <pump/net/Buffer.h>
 #include <pump/net/Socket.h>
 #include <pump/net/SocketAddress.h>
-#include <pump/net/watcher/IO_Watcher.h>
+#include <pump/net/watcher/IOWatcher.h>
 #include <pump/net/SocketOption.h>
 #include <pump/Packet.h>
 
@@ -92,7 +92,7 @@ private:
 	Socket socket_;
 	SocketAddress local_address_;
 	SocketAddress peer_address_;
-	IO_Watcher handle_;
+	IOWatcher handle_;
 	mutable int fd_;
 
 private:

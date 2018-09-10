@@ -10,14 +10,14 @@
 #include <thread>
 
 #include <pump/Common.h>
-#include <pump/net/PollAbstract.h>
+#include <pump/net/Poller.h>
 #include <pump/net/Platform.h>
 
 namespace pump {namespace net
 {
 class PollAbstract;
-class WatcherAbstract;
-class IO_Watcher;
+class watcher;
+class IOWatcher;
 
 class EventLoop
 {
@@ -34,11 +34,11 @@ PUMP_DECLARE_NON_MOVABLE(EventLoop)
 
 	void run();
 
-	void update_watcher(const WatcherAbstract& watcher);
+	void update_watcher(const watcher& watcher);
 
-	void remove_watcher(const WatcherAbstract& watcher);
+	void remove_watcher(const watcher& watcher);
 
-	void remove_watcher_sync(const WatcherAbstract& watcher) const;
+	void remove_watcher_sync(const watcher& watcher) const;
 
 	void push_back_task(const Task& task)
 	{
@@ -54,11 +54,11 @@ PUMP_DECLARE_NON_MOVABLE(EventLoop)
 		}
 	}
 
-	void add_watcher(const WatcherAbstract& watcher) const;
+	void add_watcher(const watcher& watcher) const;
 
-	void modify_watcher(const WatcherAbstract& watcher) const;
+	void modify_watcher(const watcher& watcher) const;
 
-	void delete_watcher(const WatcherAbstract& watcher) const;
+	void delete_watcher(const watcher& watcher) const;
 
 	void wakeup() const;
 
@@ -94,7 +94,7 @@ private:
 private:
 	SOCKET w_wakeup_fd_;
 	SOCKET r_wakeup_fd_;
-	std::unique_ptr<IO_Watcher> wakeup_watcher_;
+	std::unique_ptr<IOWatcher> wakeup_watcher_;
 	std::unique_ptr<PollAbstract> poll_;
 	PollType poll_type_;
 

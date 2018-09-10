@@ -16,9 +16,9 @@ typedef unsigned int HandleEvent;
 namespace pump { namespace net
 {
 
+class EventLoop;
 
-
-class WatcherAbstract
+class Watcher
 {
 public:
 
@@ -26,7 +26,7 @@ public:
 	typedef std::function<void()> WritableCallback;
 	typedef std::function<void()> ErroneousCallback;
 
-	virtual ~WatcherAbstract() { }
+	virtual ~Watcher() { }
 
 	virtual void handle_callback(const HandleEvent& handle_event) const = 0;
 
@@ -59,6 +59,8 @@ public:
 	virtual void set_writable_callback(const WritableCallback& cb) = 0;
 
 	virtual void set_erroneous_callback(const ErroneousCallback& cb) = 0;
+
+	virtual EventLoop* get_event_loop() = 0;
 };
 }}
 

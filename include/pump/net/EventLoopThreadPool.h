@@ -19,6 +19,17 @@ public:
 		init_pool();
 	}
 
+	PUMP_DECLARE_NON_COPYABLE(EventLoopThreadPool)
+	PUMP_DECLARE_NON_MOVABLE(EventLoopThreadPool)
+
+	~EventLoopThreadPool()
+	{
+
+		
+		
+	}
+
+
 	EventLoop* get_next_event_loop()
 	{
 		loop_index_ %= event_loop_threads_.size();
@@ -31,10 +42,13 @@ public:
 	}
 
 private :
+	enum ThreadStyle
+	{
+	};
 	void init_pool()
 	{
 		for (int i = 0; i < event_loop_num_; ++i) {
-			std::unique_ptr<EventLoopThread> event_loop_thread(new EventLoopThread(this, i+1));
+			std::unique_ptr<EventLoopThread> event_loop_thread(new EventLoopThread(this, i + 1));
 			event_loop_threads_.push_back(std::move(event_loop_thread));
 		}
 		count_down_latch_.wait();

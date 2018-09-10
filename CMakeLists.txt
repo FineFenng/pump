@@ -22,7 +22,7 @@ file(GLOB_RECURSE UTILITY_HEADERS "include/pump/utility/*.h")
 
 ############net_header
 file(GLOB NET_HEADERS        "include/pump/net/*.h")
-file(GLOB NET_HANDLE_HEADERS "include/pump/net/handle/*.h")
+file(GLOB NET_HANDLE_HEADERS "include/pump/net/handler/*.h")
 file(GLOB NET_PARSER_HEADERS "include/pump/net/parser/*.h")
 file(GLOB NET_SERVER_HEADERS "include/pump/net/server/*.h")
 
@@ -54,7 +54,7 @@ set(NET_SRCS
 	src/net/SocketOption.cpp
     src/net/TcpConnection.cpp
     src/net/TcpServer.cpp
-    src/net/watcher/IO_Watcher.cpp
+    src/net/watcher/IOWatcher.cpp
 	src/net/EventLoopThread.cpp
     )
 

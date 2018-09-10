@@ -5,7 +5,7 @@
 #ifndef PUMP_SELECT_H
 #define PUMP_SELECT_H
 
-#include <pump/net/PollAbstract.h>
+#include <pump/net/Poller.h>
 
 #include <functional>
 #include <cassert>
@@ -32,9 +32,9 @@ public:
 
 	void init_backend() override;
 
-	void add_interests(const WatcherAbstract& watcher) override;
-	void modify_interests(const WatcherAbstract& watcher) override;
-	void delete_interests(const WatcherAbstract& watcher) override;
+	void add_interests(const watcher& watcher) override;
+	void modify_interests(const watcher& watcher) override;
+	void delete_interests(const watcher& watcher) override;
 
 private:
 	
@@ -55,7 +55,7 @@ private:
 private:
 	typedef fd_set ReadableList;
 	typedef fd_set WritableList;
-	typedef std::vector<std::reference_wrapper<const WatcherAbstract>> WatcherList;
+	typedef std::vector<std::reference_wrapper<const watcher>> WatcherList;
 
 	ReadableList readable_list_;
 	WritableList writable_list_;

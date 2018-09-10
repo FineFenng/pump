@@ -9,7 +9,7 @@
 
 
 #include <pump/net/EventLoop.h>
-#include <pump/net/WatcherAbstract.h>
+#include <pump/net/Watcher.h>
 
 
 namespace pump { namespace net
@@ -20,10 +20,10 @@ class Socket;
 
 class TcpConnection;
 
-class IO_Watcher : public WatcherAbstract
+class IOWatcher : public Watcher
 {
 public:
-	IO_Watcher(EventLoop* loop, SOCKET fd);
+	IOWatcher(EventLoop* loop, SOCKET fd);
 
 	void handle_callback(const HandleEvent& handle_event) const override;
 
@@ -83,6 +83,7 @@ public:
 
 	void set_erroneous_callback(const ErroneousCallback& cb) override { erroneous_callback_ = cb; }
 
+	EventLoop* get_event_loop()  override { return loop_; } 
 
 private:
 	EventLoop* loop_;

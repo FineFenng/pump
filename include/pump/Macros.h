@@ -59,13 +59,13 @@ void assert_failed(const char* error, const char* file, int line, const char* fu
 
 #ifdef _DEBUG
 #if PUMP_PLATFORM_WIN
-#define PUMP_ASSERT(x, ...) \
-	((void) (x)? (void)0: pump::assert_failed(#x, __FILE__, __LINE__, __FUNCTION__, "" __VA_ARGS__))
+#define PUMP_ASSERT(x, ...) ((void) ((x)? (void)0: pump::assert_failed(#x, __FILE__, __LINE__, __FUNCTION__, "" __VA_ARGS__)))
 #else
 #define PUMP_ASSERT assert(x)
 #endif
 #endif
 }
+
 
 
 #endif

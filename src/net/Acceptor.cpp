@@ -21,8 +21,8 @@ Acceptor::Acceptor(EventLoop* event_loop, struct sockaddr_in server_address)
 	watcher_.set_readable_callback(std::bind(&Acceptor::on_new_connection, this));
 }
 
-Acceptor::Acceptor(EventLoop* eventLoop, SocketAddress socketAddress)
-	: Acceptor(eventLoop, *socketAddress.getSocketAddress())
+Acceptor::Acceptor(EventLoop* event_loop, SocketAddress socket_address)
+	: Acceptor(event_loop, *socket_address.getSocketAddress())
 {}
 
 Acceptor::~Acceptor()
@@ -55,7 +55,7 @@ bool Acceptor::listen()
 
 void Acceptor::on_new_connection() const
 {
-	struct sockaddr_in address;
+	struct sockaddr_in address{};
 	memset(&address, 0, sizeof(address));
 
 	SOCKET conn_fd;
