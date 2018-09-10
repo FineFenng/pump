@@ -1,3 +1,6 @@
 [submodule "3rd/http-parser"]
 	path = 3rd/http-parser
 	url = https://github.com/nodejs/http-parser.git
+[submodule "3rd/error_handle"]
+	path = 3rd/error_handle
+	url = https://github.com/FineFenng/error_handle.git
