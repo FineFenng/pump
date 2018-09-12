@@ -10,7 +10,6 @@
 
 #include <vector>
 
-#include <>
 #include <pump/net/Poller.h>
 
 namespace pump
@@ -24,24 +23,23 @@ class EventLoop;
 class Epoll : public Poller
 {
  public:
-  explicit Epoll(EventLoop *loop)
+  explicit Epoll(EventLoop* loop)
 	  : loop_(loop), backend_fd_(-1), is_quit_(true)
   {}
 
-  void poll(timeval tv) override;
+  void poll(const timeval* tv, TaskList* io_task_lit) override;
 
   void init_backend() override;
 
-  void add_interests(const WatcherAbstract &handle) override;
-  void modify_interests(const WatcherAbstract &handle) override;
-  void delete_interests(const WatcherAbstract &handle) override;
+  void add_interests(const Watcher& handle) override;
+  void modify_interests(const Watcher& handle) override;
+  void delete_interests(const Watcher& handle) override;
 
  private:
-
-  EventLoop *loop_;
-
+  EventLoop* loop_;
   int backend_fd_;
   bool is_quit_;
+
  private:
   typedef std::vector<struct epoll_event> EventList;
   EventList event_list_;

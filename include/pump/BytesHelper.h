@@ -16,7 +16,7 @@ template <typename T, typename OrigiPtr>
 inline T Read_XX_Impl(const OrigiPtr& start, Type<T>)
 {
 	T ret = 0;
-	for (size_t i = 0; i < sizeof(T); i++) {
+	for (int i = 0; i < sizeof(T); i++) {
 		ret <<= 8;
 		ret |= static_cast<uint8_t>(*(start + i));
 	}

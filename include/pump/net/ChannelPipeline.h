@@ -1,12 +1,12 @@
-#ifndef PUMP_NET_CHANNELPIPELINE_H_
-#define PUMP_NET_CHANNELPIPELINE_H_
+#ifndef PUMP_NET_CHANNELPIPELINE_H
+#define PUMP_NET_CHANNELPIPELINE_H
 
 #include <pump/net/Watcher.h>
 #include <pump/net/ChannelContext.h>
 
-
 namespace pump { namespace net
 {
+
 class EventLoop;
 class Handler;
 
@@ -23,10 +23,9 @@ public:
 	void init();
 	void deinit();
 
-	void push_back_handler(Watcher* wathcer, Handler* handler)
+	void push_back_handler(Watcher* watcher, Handler* handler)
 	{
-		ChannelContext* ctx = new ChannelContext(wathcer, handler);
-
+		ChannelContext* ctx = new ChannelContext(watcher, handler);
 
 
 

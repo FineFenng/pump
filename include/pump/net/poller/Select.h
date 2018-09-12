@@ -10,6 +10,7 @@
 #include <functional>
 
 #include <pump/Common.h>
+#include <pump/net/Poller.h>
 
 namespace pump {namespace net
 {
@@ -32,7 +33,7 @@ public:
 PUMP_DECLARE_NON_COPYABLE(Select)
 PUMP_DECLARE_NON_MOVABLE(Select)
 
-	void poll(timeval* const tv, TaskList* io_task_list) override;
+	void poll(const timeval* tv, TaskList* io_task_list) override;
 
 	void init_backend() override;
 

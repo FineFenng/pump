@@ -3,9 +3,8 @@
 //
 
 
-#include <pump/net/WatcherAbstract.h>
-#include <pump/net/backend/Epoll.h>
-
+#include <pump/net/Watcher.h>
+#include <pump/net/poller/Epoll.h>
 
 namespace pump
 {
@@ -13,7 +12,7 @@ namespace net
 {
 
 
-void Epoll::poll(timeval tv)
+void Epoll::poll(const timeval* tv, TaskList* io_task_list)
 {
   #define EPOLL_MAX_SIZE 500
   is_quit_ = false;
@@ -24,7 +23,7 @@ void Epoll::poll(timeval tv)
 
 	if (ready_event_count > 0) {
 	  for (size_t i = 0; i < ready_event_count; ++i) {
-		WatcherAbstract* handle = static_cast<WatcherAbstract*>(event_list[i].data.ptr);
+		Watcher* handle = static_cast<Watcher*>(event_list[i].data.ptr);
 		assert(handle);
 		handle->handle_callback(revents);
 	  }
@@ -33,7 +32,7 @@ void Epoll::poll(timeval tv)
   is_quit_ = true;
 }
 
-void Epoll::add_interests(const WatcherAbstract& handle)
+void Epoll::add_interests(const Watcher& handle)
 {
 
   if (handle.get_index() < 0) {

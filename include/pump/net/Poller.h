@@ -3,8 +3,8 @@
 //
 
 
-#ifndef PUMP_NET_POLLER_H_
-#define PUMP_NET_POLLER_H_
+#ifndef PUMP_NET_POLLER_H
+#define PUMP_NET_POLLER_H
 
 #include <functional>
 #include <vector>
@@ -22,7 +22,7 @@ public:
 public:
 	virtual ~Poller() = default;
 
-	virtual void poll(timeval* const tv, TaskList* io_task_list) = 0;
+	virtual void poll(const timeval* tv, TaskList* io_task_list) = 0;
 	virtual void init_backend() = 0;
 	virtual void add_interests(const Watcher& handle) = 0;
 	virtual void modify_interests(const Watcher& handle) = 0;
