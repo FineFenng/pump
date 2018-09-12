@@ -28,12 +28,13 @@ file(GLOB NET_SERVER_HEADERS "include/pump/net/server/*.h")
 
 set(NET_POLL_HEADERS)
 if(WIN32)
-	file(GLOB NET_POLL_HEADERS "include/pump/net/poll/Select.h")
+	file(GLOB NET_POLL_HEADERS "include/pump/net/poller/Select.h")
 else(WIN32)
 	if(APPLE)
-		file(GLOB NET_POLL_HEADERS "include/pump/net/poll/Select.h" "include/pump/net/poll/Poll.h")
+		file(GLOB NET_POLL_HEADERS "include/pump/net/poller/Select.h" "include/pump/net/poller/Poll.h")
+	else(APPLE)
+		file(GLOB NET_POLL_HEADERS "include/pump/net/poller/Select.h" "include/pump/net/poller/Poll.h" "include/pump/net/poller/Epoll.h")
 	endif(APPLE)
-	file(GLOB NET_POLL_HEADERS "include/pump/net/poll/Select.h" "include/pump/net/poll/Poll.h" "include/pump/net/poll/Epoll.h")
 endif(WIN32)
 ###########net_header
 
@@ -60,12 +61,13 @@ set(NET_SRCS
 
 
 if(WIN32)
-	list(APPEND NET_SRCS src/net/poll/Select.cpp)
+	list(APPEND NET_SRCS src/net/poller/Select.cpp)
 else(WIN32)
 	if (APPLE)
-		list(APPEND NET_SRCS src/net/poll/Select.cpp src/net/poll/Poll.cpp src/net/poll/Kqueue.cpp)
+		list(APPEND NET_SRCS src/net/poller/Select.cpp src/net/poller/Poll.cpp src/net/poller/Kqueue.cpp)
+	else(APPLE) #Linux
+		list(APPEND NET_SRCS src/net/poller/Select.cpp src/net/poller/Poll.cpp src/net/poller/Epoll.cpp)
 	endif(APPLE)
-	list(APPEND NET_SRCS src/net/poll/Select.cpp src/net/poll/Poll.cpp src/net/poll/Epoll.cpp)
 endif(WIN32)
 ###########net_src
 

@@ -8,6 +8,7 @@
 
 #include <pump/net/Acceptor.h>
 #include <pump/net/SocketOption.h>
+#include <pump/net/Watcher.h>
 
 #include <pump/utility/thread/ThreadOption.h>
 
@@ -118,7 +119,7 @@ void EventLoop::run()
 				    temp_tv = nullptr;
 				*/
 
-				clear_wakup_fd_buffer();
+				clear_wakeup_fd_buffer();
 				
 				
 				poll_->poll(tv, &io_task_list_);
@@ -248,7 +249,7 @@ void EventLoop::init_notify_watcher()
 	wakeup_watcher_->enable_readable();
 }
 
-void EventLoop::clear_wakup_fd_buffer() const
+void EventLoop::clear_wakeup_fd_buffer() const
 {
 	//TODO
 	char recv_buffer[1024] = {0};

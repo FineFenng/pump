@@ -2,8 +2,8 @@
 // Created by finefenng on 2018/7/5.
 //
 
-#ifndef QPSTEST_SOCKET_H
-#define QPSTEST_SOCKET_H
+#ifndef PUMP_NET_SOCKET_H_
+#define PUMP_NET_SOCKET_H_
 
 #include <cerrno>
 #include <cstring>
@@ -21,7 +21,7 @@ public:
 	{ }
 
 PUMP_DECLARE_NON_COPYABLE(Socket)
-PUMP_DECLARE_DEFAULT_MOVABLE(Socket)
+PUMP_DECLARE_NON_MOVABLE(Socket)
 
 	~Socket()
 	{
@@ -50,4 +50,4 @@ private:
 };
 }}
 
-#endif //QPSTEST_SOCKET_H
+#endif 

@@ -15,7 +15,6 @@
 
 namespace pump {namespace net
 {
-class PollAbstract;
 class watcher;
 class IOWatcher;
 
@@ -75,7 +74,7 @@ private:
 
 	void init_poll();
 
-	void clear_wakup_fd_buffer() const;
+	void clear_wakeup_fd_buffer() const;
 
 private:
 	enum LoopState
@@ -95,7 +94,7 @@ private:
 	SOCKET w_wakeup_fd_;
 	SOCKET r_wakeup_fd_;
 	std::unique_ptr<IOWatcher> wakeup_watcher_;
-	std::unique_ptr<PollAbstract> poll_;
+	std::unique_ptr<Poller> poll_;
 	PollType poll_type_;
 
 private:

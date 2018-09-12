@@ -14,7 +14,7 @@ namespace pump {namespace net
 {
 class EventLoop;
 
-class Select : public PollAbstract
+class Select : public Poller
 {
 public:
 	explicit Select(EventLoop* loop)

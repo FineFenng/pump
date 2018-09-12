@@ -69,7 +69,7 @@ public:
 	}
 
 
-	int recv_from_fd(int fd, int* saved_errno);
+	int recv_from_fd(SOCKET fd, int* saved_errno);
 
 	void retrieve(size_t len)
 	{
@@ -131,4 +131,4 @@ private:
 	static const unsigned int kInitBufferSize_ = 1024;
 };
 }}
-#endif //QPSTEST_BUFFER_H
+#endif 

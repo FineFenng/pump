@@ -3,8 +3,8 @@
 //
 
 
-#ifndef PUMP_NET_POLLABSTRACT_H_
-#define PUMP_NET_POLLABSTRACT_H_
+#ifndef PUMP_NET_POLLER_H_
+#define PUMP_NET_POLLER_H_
 
 #include <functional>
 #include <vector>
@@ -17,14 +17,14 @@ namespace pump { namespace net
 
 class WatcherAbstract;
 
-class PollAbstract
+class Poller
 {
 public:
 	typedef std::function<void()> Task;
 	typedef std::vector<Task> TaskList;
 public:
 
-	virtual ~PollAbstract() { }
+	virtual ~Poller() { }
 
 	virtual void poll(timeval* const tv, TaskList* io_task_list) = 0;
 	virtual void init_backend() = 0;

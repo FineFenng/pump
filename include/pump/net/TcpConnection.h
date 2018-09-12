@@ -41,7 +41,7 @@ public:
 				const SocketAddress& local_address, const SocketAddress& peer_address);
 
 PUMP_DECLARE_NON_COPYABLE(TcpConnection)
-PUMP_DECLARE_DEFAULT_MOVABLE(TcpConnection)
+PUMP_DECLARE_NON_MOVABLE(TcpConnection)
 
 	~TcpConnection();
 

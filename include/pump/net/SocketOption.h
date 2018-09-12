@@ -2,8 +2,8 @@
 // Created by fenng on 18-8-10.
 //
 
-#ifndef PUMP_SOCKETOPTION_H
-#define PUMP_SOCKETOPTION_H
+#ifndef PUMP_SOCKETOPTION_H_
+#define PUMP_SOCKETOPTION_H_
 
 #include <pump/Common.h>
 #include <pump/utility/log/Logger.h>
@@ -51,4 +51,4 @@ int Recv(SOCKET fd, char* const buffer, size_t len, int flags, int* o_errno);
 } //namespace net
 } // namespace pump
 
-#endif //PUMP_SOCKETOPTION_H
+#endif //PUMP_SOCKETOPTION_H_
