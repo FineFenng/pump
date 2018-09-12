@@ -33,11 +33,11 @@ PUMP_DECLARE_NON_MOVABLE(EventLoop)
 
 	void run();
 
-	void update_watcher(const watcher& watcher);
+	void update_watcher(const Watcher& Watcher);
 
-	void remove_watcher(const watcher& watcher);
+	void remove_watcher(const Watcher& watcher);
 
-	void remove_watcher_sync(const watcher& watcher) const;
+	void remove_watcher_sync(const Watcher& watcher) const;
 
 	void push_back_task(const Task& task)
 	{
@@ -53,11 +53,11 @@ PUMP_DECLARE_NON_MOVABLE(EventLoop)
 		}
 	}
 
-	void add_watcher(const watcher& watcher) const;
+	void add_watcher(const Watcher& watcher) const;
 
-	void modify_watcher(const watcher& watcher) const;
+	void modify_watcher(const Watcher& watcher) const;
 
-	void delete_watcher(const watcher& watcher) const;
+	void delete_watcher(const Watcher& watcher) const;
 
 	void wakeup() const;
 

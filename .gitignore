@@ -10,7 +10,6 @@ build
 
 *.a
 *.sw*
-*.cmake
 *.out
 *.moc
 moc_*

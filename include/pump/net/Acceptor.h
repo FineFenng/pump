@@ -57,4 +57,4 @@ private:
 	NewConnectionCallback new_connection_callback_;
 };
 }}
-#endif //QPSTEST_ACCEPTOR_H
+#endif

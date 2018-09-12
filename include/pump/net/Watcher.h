@@ -2,8 +2,8 @@
 // Created by finefenng on 2018/7/5.
 //
 
-#ifndef QPSTEST_HANDLE_H
-#define QPSTEST_HANDLE_H
+#ifndef PUMP_NET__WATCHER_H_
+#define PUMP_NET__WATCHER_H-
 
 #include <cstdlib>
 #include <functional>
@@ -15,18 +15,19 @@ typedef unsigned int HandleEvent;
 
 namespace pump { namespace net
 {
-
 class EventLoop;
 
 class Watcher
 {
 public:
 
-	typedef std::function<void()> ReadableCallback;
-	typedef std::function<void()> WritableCallback;
-	typedef std::function<void()> ErroneousCallback;
+	PUMP_DECLARE_CALLBACK_FUNCTION(void) ReadableCallback;
+	PUMP_DECLARE_CALLBACK_FUNCTION(void) WritableCallback;
+	PUMP_DECLARE_CALLBACK_FUNCTION(void) ErroneousCallback;
 
-	virtual ~Watcher() { }
+public:
+	virtual ~Watcher() = default;
+
 
 	virtual void handle_callback(const HandleEvent& handle_event) const = 0;
 

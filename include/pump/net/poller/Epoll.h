@@ -1,11 +1,17 @@
 //
-// Created by fenng on 18-8-13.
+// Created by fenng on 18-8-10.
 //
 
-#ifndef PUMP_POLL_H
-#define PUMP_POLL_H
+#ifndef PUMP_EPOLL_H
+#define PUMP_EPOLL_H
 
-#include <pump/net/PollAbstract.h>
+#include <cassert>
+#include <cerrno>
+
+#include <vector>
+
+#include <>
+#include <pump/net/Poller.h>
 
 namespace pump
 {
@@ -15,10 +21,10 @@ namespace net
 
 class EventLoop;
 
-class Epoll : public PollAbstract
+class Epoll : public Poller
 {
  public:
-  Epoll(EventLoop *loop)
+  explicit Epoll(EventLoop *loop)
 	  : loop_(loop), backend_fd_(-1), is_quit_(true)
   {}
 
@@ -44,4 +50,4 @@ class Epoll : public PollAbstract
 }
 }
 
-#endif //PUMP_POLL_H
+#endif //PUMP_EPOLL_H

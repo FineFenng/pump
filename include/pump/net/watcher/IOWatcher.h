@@ -2,23 +2,14 @@
 // Created by fenng on 18-8-2.
 //
 
-#ifndef PUMP_NET_IO_WATCHER_H_
-#define PUMP_NET_IO_WATCHER_H_
-
-#include <functional>
+#ifndef PUMP_NET_IOWATCHER_H_
+#define PUMP_NET_IOWATCHER_H_
 
 
 #include <pump/net/EventLoop.h>
-#include <pump/net/Watcher.h>
-
 
 namespace pump { namespace net
 {
-class EventLoop;
-
-class Socket;
-
-class TcpConnection;
 
 class IOWatcher : public Watcher
 {

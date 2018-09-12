@@ -2,8 +2,8 @@
 // Created by finefenng on 2018/7/8.
 //
 
-#ifndef QPSTEST_TCPCONNECTION_H
-#define QPSTEST_TCPCONNECTION_H
+#ifndef PUMP_NET_TCPCONNECTION_H_
+#define PUMP_NET_TCPCONNECTION_H_
 
 #include <functional>
 #include <memory>

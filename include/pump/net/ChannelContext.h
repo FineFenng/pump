@@ -3,7 +3,6 @@
 
 #include <pump/Common.h>
 
-
 namespace pump { namespace net
 {
 enum HandlerFlag
@@ -55,9 +54,9 @@ private:
 
 
 private:
+
 	Watcher* watcher_;
 	Handler* handler_;
-
 	EventLoop* loop_;
 
 	ChannelContext* prev_;

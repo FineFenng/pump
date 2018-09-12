@@ -3,20 +3,18 @@
 //
 
 
-#include <pump/net/Watcher.h>
-#include <pump/net/watcher/IO_Watcher.h>
+#include <pump/net/watcher/IOWatcher.h>
 #include <pump/utility/log/Logger.h>
 
 
 namespace pump { namespace net
 {
-IO_Watcher::IO_Watcher(class EventLoop* loop, SOCKET fd)
+IOWatcher::IOWatcher(class EventLoop* loop, SOCKET fd)
 	: loop_(loop), fd_(fd), index_(-1), events_(0)
 
-{
-}
+{ }
 
-void IO_Watcher::handle_callback(const HandleEvent& handle_event) const
+void IOWatcher::handle_callback(const HandleEvent& handle_event) const
 {
 	if (handle_event & EventFlag::kIOReadable) {
 		if (readable_callback_) { readable_callback_(); }

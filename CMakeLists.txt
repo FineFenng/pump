@@ -5,10 +5,10 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -o3")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -o3")
 
+
 ############common_header 
 file(GLOB HEADERS "include/pump/*.h")
 ############common_header 
-
 
 ############config_header
 file(GLOB CONFIG_HEADERS "include/pump/config/*.h")
@@ -22,18 +22,18 @@ file(GLOB_RECURSE UTILITY_HEADERS "include/pump/utility/*.h")
 
 ############net_header
 file(GLOB NET_HEADERS        "include/pump/net/*.h")
-file(GLOB NET_HANDLE_HEADERS "include/pump/net/handler/*.h")
+file(GLOB NET_HANDLER_HEADERS "include/pump/net/handler/*.h")
 file(GLOB NET_PARSER_HEADERS "include/pump/net/parser/*.h")
 file(GLOB NET_SERVER_HEADERS "include/pump/net/server/*.h")
 
-set(NET_POLL_HEADERS)
+set(NET_POLLER_HEADERS)
 if(WIN32)
-	file(GLOB NET_POLL_HEADERS "include/pump/net/poller/Select.h")
+	file(GLOB NET_POLLER_HEADERS "include/pump/net/poller/Select.h")
 else(WIN32)
 	if(APPLE)
-		file(GLOB NET_POLL_HEADERS "include/pump/net/poller/Select.h" "include/pump/net/poller/Poll.h")
+		file(GLOB NET_POLLER_HEADERS "include/pump/net/poller/Select.h" "include/pump/net/poller/Poll.h")
 	else(APPLE)
-		file(GLOB NET_POLL_HEADERS "include/pump/net/poller/Select.h" "include/pump/net/poller/Poll.h" "include/pump/net/poller/Epoll.h")
+		file(GLOB NET_POLLER_HEADERS "include/pump/net/poller/Select.h" "include/pump/net/poller/Poll.h" "include/pump/net/poller/Epoll.h")
 	endif(APPLE)
 endif(WIN32)
 ###########net_header
@@ -82,8 +82,8 @@ add_library(pump_net  STATIC
 					 ${HEADERS} 
 					 ${CONFIG_HEADERS} 
 					 ${NET_HEADERS} 
-					 ${NET_HANDLE_HEADERS} 
-					 ${NET_POLL_HEADERS} 
+					 ${NET_HANDLER_HEADERS}
+					 ${NET_POLLER_HEADERS} 
 					 ${NET_PARSER_HEADERS}
 					 ${NET_SERVER_HEADERS}
 					 )

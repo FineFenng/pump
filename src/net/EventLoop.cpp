@@ -2,13 +2,11 @@
 // Created by finefenng on 2018/7/5.
 //
 
-#include <pump/net/EventLoop.h>
-
 #include <sstream>
 
+#include <pump/net/EventLoop.h>
 #include <pump/net/Acceptor.h>
 #include <pump/net/SocketOption.h>
-#include <pump/net/Watcher.h>
 
 #include <pump/utility/thread/ThreadOption.h>
 
@@ -142,37 +140,37 @@ void EventLoop::run()
 	} while (is_looping_);
 }
 
-void EventLoop::update_watcher(const watcher& watcher)
+void EventLoop::update_watcher(const Watcher& Watcher)
 {
-	if (watcher.get_index() < 0) {
-		push_back_task(std::bind(&EventLoop::add_watcher, this, std::ref(watcher)));
+	if (Watcher.get_index() < 0) {
+		push_back_task(std::bind(&EventLoop::add_watcher, this, std::ref(Watcher)));
 	}
 	else {
-		push_back_task(std::bind(&EventLoop::modify_watcher, this, std::ref(watcher)));
+		push_back_task(std::bind(&EventLoop::modify_watcher, this, std::ref(Watcher)));
 	}
 }
 
-void EventLoop::remove_watcher(const watcher& watcher)
+void EventLoop::remove_watcher(const Watcher& watcher)
 {
 	push_back_task(std::bind(&EventLoop::delete_watcher, this, std::ref(watcher)));
 }
 
-void EventLoop::remove_watcher_sync(const watcher& watcher) const
+void EventLoop::remove_watcher_sync(const Watcher& watcher) const
 {
 	delete_watcher(watcher);
 }
 
-void EventLoop::add_watcher(const watcher& watcher) const
+void EventLoop::add_watcher(const Watcher& watcher) const
 {
 	poll_->add_interests(watcher);
 }
 
-void EventLoop::modify_watcher(const watcher& watcher) const
+void EventLoop::modify_watcher(const Watcher& watcher) const
 {
 	poll_->modify_interests(watcher);
 }
 
-void EventLoop::delete_watcher(const watcher& watcher) const
+void EventLoop::delete_watcher(const Watcher& watcher) const
 {
 	poll_->delete_interests(watcher);
 }

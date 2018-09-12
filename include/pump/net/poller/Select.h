@@ -5,10 +5,11 @@
 #ifndef PUMP_SELECT_H
 #define PUMP_SELECT_H
 
-#include <pump/net/Poller.h>
 
-#include <functional>
 #include <cassert>
+#include <functional>
+
+#include <pump/Common.h>
 
 namespace pump {namespace net
 {
@@ -18,7 +19,8 @@ class Select : public Poller
 {
 public:
 	explicit Select(EventLoop* loop)
-		: loop_(loop), is_quit_(true),
+		: loop_(loop),
+		is_quit_(true),
 		max_fd_(-1)
 	{ }
 
@@ -27,17 +29,19 @@ public:
 		assert(watcher_list_.empty());
 	}
 
+PUMP_DECLARE_NON_COPYABLE(Select)
+PUMP_DECLARE_NON_MOVABLE(Select)
 
 	void poll(timeval* const tv, TaskList* io_task_list) override;
 
 	void init_backend() override;
 
-	void add_interests(const watcher& watcher) override;
-	void modify_interests(const watcher& watcher) override;
-	void delete_interests(const watcher& watcher) override;
+	void add_interests(const Watcher& watcher) override;
+	void modify_interests(const Watcher& watcher) override;
+	void delete_interests(const Watcher& watcher) override;
 
 private:
-	
+
 
 	enum Select_Flag
 	{
@@ -55,7 +59,7 @@ private:
 private:
 	typedef fd_set ReadableList;
 	typedef fd_set WritableList;
-	typedef std::vector<std::reference_wrapper<const watcher>> WatcherList;
+	typedef std::vector<std::reference_wrapper<const Watcher>> WatcherList;
 
 	ReadableList readable_list_;
 	WritableList writable_list_;
