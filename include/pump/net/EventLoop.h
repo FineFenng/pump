@@ -28,8 +28,8 @@ public:
 
 	~EventLoop();
 
-PUMP_DECLARE_NON_COPYABLE(EventLoop)
-PUMP_DECLARE_NON_MOVABLE(EventLoop)
+PUMP_DECLARE_DELETE_COPYABLE(EventLoop)
+PUMP_DECLARE_DELETE_MOVABLE(EventLoop)
 
 	void run();
 

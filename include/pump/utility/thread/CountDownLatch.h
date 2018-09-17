@@ -17,8 +17,8 @@ public:
 
 	~CountDownLatch() = default;
 
-PUMP_DECLARE_NON_COPYABLE(CountDownLatch)
-PUMP_DECLARE_NON_MOVABLE(CountDownLatch)
+PUMP_DECLARE_DELETE_COPYABLE(CountDownLatch)
+PUMP_DECLARE_DELETE_MOVABLE(CountDownLatch)
 
 	void wait()
 	{

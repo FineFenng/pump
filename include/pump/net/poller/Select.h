@@ -30,8 +30,8 @@ public:
 		assert(watcher_list_.empty());
 	}
 
-PUMP_DECLARE_NON_COPYABLE(Select)
-PUMP_DECLARE_NON_MOVABLE(Select)
+PUMP_DECLARE_DELETE_COPYABLE(Select)
+PUMP_DECLARE_DELETE_MOVABLE(Select)
 
 	void poll(const timeval* tv, TaskList* io_task_list) override;
 

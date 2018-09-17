@@ -34,7 +34,7 @@ public:
 
 	~Acceptor();
 
-PUMP_DECLARE_NON_COPYABLE(Acceptor)
+PUMP_DECLARE_DELETE_COPYABLE(Acceptor)
 
 PUMP_DECLARE_DEFAULT_MOVABLE(Acceptor)
 

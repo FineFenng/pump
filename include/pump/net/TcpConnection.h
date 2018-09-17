@@ -40,8 +40,8 @@ public:
 	TcpConnection(EventLoop* loop, int fd,
 				const SocketAddress& local_address, const SocketAddress& peer_address);
 
-PUMP_DECLARE_NON_COPYABLE(TcpConnection)
-PUMP_DECLARE_NON_MOVABLE(TcpConnection)
+PUMP_DECLARE_DELETE_COPYABLE(TcpConnection)
+PUMP_DECLARE_DELETE_MOVABLE(TcpConnection)
 
 	~TcpConnection();
 

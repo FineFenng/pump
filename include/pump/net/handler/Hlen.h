@@ -1,5 +1,5 @@
-#ifndef PUMP_NET_SIMPLEMESSAGEPARSER_H_
-#define  PUMP_NET_SIMPLEMESSAGEPARSER_H_
+#ifndef PUMP_NET_SIMPLEMESSAGEPARSER_H
+#define PUMP_NET_SIMPLEMESSAGEPARSER_H
 
 #include <pump/net/TcpConnection.h>
 #include <pump/BytesHelper.h>

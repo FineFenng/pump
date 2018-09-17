@@ -26,8 +26,8 @@ public:
 	PUMP_DECLARE_CALLBACK_FUNCTION(void) ErroneousCallback;
 
 public:
-	virtual ~Watcher() = default;
 
+	virtual ~Watcher()  = default;
 
 	virtual void handle_callback(const HandleEvent& handle_event) const = 0;
 
