@@ -3,8 +3,8 @@
 //
 
 
-#ifndef PUMP_CONFIG_PLATFORM_H_
-#define PUMP_CONFIG_PLATFORM_H_
+#ifndef PUMP_CONFIG_PLATFORM_H
+#define PUMP_CONFIG_PLATFORM_H
 
 
 #if defined(WIN32) || defined(_WIN64)

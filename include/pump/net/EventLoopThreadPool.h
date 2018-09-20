@@ -20,8 +20,8 @@ public:
 		init_pool();
 	}
 
-	PUMP_DECLARE_NON_COPYABLE(EventLoopThreadPool)
-	PUMP_DECLARE_NON_MOVABLE(EventLoopThreadPool)
+	PUMP_DECLARE_DELETE_COPYABLE(EventLoopThreadPool)
+	PUMP_DECLARE_DELETE_MOVABLE(EventLoopThreadPool)
 
 	~EventLoopThreadPool()
 	{

@@ -20,8 +20,8 @@ public:
 		: fd_(fd)
 	{ }
 
-PUMP_DECLARE_NON_COPYABLE(Socket)
-PUMP_DECLARE_NON_MOVABLE(Socket)
+PUMP_DECLARE_DELETE_COPYABLE(Socket)
+PUMP_DECLARE_DELETE_MOVABLE(Socket)
 
 	~Socket()
 	{

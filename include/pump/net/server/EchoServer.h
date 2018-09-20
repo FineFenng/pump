@@ -1,5 +1,5 @@
-#ifndef PUMP_NET_ECHOSERVER_H_
-#define PUMP_NET_ECHOSERVER_H_
+#ifndef PUMP_NET_ECHOSERVER_H
+#define PUMP_NET_ECHOSERVER_H
 
 #include <pump/net/TcpServer.h>
 #include <pump/Packet.h>

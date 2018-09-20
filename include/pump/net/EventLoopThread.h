@@ -32,8 +32,8 @@ public:
 		}
 	}
 
-PUMP_DECLARE_NON_COPYABLE(EventLoopThread)
-PUMP_DECLARE_NON_MOVABLE(EventLoopThread)
+PUMP_DECLARE_DELETE_COPYABLE(EventLoopThread)
+PUMP_DECLARE_DELETE_MOVABLE(EventLoopThread)
 
 	EventLoop* get_event_loop() const { return loop_; }
 
