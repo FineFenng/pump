@@ -14,13 +14,13 @@
 
 namespace pump { namespace net
 {
-class Poller
+class PollerInterface
 {
 public:
 	typedef std::function<void()> Task;
 	typedef std::vector<Task> TaskList;
 public:
-	virtual ~Poller() = default;
+	virtual ~PollerInterface() = default;
 
 	virtual void poll(const timeval* tv, TaskList* io_task_list) = 0;
 	virtual void init_backend() = 0;

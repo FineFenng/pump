@@ -1,9 +1,9 @@
 #include <pump/net/ChannelContext.h>
-#include <pump/net/Watcher.h>
+#include <pump/net/WatcherInterface.h>
 
 namespace pump {namespace net
 {
-ChannelContext::ChannelContext(Watcher* watcher, Handler* handler)
+ChannelContext::ChannelContext(WatcherInterface* watcher, Handler* handler)
 	: watcher_(watcher),
 	handler_(handler),
 	loop_(watcher_->get_event_loop()),

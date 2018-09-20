@@ -11,7 +11,7 @@ namespace net
 
 
 
-void Kqueue::poll(const timeval* tv, Poller::TaskList* io_task_list)
+void Kqueue::poll(const timeval* tv, PollerInterface::TaskList* io_task_list)
 {
 
 

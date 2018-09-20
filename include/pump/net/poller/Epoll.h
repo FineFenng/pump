@@ -10,7 +10,7 @@
 
 #include <vector>
 
-#include <pump/net/Poller.h>
+#include <pump/net/PollerInterface.h>
 
 namespace pump
 {
@@ -20,7 +20,7 @@ namespace net
 
 class EventLoop;
 
-class Epoll : public Poller
+class Epoll : public PollerInterface
 {
  public:
   explicit Epoll(EventLoop* loop)
@@ -31,9 +31,9 @@ class Epoll : public Poller
 
   void init_backend() override;
 
-  void add_interests(const Watcher& handle) override;
-  void modify_interests(const Watcher& handle) override;
-  void delete_interests(const Watcher& handle) override;
+  void add_interests(const WatcherInterface& handle) override;
+  void modify_interests(const WatcherInterface& handle) override;
+  void delete_interests(const WatcherInterface& handle) override;
 
  private:
   EventLoop* loop_;

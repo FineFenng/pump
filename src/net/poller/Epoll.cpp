@@ -3,7 +3,7 @@
 //
 
 
-#include <pump/net/Watcher.h>
+#include <pump/net/WatcherInterface.h>
 #include <pump/net/poller/Epoll.h>
 
 namespace pump
@@ -23,7 +23,7 @@ void Epoll::poll(const timeval* tv, TaskList* io_task_list)
 
 	if (ready_event_count > 0) {
 	  for (size_t i = 0; i < ready_event_count; ++i) {
-		Watcher* handle = static_cast<Watcher*>(event_list[i].data.ptr);
+		WatcherInterface* handle = static_cast<WatcherInterface*>(event_list[i].data.ptr);
 		assert(handle);
 		handle->handle_callback(revents);
 	  }
@@ -32,7 +32,7 @@ void Epoll::poll(const timeval* tv, TaskList* io_task_list)
   is_quit_ = true;
 }
 
-void Epoll::add_interests(const Watcher& handle)
+void Epoll::add_interests(const WatcherInterface& handle)
 {
 
   if (handle.get_index() < 0) {

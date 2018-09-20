@@ -10,13 +10,13 @@
 #include <functional>
 
 #include <pump/Common.h>
-#include <pump/net/Poller.h>
+#include <pump/net/PollerInterface.h>
 
 namespace pump {namespace net
 {
 class EventLoop;
 
-class Select : public Poller
+class Select : public PollerInterface
 {
 public:
 	explicit Select(EventLoop* loop)
@@ -37,9 +37,9 @@ PUMP_DECLARE_DELETE_MOVABLE(Select)
 
 	void init_backend() override;
 
-	void add_interests(const Watcher& watcher) override;
-	void modify_interests(const Watcher& watcher) override;
-	void delete_interests(const Watcher& watcher) override;
+	void add_interests(const WatcherInterface& watcher) override;
+	void modify_interests(const WatcherInterface& watcher) override;
+	void delete_interests(const WatcherInterface& watcher) override;
 
 private:
 
@@ -60,7 +60,7 @@ private:
 private:
 	typedef fd_set ReadableList;
 	typedef fd_set WritableList;
-	typedef std::vector<std::reference_wrapper<const Watcher>> WatcherList;
+	typedef std::vector<std::reference_wrapper<const WatcherInterface>> WatcherList;
 
 	ReadableList readable_list_;
 	WritableList writable_list_;

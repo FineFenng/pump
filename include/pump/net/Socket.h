@@ -34,7 +34,8 @@ PUMP_DECLARE_DELETE_MOVABLE(Socket)
 					LOG_ERROR << "Close Socket: " << fd_ << " failed.";
 					return;
 				}
-			} else {
+			}
+			else {
 				break;
 			}
 		} while (true);
@@ -50,4 +51,4 @@ private:
 };
 }}
 
-#endif 
+#endif

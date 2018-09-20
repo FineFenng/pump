@@ -66,7 +66,9 @@ void TcpConnection::on_readable()
 		LOG_ERROR << "Read Sock " << socket_.get_fd() << " error.";
 		on_erroneous();
 	}
-	else { }
+	else {
+		
+	}
 }
 
 // IO_TASK
@@ -106,7 +108,6 @@ void TcpConnection::on_writable()
 
 void TcpConnection::send_in_bind_thread(const char* data, size_t len)
 {
-	
 	size_t remain_count = len;
 	int wrote_count = 0;
 

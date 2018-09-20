@@ -140,7 +140,7 @@ void EventLoop::run()
 	} while (is_looping_);
 }
 
-void EventLoop::update_watcher(const Watcher& Watcher)
+void EventLoop::update_watcher(const WatcherInterface& Watcher)
 {
 	if (Watcher.get_index() < 0) {
 		push_back_task(std::bind(&EventLoop::add_watcher, this, std::ref(Watcher)));
@@ -150,27 +150,27 @@ void EventLoop::update_watcher(const Watcher& Watcher)
 	}
 }
 
-void EventLoop::remove_watcher(const Watcher& watcher)
+void EventLoop::remove_watcher(const WatcherInterface& watcher)
 {
 	push_back_task(std::bind(&EventLoop::delete_watcher, this, std::ref(watcher)));
 }
 
-void EventLoop::remove_watcher_sync(const Watcher& watcher) const
+void EventLoop::remove_watcher_sync(const WatcherInterface& watcher) const
 {
 	delete_watcher(watcher);
 }
 
-void EventLoop::add_watcher(const Watcher& watcher) const
+void EventLoop::add_watcher(const WatcherInterface& watcher) const
 {
 	poll_->add_interests(watcher);
 }
 
-void EventLoop::modify_watcher(const Watcher& watcher) const
+void EventLoop::modify_watcher(const WatcherInterface& watcher) const
 {
 	poll_->modify_interests(watcher);
 }
 
-void EventLoop::delete_watcher(const Watcher& watcher) const
+void EventLoop::delete_watcher(const WatcherInterface& watcher) const
 {
 	poll_->delete_interests(watcher);
 }

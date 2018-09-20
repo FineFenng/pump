@@ -2,10 +2,10 @@
 #define PUMP_NET_FILEWATHCER_H_
 
 
-#include <pump/net/Watcher.h>
+#include <pump/net/WatcherInterface.h>
 namespace pump { namespace net
 {
-class FileWatcher : Watcher
+class FileWatcher : WatcherInterface
 {
 
 	

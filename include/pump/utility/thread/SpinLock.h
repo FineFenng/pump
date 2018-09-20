@@ -15,7 +15,7 @@ public:
 	SpinLock() = default;
 	~SpinLock() = default;
 
-PUMP_DECLARE_DELETE_COPYABLE(SpinLock)
+PUMP_DELETE_COPYABLE_AND_ASSIGN(SpinLock)
 PUMP_DECLARE_DELETE_MOVABLE(SpinLock)
 
 	void lock()

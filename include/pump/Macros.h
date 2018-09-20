@@ -57,6 +57,13 @@ void assert_failed(const char* error, const char* file, int line, const char* fu
 	__classname__(__classname__&&) = default; \
 	__classname__& operator=(__classname__&&) = default;
 
+#define PUMP_DECLARE_DELETE_COPYABLE_AND_MOVABLE(__classname__) \
+public:\
+	__classname__(const __classname__&) = delete; \
+	__classname__& operator=(const __classname__&) = delete; \
+	__classname__(__classname__&&) = delete; \
+	__classname__&& operator=(__classname__&&) = delete;
+
 
 #define PUMP_DECLARE_CALLBACK_FUNCTION(T,...)  typedef std::function<T(__VA_ARGS__)>
 

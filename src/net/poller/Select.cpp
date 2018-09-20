@@ -6,7 +6,7 @@
 
 #include <algorithm>
 
-#include <pump/net/Watcher.h>
+#include <pump/net/WatcherInterface.h>
 #include <pump/net/watcher/IOWatcher.h>
 #include <pump/utility/log/Logger.h>
 

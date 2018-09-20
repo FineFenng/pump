@@ -16,7 +16,7 @@ enum HandlerFlag
 };
 
 
-class Watcher;
+class WatcherInterface;
 class Handler;
 class EventLoop;
 class ChannelPipeline;
@@ -25,7 +25,7 @@ class ChannelContext
 {
 	friend ChannelPipeline;
 public:
-	ChannelContext(Watcher* watcher, Handler* handler);
+	ChannelContext(WatcherInterface* watcher, Handler* handler);
 private:
 
 	ChannelContext* find_next(HandlerFlag flag)
@@ -56,7 +56,7 @@ private:
 
 private:
 
-	Watcher* watcher_;
+	WatcherInterface* watcher_;
 	Handler* handler_;
 	EventLoop* loop_;
 

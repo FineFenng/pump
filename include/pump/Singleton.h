@@ -19,8 +19,8 @@ public:
 
 	Singleton() = delete;
 	~Singleton() = delete;
-PUMP_DECLARE_DELETE_COPYABLE(Singleton)
-PUMP_DECLARE_DELETE_MOVABLE(Singleton)
+
+PUMP_DECLARE_DELETE_COPYABLE_AND_MOVABLE(Singleton)
 
 	static T* get_instance()
 	{

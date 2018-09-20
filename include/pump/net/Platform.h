@@ -26,28 +26,27 @@
 
 namespace pump {namespace net
 {
-
-    enum class PollType
-    {
-        kDefault,
-        kSelect,
+enum class PollType
+{
+	kDefault,
+	kSelect,
 #ifdef PUMP_PLATFORM_MACX
         kKQueue,
 #endif
 #ifdef PUMP_PLATFORM_LINUX
         kEpoll,
 #endif
-    };
-
-enum EventFlag : unsigned int {
-    kUndefined  = 0xFFFFFFFF,
-    kNone       = 0x00,
-    kIOReadable = 0x01,
-    kIOWritable = 0x02,
-    kIO         = (kIOReadable | kIOWritable),
-    kTimeout    = 0x04,
 };
 
+enum EventFlag : unsigned int
+{
+	kUndefined = 0xFFFFFFFF,
+	kNone = 0x00,
+	kIOReadable = 0x01,
+	kIOWritable = 0x02,
+	kIO = (kIOReadable | kIOWritable),
+	kTimeout = 0x04,
+};
 }}
 
 #endif

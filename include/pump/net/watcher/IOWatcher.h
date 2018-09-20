@@ -11,7 +11,7 @@
 namespace pump { namespace net
 {
 
-class IOWatcher : public Watcher
+class IOWatcher : public WatcherInterface
 {
 public:
 	IOWatcher(EventLoop* loop, SOCKET fd);

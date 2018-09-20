@@ -10,7 +10,7 @@
 #include <thread>
 
 #include <pump/Common.h>
-#include <pump/net/Poller.h>
+#include <pump/net/PollerInterface.h>
 #include <pump/net/Platform.h>
 
 namespace pump {namespace net
@@ -33,11 +33,11 @@ PUMP_DECLARE_DELETE_MOVABLE(EventLoop)
 
 	void run();
 
-	void update_watcher(const Watcher& Watcher);
+	void update_watcher(const WatcherInterface& Watcher);
 
-	void remove_watcher(const Watcher& watcher);
+	void remove_watcher(const WatcherInterface& watcher);
 
-	void remove_watcher_sync(const Watcher& watcher) const;
+	void remove_watcher_sync(const WatcherInterface& watcher) const;
 
 	void push_back_task(const Task& task)
 	{
@@ -53,11 +53,11 @@ PUMP_DECLARE_DELETE_MOVABLE(EventLoop)
 		}
 	}
 
-	void add_watcher(const Watcher& watcher) const;
+	void add_watcher(const WatcherInterface& watcher) const;
 
-	void modify_watcher(const Watcher& watcher) const;
+	void modify_watcher(const WatcherInterface& watcher) const;
 
-	void delete_watcher(const Watcher& watcher) const;
+	void delete_watcher(const WatcherInterface& watcher) const;
 
 	void wakeup() const;
 
@@ -94,7 +94,7 @@ private:
 	SOCKET w_wakeup_fd_;
 	SOCKET r_wakeup_fd_;
 	std::unique_ptr<IOWatcher> wakeup_watcher_;
-	std::unique_ptr<Poller> poll_;
+	std::unique_ptr<PollerInterface> poll_;
 	PollType poll_type_;
 
 private:

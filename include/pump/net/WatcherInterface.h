@@ -17,7 +17,7 @@ namespace pump { namespace net
 {
 class EventLoop;
 
-class Watcher
+class WatcherInterface
 {
 public:
 
@@ -27,7 +27,7 @@ public:
 
 public:
 
-	virtual ~Watcher()  = default;
+	virtual ~WatcherInterface()  = default;
 
 	virtual void handle_callback(const HandleEvent& handle_event) const = 0;
 
