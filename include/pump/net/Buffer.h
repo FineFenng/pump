@@ -63,7 +63,7 @@ public:
 		append_string(message.c_str(), message.size());
 	}
 
-	void appendUInt32(uint32_t value)
+	void append_uint32(uint32_t value)
 	{
 		uint32_t wrote_count = pump::bigendian::Write_uint32(value, get_writable_address());
 	}
@@ -74,7 +74,7 @@ public:
 	void retrieve(size_t len)
 	{
 		readable_index_ += len;
-		assert(readable_index_ <= writable_index_);
+		PUMP_ASSERT(readable_index_ <= writable_index_);
 	}
 
 	void retrieve_all() { readable_index_ = writable_index_ = 0; }

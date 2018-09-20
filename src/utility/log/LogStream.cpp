@@ -24,25 +24,25 @@ LogStream::self& LogStream::operator<<(short val)
 
 LogStream::self& LogStream::operator<<(unsigned int val)
 {
-    format_integet(val);
+    format_integer(val);
     return *this;
 }
 
 LogStream::self& LogStream::operator<<(int val)
 {
-    format_integet(val);
+    format_integer(val);
     return *this;
 }
 
 LogStream::self& LogStream::operator<<(unsigned long val)
 {
-    format_integet(val);
+    format_integer(val);
     return *this;
 }
 
 LogStream::self& LogStream::operator<<(long val)
 {
-    format_integet(val);
+    format_integer(val);
     return *this;
 }
 LogStream::self& LogStream::operator<<(void* val)
@@ -52,13 +52,13 @@ LogStream::self& LogStream::operator<<(void* val)
 
 LogStream::self& LogStream::operator<<(unsigned long long val)
 {
-    format_integet(val);
+    format_integer(val);
     return *this;
 }
 
 LogStream::self& LogStream::operator<<(long long val)
 {
-    format_integet(val);
+    format_integer(val);
     return *this;
 }
 

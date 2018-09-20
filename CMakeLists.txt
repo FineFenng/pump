@@ -5,6 +5,10 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -o3")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -o3")
 
+############generate compile_command.json
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+############generate compile_command.json
+
 
 ############common_header 
 file(GLOB HEADERS "include/pump/*.h")
@@ -74,8 +78,7 @@ endif (WIN32)
 ###########net_src
 
 
-add_library(pump_utiliy STATIC ${UTILITY_SRCS} ${UTILITY_HEADERS})
-
+add_library(pump_utiliy ${UTILITY_SRCS} ${UTILITY_HEADERS})
 target_include_directories(pump_utiliy PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 add_library(pump_net STATIC
@@ -98,8 +101,6 @@ add_library(node_http_parser STATIC
 
 
 target_link_libraries(pump_net pump_utiliy node_http_parser)
-
-
 target_include_directories(pump_net PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 

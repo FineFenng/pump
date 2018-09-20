@@ -5,7 +5,7 @@
 
 namespace pump
 {
-    typedef uint8_t BYTE_T;
+    typedef unsigned char BYTE_T;
 	
 #ifdef PUMP_PLATFORM_WIN
     typedef unsigned __int64 SOCKET;

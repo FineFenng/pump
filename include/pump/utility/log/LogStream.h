@@ -12,17 +12,17 @@
 #include <memory>
 #include <string>
 
+#include <pump/utility/FixedBuffer.h>
 #include <pump/utility/SourceFile.h>
+
 
 namespace pump { namespace utility
 {
-static const int kSmallBuffer = 4000;
-static const int kLargeBuffer = 4000 * 1000;
+;
 static const char digits[] = {
 	'F', 'E', 'D', 'C', 'B', 'A', '9', '8', '7', '6', '5', '4', '3', '2', '1',
 	'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
 };
-
 
 
 template <typename T>
@@ -49,52 +49,12 @@ inline size_t ConvertNumToString(const T& t, char* buffer, int base)
 	return p - buffer;
 }
 
-template <unsigned int SIZE>
-class FixedBuffer
-{
-public:
-	FixedBuffer()
-		: data_{0},
-		cur_(data_)
-	{ }
-
-
-	void append(const char* buf, size_t len)
-	{
-		if (avail() > len) {
-			memcpy(cur_, buf, len);
-			cur_ += len;
-		}
-	}
-
-	const char* data() const { return data_; }
-
-	char* current() const { return cur_; }
-
-	size_t length() const { return cur_ - data_; }
-
-	void add(size_t len) { cur_ += len; }
-
-	void reset() { cur_ = data_; }
-
-	void bzero() { memset(data_, 0, sizeof(data_)); }
-
-	size_t avail() const { return end() - cur_; }
-
-
-private:
-
-	const char* end() const { return data_ + sizeof(data_); }
-
-	char data_[SIZE];
-	char* cur_;
-};
 
 class LogStream
 {
 public:
 	typedef LogStream self;
-	typedef FixedBuffer<kSmallBuffer> LogBuffer;
+	typedef SmallFixedBuffer LogBuffer;
 
 	LogStream() = default;
 
@@ -134,10 +94,10 @@ private:
 	static const size_t max_numeric_size = 32;
 
 	template <typename T>
-	inline void format_integet(T v)
+	inline void format_integer(T v)
 	{
 		if (buffer().avail() > max_numeric_size) {
-			size_t len = ConvertNumToString(v, buffer_.current(), 10);
+			const size_t len = ConvertNumToString(v, buffer_.current(), 10);
 			buffer_.add(len);
 		}
 	}
@@ -149,4 +109,4 @@ private:
 }}
 
 
-#endif //LOGGER_LOGSTREAM_H
+#endif
