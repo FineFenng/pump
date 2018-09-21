@@ -301,9 +301,9 @@ int SocketGetInetStreamPair(const int& type, SOCKET o_sv[2])
 		return pump::kFail;
 	}
 
-	struct sockaddr_in addr_listen;
-	struct sockaddr_in addr_connect;
-	struct sockaddr_in addr_accept;
+	struct sockaddr_in addr_listen{};
+	struct sockaddr_in addr_connect{};
+	struct sockaddr_in addr_accept{};
 	::memset(&addr_listen, 0, sizeof(addr_listen));
 	socklen_t socklen = sizeof(struct sockaddr_in);
 

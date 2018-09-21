@@ -21,12 +21,16 @@ int SocketBind(SOCKET fd, const struct sockaddr_in* peer_address);
 
 
 #ifdef PUMP_PLATFORM_WIN
-#define MAX_BACK_LOG 256
+    #define MAX_BACK_LOG 256
+#else
+    #define MAX_BACK_LOG  SOMAXCONN
 #endif
+
 
 int SocketListen(SOCKET fd, int backlog = MAX_BACK_LOG);
 
 SOCKET SocketAccept(SOCKET fd, struct sockaddr_in* address);
+
 
 int SocketClose(SOCKET fd);
 

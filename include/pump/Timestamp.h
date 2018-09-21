@@ -21,7 +21,7 @@ public:
 	typedef std::chrono::time_point<Clock, MicrosecondDuration> TimePoint;
 
 public:
-	Timestamp(const TimePoint& time_point)
+	explicit Timestamp(const TimePoint& time_point)
 		: time_point_(time_point) { }
 
 	const TimePoint& get_time_point() const { return time_point_; }
@@ -46,7 +46,7 @@ public:
 #else
 		gmtime_r(&seconds, &time);
 #endif
-		const int count = strftime(time_buffer, sizeof(time_buffer), "%Y-%m-%d %H:%M:%S", &time);
+		const size_t count = strftime(time_buffer, sizeof(time_buffer), "%Y-%m-%d %H:%M:%S", &time);
 		snprintf(time_buffer + count, sizeof(time_buffer) - count, ".%ld", nano_seconds);
 		return time_buffer;
 	}

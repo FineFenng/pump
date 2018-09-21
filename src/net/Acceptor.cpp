@@ -59,6 +59,7 @@ void Acceptor::on_new_connection() const
 	memset(&address, 0, sizeof(address));
 
 	SOCKET conn_fd;
+
 	do {
 		conn_fd = SocketAccept(socket_.get_fd(), &address);
 
@@ -91,6 +92,7 @@ void Acceptor::on_new_connection() const
 
 void Acceptor::set_reuse_address_option() const
 {
-	SOCKET re = SocketSetReuseAddress(socket_.get_fd());
+	const SOCKET re = SocketSetReuseAddress(socket_.get_fd());
+	(void)re;
 }
 }}

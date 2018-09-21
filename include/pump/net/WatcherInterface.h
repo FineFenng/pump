@@ -2,8 +2,8 @@
 // Created by finefenng on 2018/7/5.
 //
 
-#ifndef PUMP_NET__WATCHER_H_
-#define PUMP_NET__WATCHER_H-
+#ifndef PUMP_NET_WATCHERINTERFACE_H
+#define PUMP_NET_WATCHERINTERFACE_H
 
 #include <cstdlib>
 #include <functional>

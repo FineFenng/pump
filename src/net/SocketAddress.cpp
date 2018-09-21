@@ -33,7 +33,7 @@
 namespace pump {namespace net
 {
 SocketAddress::SocketAddress(const char* ip, unsigned short port)
-	:socket_address_()
+	:socket_address_{}
 {
 	socket_address_.sin_family = AF_INET;
 	::inet_pton(AF_INET, ip, &socket_address_.sin_addr);
