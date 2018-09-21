@@ -44,9 +44,9 @@ endif (WIN32)
 
 ###########utility_src
 set(UTILITY_SRCS
-        src/utility/log/Logger.cpp
-        src/utility/log/LogStream.cpp
-        )
+    src/utility/log/Logger.cpp
+    src/utility/log/LogStream.cpp
+    src/utility/log/LogFile.cpp)
 ###########utility_src
 
 

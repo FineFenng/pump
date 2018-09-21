@@ -8,11 +8,11 @@
 namespace pump {namespace utility
 {
 
-inline uint64_t GetCurrentThreadId()
+inline int64_t GetCurrentThreadId()
 {
 	std::ostringstream out_stream;
 	out_stream << std::this_thread::get_id();
-	const uint64_t current_thread_id = std::strtoll(out_stream.str().c_str(), nullptr, 16);
+	const int64_t current_thread_id = std::strtoll(out_stream.str().c_str(), nullptr, 16);
 	return current_thread_id;
 }
 

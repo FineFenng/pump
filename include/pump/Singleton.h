@@ -33,7 +33,7 @@ PUMP_DECLARE_DELETE_COPYABLE_AND_MOVABLE(Singleton)
 			re = instance_.load(std::memory_order_acquire);
 			if (re == nullptr) {
 				re = new T();
-				schedule_for_destory(Singleton<T>::destroy_instance);
+				schedule_for_destroy(Singleton<T>::destroy_instance);
 				instance_.store(re, std::memory_order_release);
 			}
 		}
@@ -55,7 +55,7 @@ PUMP_DECLARE_DELETE_COPYABLE_AND_MOVABLE(Singleton)
 	}
 
 protected:
-	static void schedule_for_destory(void(*func)()) {
+	static void schedule_for_destroy(void(*func)()) {
 		std::atexit(func);
 	}
 

@@ -37,14 +37,14 @@ public:
 		char time_buffer[64] = {0};
 		struct tm time{};
 
-		const auto seconds = time_point_.time_since_epoch().count() / 1000000;
+		const long long seconds = time_point_.time_since_epoch().count() / 1000000;
 
 		const long nano_seconds = time_point_.time_since_epoch().count() % 1000000;
 
 #ifdef PUMP_PLATFORM_WIN
 		gmtime_s(&time, &seconds);
 #else
-		gmtime_r(&seconds, &time);
+		gmtime_r(reinterpret_cast<const time_t*>(&seconds), &time);
 #endif
 		const size_t count = strftime(time_buffer, sizeof(time_buffer), "%Y-%m-%d %H:%M:%S", &time);
 		snprintf(time_buffer + count, sizeof(time_buffer) - count, ".%ld", nano_seconds);

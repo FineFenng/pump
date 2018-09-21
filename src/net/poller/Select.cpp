@@ -9,10 +9,12 @@
 #include <pump/net/WatcherInterface.h>
 #include <pump/net/watcher/IOWatcher.h>
 #include <pump/utility/log/Logger.h>
+#include <pump/net/poller/Select.h>
+
 
 namespace pump {namespace net
 {
-void Select::poll(struct timeval* tv, TaskList* io_task_list)
+void Select::poll(const timeval* tv, TaskList* io_task_list)
 {
 	ReadableList readable_list_vr;
 	WritableList writable_list_vr;
@@ -26,7 +28,7 @@ void Select::poll(struct timeval* tv, TaskList* io_task_list)
 		LOG_TRACE << "Current ready socket fd number: " << ready_event_count;
 		for (size_t i = 0; i < watcher_list_.size() && ready_event_count; ++i) {
 			unsigned int revents = 0;
-			std::reference_wrapper<const watcher> watcher = watcher_list_[i];
+			std::reference_wrapper<const WatcherInterface> watcher = watcher_list_[i];
 			const SOCKET fd = watcher.get().get_fd();
 			if (FD_ISSET(fd, &readable_list_vr)) {
 				revents |= static_cast<unsigned int>(EventFlag::kIOReadable);
@@ -37,7 +39,7 @@ void Select::poll(struct timeval* tv, TaskList* io_task_list)
 				LOG_TRACE << "Socket fd:" << fd << " has writable event happen.";
 			}
 			if (revents > 0) {
-				io_task_list->push_back(std::bind(&watcher::handle_callback, watcher, revents));
+				io_task_list->push_back(std::bind(&WatcherInterface::handle_callback, watcher, revents));
 				--ready_event_count;
 			}
 		}
@@ -58,7 +60,7 @@ void Select::init_backend()
 	FD_ZERO(&writable_list_);
 }
 
-void Select::add_interests(const watcher& watcher)
+void Select::add_interests(const WatcherInterface& watcher)
 {
 	if (watcher.get_index() < 0) {
 		const SOCKET fd = watcher.get_fd();
@@ -79,7 +81,7 @@ void Select::add_interests(const watcher& watcher)
 	}
 }
 
-void Select::modify_interests(const watcher& watcher)
+void Select::modify_interests(const WatcherInterface& watcher)
 {
 	assert(watcher.get_index() >= 0);
 	const SOCKET fd = watcher.get_fd();
@@ -98,14 +100,14 @@ void Select::modify_interests(const watcher& watcher)
 	}
 }
 
-void Select::delete_interests(const watcher& watcher)
+void Select::delete_interests(const WatcherInterface& watcher)
 {
 	const int index = watcher.get_index();
 	const SOCKET fd = watcher.get_fd();
 	assert(index >= 0);
-	std::reference_wrapper<const watcher>& handle_ref = watcher_list_[index];
+	std::reference_wrapper<const WatcherInterface>& handle_ref = watcher_list_[index];
 	if (index != watcher_list_.size() - 1) {
-		std::reference_wrapper<const watcher>& back_handle_ref = watcher_list_.back();
+		std::reference_wrapper<const WatcherInterface>& back_handle_ref = watcher_list_.back();
 		back_handle_ref.get().set_index(index);
 		std::swap(handle_ref, back_handle_ref);
 	}
@@ -113,4 +115,5 @@ void Select::delete_interests(const watcher& watcher)
 	FD_CLR(fd, &writable_list_);
 	watcher_list_.pop_back();
 }
+
 }}
