@@ -4,3 +4,6 @@
 [submodule "3rd/error_handle"]
 	path = 3rd/error_handle
 	url = https://github.com/FineFenng/error_handle.git
+[submodule "3rd/googletest"]
+	path = 3rd/googletest
+	url = https://github.com/google/googletest.git

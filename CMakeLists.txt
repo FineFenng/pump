@@ -77,6 +77,16 @@ else (WIN32)
 endif (WIN32)
 ###########net_src
 
+set(3rd_DIR "${CMAKE_SOURCE_DIR}/3rd")
+add_library(node_http_parser STATIC
+        ${3rd_DIR}/http-parser/http_parser.c
+        ${3rd_DIR}/http-parser/http_parser.h )
+
+
+add_subdirectory(${3rd_DIR}/googletest)
+include_directories(${3rd_DIR}/googletest/googletest/include)
+include_directories(${3rd_DIR}/googletest/googlemock/include)
+
 
 add_library(pump_utiliy ${UTILITY_SRCS} ${UTILITY_HEADERS})
 target_include_directories(pump_utiliy PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
@@ -92,27 +102,8 @@ add_library(pump_net STATIC
         ${NET_SERVER_HEADERS}
         )
 
-set(3rd_DIR "${CMAKE_SOURCE_DIR}/3rd")
-
-add_library(node_http_parser STATIC
-        ${3rd_DIR}/http-parser/http_parser.c
-        ${3rd_DIR}/http-parser/http_parser.h
-        )
-
-
 target_link_libraries(pump_net pump_utiliy node_http_parser)
 target_include_directories(pump_net PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
-
-
-add_executable(EchoTest test/EchoTest.cpp)
-target_link_libraries(EchoTest pump_net)
-
-add_executable(LogTest test/LogTest.cpp)
-target_link_libraries(LogTest pump_utiliy)
-
-add_executable(ChronoTest test/ChronoTest.cpp)
-
-
 
 
 

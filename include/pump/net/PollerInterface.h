@@ -3,8 +3,8 @@
 //
 
 
-#ifndef PUMP_NET_POLLER_H
-#define PUMP_NET_POLLER_H
+#ifndef PUMP_NET_POLLERINTERFACE_H
+#define PUMP_NET_POLLERINTERFACE_H
 
 #include <functional>
 #include <vector>
