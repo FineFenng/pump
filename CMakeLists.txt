@@ -50,7 +50,10 @@ set(UTILITY_SRCS
     src/utility/log/ConsoleLogger.cpp
     src/utility/log/AppendFile.cpp
     src/utility/log/AsyncLogging.cpp
-    src/utility/log/LoggerManager.cpp src/utility/thread/SpinLock.cpp src/utility/log/SystemLogger.cpp)
+    src/utility/log/LoggerManager.cpp
+    src/utility/thread/SpinLock.cpp
+    src/utility/log/SystemLogger.cpp
+    )
 ###########utility_src
 
 
@@ -67,7 +70,9 @@ set(NET_SRCS
     src/net/TcpServer.cpp
     src/net/watcher/IOWatcher.cpp
     src/net/EventLoopThread.cpp
-    src/utility/thread/ThreadOption.cpp src/utility/thread/SpinLock.cpp)
+    src/utility/thread/ThreadOption.cpp
+    src/utility/thread/SpinLock.cpp
+    )
 
 
 if (WIN32)

@@ -20,34 +20,34 @@ class Singleton {
  public:
 
   static T* get_instance() {
-	T* re = instance_.load(std::memory_order_acquire);
+    T* re = instance_.load(std::memory_order_acquire);
 
-	if (re == nullptr) {
-	  static std::mutex constructor_mutex;
-	  std::lock_guard<std::mutex> lk(constructor_mutex);
+    if (re == nullptr) {
+      static std::mutex constructor_mutex;
+      std::lock_guard<std::mutex> lk(constructor_mutex);
 
-	  re = instance_.load(std::memory_order_acquire);
-	  if (re == nullptr) {
-		re = new T();
-		schedule_for_destroy(Singleton<T>::destroy_instance);
-		instance_.store(re, std::memory_order_release);
-	  }
-	}
-	return re;
+      re = instance_.load(std::memory_order_acquire);
+      if (re == nullptr) {
+        re = new T();
+        schedule_for_destroy(Singleton<T>::destroy_instance);
+        instance_.store(re, std::memory_order_release);
+      }
+    }
+    return re;
   }
 
   static void destroy_instance() {
 
-	T* re = instance_.load(std::memory_order_acquire);
+    T* re = instance_.load(std::memory_order_acquire);
 
-	if (re != nullptr) {
-	  static std::mutex destroy_mutex;
-	  std::lock_guard<std::mutex> lk(destroy_mutex);
-	  if (re != nullptr) {
-		delete re;
-		instance_.store(nullptr, std::memory_order_release);
-	  }
-	}
+    if (re != nullptr) {
+      static std::mutex destroy_mutex;
+      std::lock_guard<std::mutex> lk(destroy_mutex);
+      if (re != nullptr) {
+        delete re;
+        instance_.store(nullptr, std::memory_order_release);
+      }
+    }
   }
 
  protected:
@@ -56,7 +56,7 @@ class Singleton {
 
  protected:
   static void schedule_for_destroy(void(* func)()) {
-	std::atexit(func);
+    std::atexit(func);
   }
 
  private:
