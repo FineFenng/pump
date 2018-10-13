@@ -20,7 +20,7 @@ TcpConnection::TcpConnection(EventLoop* loop, int fd, const SocketAddress& local
   handle_.set_readable_callback(std::bind(&TcpConnection::on_readable, this));
   handle_.set_writable_callback(std::bind(&TcpConnection::on_writable, this));
   handle_.set_erroneous_callback(std::bind(&TcpConnection::on_erroneous, this));
-  handle_.enable_readable();
+  handle_.enable_readable(); // not thread safety 可能使用C++二段构造
 }
 
 TcpConnection::~TcpConnection() {
@@ -34,7 +34,7 @@ void TcpConnection::send(const char* data, size_t len) {
 
 // IO_TASK
 void TcpConnection::on_readable() {
-  int saved_errno;
+  int       saved_errno;
   const int byte_count = input_buffer_.recv_from_fd(socket_.get_fd(), &saved_errno);
 
   if (byte_count == 0) {
@@ -84,7 +84,7 @@ void TcpConnection::on_writable() {
 
 void TcpConnection::send_in_bind_thread(const char* data, size_t len) {
   size_t remain_count = len;
-  int wrote_count = 0;
+  int    wrote_count  = 0;
 
   if (!handle_.is_writable() && output_buffer_.get_readable_bytes() == 0) {
 	//wrote_count = ::send_in_bind_thread(get_fd(), data, len, 0);

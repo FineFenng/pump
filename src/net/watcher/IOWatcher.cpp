@@ -4,7 +4,7 @@
 
 
 #include <pump/net/watcher/IOWatcher.h>
-#include <pump/utility/log/Logger.h>
+#include <pump/utility/log/LogLine.h>
 
 
 namespace pump { namespace net

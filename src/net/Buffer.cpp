@@ -4,9 +4,6 @@
 
 
 #include <pump/net/Buffer.h>
-#include <pump/net/SocketOption.h>
-#include <pump/Common.h>
-
 
 namespace pump { namespace net
 {

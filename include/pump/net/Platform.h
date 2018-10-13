@@ -4,8 +4,8 @@
 #include <pump/Common.h>
 
 #ifdef PUMP_PLATFORM_GNU
-#include <pump/net/poll/Select.h>
-#include <pump/net/poll/Poll.h>
+#include <pump/net/poller/Select.h>
+#include <pump/net/poller/Poll.h>
 #endif
 
 #ifdef PUMP_PLATFORM_LINUX

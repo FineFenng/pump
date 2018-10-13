@@ -6,7 +6,7 @@
 #define PUMP_NET_SOCKETOPTION_H_
 
 #include <pump/Common.h>
-#include <pump/utility/log/Logger.h>
+#include <pump/utility/log/LogLine.h>
 
 
 namespace pump { namespace net

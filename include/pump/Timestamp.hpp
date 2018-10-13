@@ -29,7 +29,7 @@ public:
 	static Timestamp now()
 	{
 		const TimePoint current_point = std::chrono::time_point_cast<MicrosecondDuration>(Clock::now());
-		return Timestamp{current_point};
+		return Timestamp(current_point);
 	}
 
 	std::string get_time_point_string() const
@@ -39,7 +39,7 @@ public:
 
 		const long long seconds = time_point_.time_since_epoch().count() / 1000000;
 
-		const long nano_seconds = time_point_.time_since_epoch().count() % 1000000;
+		const long micro_seconds = time_point_.time_since_epoch().count() % 1000000;
 
 #ifdef PUMP_PLATFORM_WIN
 		gmtime_s(&time, &seconds);
@@ -47,7 +47,7 @@ public:
 		gmtime_r(reinterpret_cast<const time_t*>(&seconds), &time);
 #endif
 		const size_t count = strftime(time_buffer, sizeof(time_buffer), "%Y-%m-%d %H:%M:%S", &time);
-		snprintf(time_buffer + count, sizeof(time_buffer) - count, ".%ld", nano_seconds);
+		snprintf(time_buffer + count, sizeof(time_buffer) - count, ".%ld", micro_seconds);
 		return time_buffer;
 	}
 

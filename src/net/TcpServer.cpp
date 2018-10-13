@@ -53,7 +53,6 @@ void TcpServer::init_connection(int fd, const SocketAddress& client_address) {
   new_connection_ptr->set_closed_callback(std::bind(&TcpServer::deinit_connection, this, _1));
   new_connection_ptr->set_connection_style(TcpConnection::kEstablishing);
   tcp_connection_map_[fd].first = new_connection_ptr;
-
   tcp_connection_map_[fd].second.reset();
 
   loop->push_back_task(std::bind(&TcpServer::on_new_connection, this, new_connection_ptr));

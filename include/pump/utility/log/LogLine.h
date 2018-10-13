@@ -56,6 +56,7 @@ private:
     LogLevel  level_;
 
 
+
 };
 }
 }

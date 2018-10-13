@@ -6,32 +6,26 @@
 
 #include <pump/Common.h>
 
-namespace pump { namespace utility
-{
-class SpinLock
-{
-public:
+namespace pump { namespace utility {
+class SpinLock {
+ PUMP_DECLARE_DELETE_COPYABLE_AND_MOVABLE(SpinLock)
+ public:
 
-	SpinLock() = default;
-	~SpinLock() = default;
+  SpinLock() = default;
+  ~SpinLock() = default;
 
-PUMP_DELETE_COPYABLE_AND_ASSIGN(SpinLock)
-PUMP_DECLARE_DELETE_MOVABLE(SpinLock)
-
-	void lock()
-	{
-		while (flag.test_and_set(std::memory_order_acquire)) {
-			std::this_thread::yield();
-		}
+  void lock() {
+	while (flag_.test_and_set(std::memory_order_acquire)) {
+	  std::this_thread::yield();
 	}
+  }
 
-	void unlock()
-	{
-		flag.clear(std::memory_order_acquire);
-	}
+  void unlock() {
+	flag_.clear(std::memory_order_acquire);
+  }
 
-private:
-	std::atomic_flag flag = ATOMIC_FLAG_INIT;
+ private:
+  std::atomic_flag flag_ = ATOMIC_FLAG_INIT;
 };
 }}
 #endif
