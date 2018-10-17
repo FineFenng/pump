@@ -1,24 +1,30 @@
 //
-// Created by finefenng on 2018/9/12.
+// Created by fengc on 18-10-17.
 //
 
 #ifndef PUMP_NET_CHANNEL_H
 #define PUMP_NET_CHANNEL_H
 
-namespace pump
-{
-namespace net
-{
+namespace pump {
+namespace net {
+class EventLoop;
+class ChannelPipeline;
+class WathcherInterface;
+class Channel {
+ public:
+  Channel(EventLoop* loop, WathcherInterface* watcher, ChannelPipeline* channel_pipeline);
 
-class Channel
-{
 
+
+
+
+ private:
+  EventLoop* loop_;
+  WathcherInterface* wathcher_;
+  ChannelPipeline* channel_pipeline_;
 };
 
-
-
+}
 }
 
-}
-
-#endif //PUMP_CHANNEL_H
+#endif //PUMP_NET_CHANNEL_H

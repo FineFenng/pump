@@ -51,8 +51,8 @@ class Singleton {
   }
 
  protected:
-  Singleton() {}
-  virtual ~Singleton() {};
+  Singleton() = default;
+  virtual ~Singleton() = default;
 
  protected:
   static void schedule_for_destroy(void(* func)()) {
@@ -60,10 +60,10 @@ class Singleton {
   }
 
  private:
-  static std::atomic<T*> instance_ = nullptr;
+  static std::atomic<T*> instance_;
 };
 
-//template<typename T> std::atomic<T*> Singleton<T>::instance_ = nullptr;
+template<typename T> std::atomic<T*> Singleton<T>::instance_ = nullptr;
 
 }
 

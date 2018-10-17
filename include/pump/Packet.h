@@ -25,7 +25,7 @@ namespace pump
 class Packet
 {
 public:
-	Packet(uint32_t left_capacity = PACK_INIT_LEFT_CAPACITY, uint32_t right_capacity = PACK_INIT_RIGHT_CAPACITY)
+	explicit Packet(uint32_t left_capacity = PACK_INIT_LEFT_CAPACITY, uint32_t right_capacity = PACK_INIT_RIGHT_CAPACITY)
 		: buffer_(nullptr),
 		left_capacity_(left_capacity),
 		right_capacity_(right_capacity),
