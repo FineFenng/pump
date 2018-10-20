@@ -6,14 +6,10 @@
 #include <pump/net/WatcherInterface.h>
 #include <pump/net/poller/Epoll.h>
 
-namespace pump
-{
-namespace net
-{
+namespace pump {
+namespace net {
 
-
-void Epoll::poll(const timeval* tv, TaskList* io_task_list)
-{
+void Epoll::poll(const timeval* tv, TaskList* io_task_list) {
   #define EPOLL_MAX_SIZE 500
   is_quit_ = false;
 
@@ -32,8 +28,7 @@ void Epoll::poll(const timeval* tv, TaskList* io_task_list)
   is_quit_ = true;
 }
 
-void Epoll::add_interests(const WatcherInterface& handle)
-{
+void Epoll::add_interests(const WatcherInterface& handle) {
 
   if (handle.get_index() < 0) {
 
@@ -48,8 +43,7 @@ void Epoll::add_interests(const WatcherInterface& handle)
   }
 }
 
-void Epoll::modify_interests(const WatcherAbstract& handle)
-{
+void Epoll::modify_interests(const WatcherAbstract& handle) {
   int index = handle.get_index();
   if (index >= 0) {
 
@@ -61,8 +55,7 @@ void Epoll::modify_interests(const WatcherAbstract& handle)
   }
 }
 
-void Epoll::delete_interests(const WatcherAbstract& handle)
-{
+void Epoll::delete_interests(const WatcherAbstract& handle) {
   int index = handle.get_index();
   if (index >= 0) {
 
@@ -81,8 +74,7 @@ void Epoll::delete_interests(const WatcherAbstract& handle)
   }
 }
 
-void Epoll::init_backend()
-{
+void Epoll::init_backend() {
 
 #ifdef EPOLL_CLOEXEC
   backend_fd_ = epoll_create1(EPOLL_CLOEXEC);
@@ -95,7 +87,6 @@ void Epoll::init_backend()
   fcntl(backend_fd_, F_SETFD, FD_CLOEXEC);
 
 }
-
 
 }
 }

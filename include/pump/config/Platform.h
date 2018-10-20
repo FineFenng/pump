@@ -13,8 +13,7 @@
 #endif
 
 #ifdef __GNUC__
-#define PUMP_PLATFORM_GNU      1
-#define PUMP_PLATFORM          PUMP_PLATFORM_GNU
+#define PUMP_PLATFORM_GNU
 #endif
 
 #if defined(__GNUC__) && defined(__LINUX) || defined(__LINUX__) 
@@ -31,6 +30,9 @@
 #ifndef PUMP_PLATFORM
 #error
 #endif
+/**********************************************************************************
+                        Cross-Platform Header Files
+ *********************************************************************************/
 #ifdef PUMP_PLATFORM_GNU
     #include <sys/time.h>
     #include <sys/types.h>
@@ -101,5 +103,6 @@
 #pragma comment(lib,"ws2_32.lib")
 #pragma comment(lib,"mswsock.lib")
 #endif
+
 
 #endif //PUMP_CONFIG_PLATFORM_H_

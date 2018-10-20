@@ -86,7 +86,7 @@ private:
 	};
 
 private:
-	uint64_t thread_id_;
+	int64_t thread_id_;
 	bool is_looping_;
 	LoopState loop_state_;
 

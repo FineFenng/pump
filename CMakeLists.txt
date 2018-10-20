@@ -44,26 +44,35 @@ endif (WIN32)
 
 ###########utility_src
 set(UTILITY_SRCS
-        src/utility/log/Logger.cpp
-        src/utility/log/LogStream.cpp
-        )
+    src/utility/log/LogLine.cpp
+    src/utility/log/LogStream.cpp
+    src/utility/log/FileLogger.cpp
+    src/utility/log/ConsoleLogger.cpp
+    src/utility/log/AppendFile.cpp
+    src/utility/log/AsyncLogging.cpp
+    src/utility/log/LoggerManager.cpp
+    src/utility/thread/SpinLock.cpp
+    src/utility/log/SystemLogger.cpp
+    )
 ###########utility_src
 
 
 ###########net_src
 set(NET_SRCS
-        src/net/Acceptor.cpp
-        src/net/Buffer.cpp
-        src/net/ChannelContext.cpp
-        src/net/ChannelPipeline.cpp
-        src/net/EventLoop.cpp
-        src/net/SocketAddress.cpp
-        src/net/SocketOption.cpp
-        src/net/TcpConnection.cpp
-        src/net/TcpServer.cpp
-        src/net/watcher/IOWatcher.cpp
-        src/net/EventLoopThread.cpp
-        )
+    src/net/Acceptor.cpp
+    src/net/Buffer.cpp
+    src/net/ChannelContext.cpp
+    src/net/ChannelPipeline.cpp
+    src/net/EventLoop.cpp
+    src/net/SocketAddress.cpp
+    src/net/SocketOption.cpp
+    src/net/TcpConnection.cpp
+    src/net/TcpServer.cpp
+    src/net/watcher/IOWatcher.cpp
+    src/net/EventLoopThread.cpp
+    src/utility/thread/ThreadOption.cpp
+    src/utility/thread/SpinLock.cpp
+    )
 
 
 if (WIN32)
@@ -105,7 +114,9 @@ add_library(pump_net STATIC
 target_link_libraries(pump_net pump_utiliy node_http_parser)
 target_include_directories(pump_net PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
-
+add_subdirectory(${3rd_DIR}/googletest)
+include_directories(${3rd_DIR}/googletest/googletest)
+include_directories(${3rd_DIR}/googletest/googlemock)
 
 
 

@@ -1,5 +1,5 @@
 #include <pump/net/server/EchoServer.h>
-#include <pump/utility/log/Logger.h>
+#include <pump/utility/log/LogLine.h>
 
 int main(int argc, char* argv[])
 {
