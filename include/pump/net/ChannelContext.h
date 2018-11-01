@@ -2,8 +2,10 @@
 #define PUMP_NET_CHANNELCONTEXT_H_
 
 #include <pump/Common.h>
+#in
 
-namespace pump { namespace net {
+namespace pump {
+namespace net {
 enum HandlerFlag {
   kNone = 0x00,
   kActivity = 0x01,
@@ -21,43 +23,44 @@ class ChannelPipeline;
 class ChannelContext {
   friend ChannelPipeline;
  public:
-  ChannelContext(WatcherInterface* watcher, Handler* handler);
+  ChannelContext(WatcherInterface *watcher, Handler *handler);
  private:
 
-  ChannelContext* find_next(HandlerFlag flag) {
-	ChannelContext* ctx = this;
+  ChannelContext *find_next(HandlerFlag flag) {
+    ChannelContext *ctx = this;
 
-	do {
-	  ctx = ctx->next_; // TODO ???
-	  PUMP_ASSERT(ctx != nullptr);
-	} while (!(ctx->flag_ & flag));
+    do {
+      ctx = ctx->next_; // TODO ???
+      PUMP_ASSERT(ctx != nullptr);
+    } while (!(ctx->flag_ & flag));
 
-	return ctx;
+    return ctx;
   }
 
-  ChannelContext* find_prev(HandlerFlag flag) {
-	ChannelContext* ctx = this;
+  ChannelContext *find_prev(HandlerFlag flag) {
+    ChannelContext *ctx = this;
 
-	do {
-	  ctx = ctx->prev_;
-	  PUMP_ASSERT(ctx != nullptr);
+    do {
+      ctx = ctx->prev_;
+      PUMP_ASSERT(ctx != nullptr);
 
-	} while (!(ctx->flag_ & flag));
-	return ctx;
+    } while (!(ctx->flag_ & flag));
+    return ctx;
   }
 
  private:
 
-  WatcherInterface* watcher_;
-  Handler* handler_;
-  EventLoop* loop_;
+  WatcherInterface *watcher_;
+  Handler *handler_;
+  EventLoop *loop_;
 
-  ChannelContext* prev_;
-  ChannelContext* next_;
+  ChannelContext *prev_;
+  ChannelContext *next_;
   HandlerFlag flag_;
 
  private:
 };
-}}
+}
+}
 
 #endif

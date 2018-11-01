@@ -50,8 +50,8 @@ class Singleton {
   }
 
  protected:
-  Singleton() {}
-  virtual ~Singleton() {};
+  Singleton() = default;
+  virtual ~Singleton() = default;
 
  protected:
   static void schedule_for_destroy(void(* func)()) {
