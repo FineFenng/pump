@@ -13,12 +13,11 @@
 
 namespace pump { namespace net {
 class Socket {
+ PUMP_DECLARE_DELETE_COPYABLE_AND_MOVABLE(Socket)
  public:
   explicit Socket(SOCKET fd)
 	  : fd_(fd) {}
 
- PUMP_DECLARE_DELETE_COPYABLE(Socket)
- PUMP_DECLARE_DELETE_MOVABLE(Socket)
 
   ~Socket() {
 	do {
