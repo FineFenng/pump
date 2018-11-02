@@ -34,10 +34,6 @@ public:
 
 	~Acceptor();
 
-PUMP_DECLARE_DELETE_COPYABLE(Acceptor)
-
-PUMP_DECLARE_DEFAULT_MOVABLE(Acceptor)
-
 	bool listen();
 
 	void set_reuse_address_option() const;

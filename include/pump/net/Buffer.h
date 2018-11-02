@@ -45,7 +45,6 @@ public:
 	{ }
 
 
-
 	void append_string(const char* message, size_t len)
 	{
 		ensure_capacity(len);

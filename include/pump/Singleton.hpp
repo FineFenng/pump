@@ -10,6 +10,7 @@
 #include <atomic>
 #include <mutex>
 
+
 #include <pump/Common.h>
 
 namespace pump {
@@ -17,8 +18,8 @@ namespace pump {
 template<typename T>
 class Singleton {
  PUMP_DECLARE_DELETE_COPYABLE_AND_MOVABLE(Singleton)
- public:
 
+ public:
   static T* get_instance() {
     T* re = instance_.load(std::memory_order_acquire);
 
@@ -37,9 +38,7 @@ class Singleton {
   }
 
   static void destroy_instance() {
-
     T* re = instance_.load(std::memory_order_acquire);
-
     if (re != nullptr) {
       static std::mutex destroy_mutex;
       std::lock_guard<std::mutex> lk(destroy_mutex);
@@ -63,7 +62,7 @@ class Singleton {
   static std::atomic<T*> instance_;
 };
 
-template<typename T> std::atomic<T*> Singleton<T>::instance_ = nullptr;
+template<typename T> std::atomic<T*> Singleton<T>::instance_(nullptr);
 
 }
 

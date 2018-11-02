@@ -9,9 +9,9 @@
 #include <mutex>
 #include <vector>
 
-#include <pump/Singleton.h>
+#include <pump/Singleton.hpp>
 #include <pump/utility/log/LoggerInterface.h>
-#include <pump/utility/thread/SpinLock.h>
+#include <pump/utility/thread/SpinLock.hpp>
 #include <pump/utility/log/AsyncLogging.h>
 
 namespace pump {
@@ -44,9 +44,8 @@ class LoggerManager : public pump::Singleton<LoggerManager> {
     }
     spinLock_.unlock();
   }
- protected:
+ private:
   LoggerManager();
-  ~LoggerManager() = default;
 
  private:
   bool is_inited_;
