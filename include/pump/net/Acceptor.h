@@ -33,10 +33,14 @@ namespace pump {namespace net {
 
 		~Acceptor();
 
+<<<<<<< HEAD
 
 		bool listen();
 
 		void set_reuse_address_option() const;
+=======
+	bool listen();
+>>>>>>> master
 
 		void on_new_connection() const;
 

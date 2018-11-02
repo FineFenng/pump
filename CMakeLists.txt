@@ -52,7 +52,6 @@ set(UTILITY_SRCS
     src/utility/log/AppendFile.cpp
     src/utility/log/AsyncLogging.cpp
     src/utility/log/LoggerManager.cpp
-    src/utility/thread/SpinLock.cpp
     src/utility/log/SystemLogger.cpp
     )
 ###########utility_src
@@ -72,7 +71,6 @@ set(NET_SRCS
     src/net/watcher/IOWatcher.cpp
     src/net/EventLoopThread.cpp
     src/utility/thread/ThreadOption.cpp
-    src/utility/thread/SpinLock.cpp
     )
 
 
@@ -88,11 +86,12 @@ endif (WIN32)
 ###########net_src
 
 set(3rd_DIR "${CMAKE_SOURCE_DIR}/3rd")
-add_library(node_http_parser STATIC
-        ${3rd_DIR}/http-parser/http_parser.c
-        ${3rd_DIR}/http-parser/http_parser.h )
+set(TEST_DIR "${CMAKE_SOURCE_DIR}/test")
+set(GOOGLE_TEST_DIR ${CMAKE_SOURCE_DIR}/test/googletest)
 
-
+add_subdirectory(${3rd_DIR}/googletest)
+include_directories(${3rd_DIR}/googletest/googletest/include)
+include_directories(${3rd_DIR}/googletest/googlemock/include)
 
 add_library(pump_utiliy ${UTILITY_SRCS} ${UTILITY_HEADERS})
 
@@ -110,9 +109,36 @@ add_library(pump_net STATIC
         ${NET_SERVER_HEADERS}
         )
 
+
+add_library(node_http_parser STATIC
+        ${3rd_DIR}/http-parser/http_parser.c
+        ${3rd_DIR}/http-parser/http_parser.h
+        )
+
+
+
+include_directories(${CMAKE_SOURCE_DIR}/include/) #top header files path
 target_link_libraries(pump_net pump_utiliy node_http_parser)
+target_include_directories(pump_net PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 
 
+############################Google Test#############################
+#add_subdirectory(${3rd_DIR}/googletest)
+include_directories(${3rd_DIR}/googletest/googletest/include)
+include_directories(${3rd_DIR}/googletest/googlemock/indclude)
+link_libraries(${3rd_DIR}/googletest)
 
 
+add_executable(google_test_units ${GOOGLE_TEST_DIR}/google_test_units.cpp)
+# Link with GoogleTest
+target_link_libraries(google_test_units gtest gtest_main)
+#Link with GoogleMock
+target_link_libraries(google_test_units gmock gmock_main)
+
+####################################################################
+
+############################Common Test#############################
+add_executable(SingletonTest ${TEST_DIR}/SingletonTest.cpp)
+
+####################################################################
