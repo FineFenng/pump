@@ -40,11 +40,11 @@ class ThreadWrapper {
 
   void join();
 
-  bool is_start() {
+  bool is_started() const {
     return is_start_;
   }
 
-  uint64_t get_thread_id() {
+  uint64_t get_thread_id() const {
     return thread_id_;
   }
 

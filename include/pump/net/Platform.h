@@ -26,7 +26,7 @@
 
 namespace pump {namespace net
 {
-enum class PollType
+enum class PollerType
 {
 	kDefault,
 	kSelect,

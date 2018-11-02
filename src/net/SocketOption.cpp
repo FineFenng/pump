@@ -88,7 +88,7 @@ int SocketGetLastErrno(SOCKET fd) {
   }
 }
 
-void SocketSetNoblocking(SOCKET fd) {
+void SocketSetNonblocking(SOCKET fd) {
 #if PUMP_PLATFORM_WIN
   u_long val = 1;
   ioctlsocket(fd, FIONBIO, &val);

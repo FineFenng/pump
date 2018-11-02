@@ -3,6 +3,8 @@
 
 #include <pump/Macros.h>
 #include <pump/Types.h>
+#include <pump/RefBase.hpp>
+#include <pump/RefPtr.hpp>
 #include <pump/config/Platform.h>
 #include <pump/config/Constants.h>
 

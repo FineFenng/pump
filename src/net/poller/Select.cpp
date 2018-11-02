@@ -51,7 +51,7 @@ void Select::poll(const timeval* tv, TaskList* io_task_list) {
   }
 }
 
-void Select::init_backend() {
+void Select::init() {
   FD_ZERO(&readable_list_);
   FD_ZERO(&writable_list_);
 }

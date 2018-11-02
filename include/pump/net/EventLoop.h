@@ -13,99 +13,94 @@
 #include <pump/net/PollerInterface.h>
 #include <pump/net/Platform.h>
 
-namespace pump {namespace net
-{
-class watcher;
-class IOWatcher;
+namespace pump {namespace net {
 
-class EventLoop
-{
-public:
-	PUMP_DECLARE_CALLBACK_FUNCTION(void) Task;
+	class IOWatcher;
 
-public:
-	explicit EventLoop(int event_loop_id = 0);
+	class EventLoop : public pump::RefBase {
+	PUMP_DECLARE_DELETE_COPYABLE_AND_MOVABLE(EventLoop)
 
-	~EventLoop();
+	public:
+		PUMP_DECLARE_CALLBACK_FUNCTION(void) Task;
 
-PUMP_DECLARE_DELETE_COPYABLE(EventLoop)
-PUMP_DECLARE_DELETE_MOVABLE(EventLoop)
+	public:
+		explicit EventLoop(int event_loop_id = 0);
 
-	void run();
+		~EventLoop();
 
-	void update_watcher(const WatcherInterface& Watcher);
+		void run();
 
-	void remove_watcher(const WatcherInterface& watcher);
+		void update_watcher(const WatcherInterface& Watcher);
 
-	void remove_watcher_sync(const WatcherInterface& watcher) const;
+		void remove_watcher(const WatcherInterface& watcher);
 
-	void push_back_task(const Task& task)
-	{
-		if (is_in_bind_thread()) {
-			normal_task_list_.push_back(task);
-		}
-		else {
-			{
-				std::lock_guard<std::mutex> lock_guard(mutex_);
+		void remove_watcher_sync(const WatcherInterface& watcher) const;
+
+		void push_back_task(const Task& task) {
+			if (is_in_bind_thread()) {
 				normal_task_list_.push_back(task);
 			}
-			wakeup();
+			else {
+				{
+					std::lock_guard<std::mutex> lock_guard(mutex_);
+					normal_task_list_.push_back(task);
+				}
+				wakeup();
+			}
 		}
-	}
 
-	void add_watcher(const WatcherInterface& watcher) const;
+		void add_watcher(const WatcherInterface& watcher) const;
 
-	void modify_watcher(const WatcherInterface& watcher) const;
+		void modify_watcher(const WatcherInterface& watcher) const;
 
-	void delete_watcher(const WatcherInterface& watcher) const;
+		void delete_watcher(const WatcherInterface& watcher) const;
 
-	void wakeup() const;
+		void wakeup() const;
 
-	int get_event_loop_id() const { return event_loop_id_; }
+		int get_event_loop_id() const { return event_loop_id_; }
 
-private:
-	void init();
+	private:
+		void init();
 
-	bool is_in_bind_thread() const;
+		bool is_in_bind_thread() const;
 
-	int calc_poll_block_time() const;
+		int calc_poll_block_time() const;
 
-	void init_notify_watcher();
+		void init_notify_watcher();
 
-	void init_poll();
+		void init_poll();
 
-	void clear_wakeup_fd_buffer() const;
+		void clear_wakeup_fd_buffer() const;
 
-private:
-	enum LoopState
-	{
-		kNormaTasklExecute,
-		kIOPolling,
-		kIOTaskExecute,
-		kDelayTaskExecute,
+	private:
+		enum class LoopState {
+			kNormaTaskExecute,
+			kIOPolling,
+			kIOTaskExecute,
+			kDelayTaskExecute,
+		};
+
+	private:
+		int64_t thread_id_;
+		bool is_looping_;
+		LoopState loop_state_;
+
+	private:
+		SOCKET w_wakeup_fd_;
+		SOCKET r_wakeup_fd_;
+		std::unique_ptr<IOWatcher> wakeup_watcher_;
+		std::unique_ptr<PollerInterface> poll_;
+		PollerType poll_type_;
+
+	private:
+		typedef std::vector<Task> TaskList;
+
+		TaskList normal_task_list_;
+		TaskList delay_task_list_;
+		TaskList io_task_list_;
+		std::mutex mutex_;
+		int event_loop_id_;
 	};
-
-private:
-	int64_t thread_id_;
-	bool is_looping_;
-	LoopState loop_state_;
-
-private:
-	SOCKET w_wakeup_fd_;
-	SOCKET r_wakeup_fd_;
-	std::unique_ptr<IOWatcher> wakeup_watcher_;
-	std::unique_ptr<PollerInterface> poll_;
-	PollType poll_type_;
-
-private:
-	typedef std::vector<Task> TaskList;
-
-	TaskList normal_task_list_;
-	TaskList delay_task_list_;
-	TaskList io_task_list_;
-	std::mutex mutex_;
-	int event_loop_id_;
-};
 }}
 
 #endif //QPSTEST_EVENTLOOP_H

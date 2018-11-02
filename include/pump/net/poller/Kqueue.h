@@ -17,7 +17,7 @@ public:
 
 private:
 	void poll(const timeval* tv, TaskList* io_task_list) override;
-	void init_backend() = 0;
+	void init() = 0;
 	void add_interests(const WatcherInterface& handle) override;
 	void modify_interests(const WatcherInterface& handle) override;
 	void delete_interests(const WatcherInterface& handle) override;

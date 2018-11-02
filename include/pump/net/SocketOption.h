@@ -38,7 +38,7 @@ int SocketGetInetStreamPair(const int& type, SOCKET o_sv[2]);
 
 int SocketGetLastErrno(SOCKET fd);
 
-void SocketSetNoblocking(SOCKET fd);
+void SocketSetNonblocking(SOCKET fd);
 
 int SocketSetReuseAddress(int fd);
 /* 

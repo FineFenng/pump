@@ -74,7 +74,7 @@ void Epoll::delete_interests(const WatcherAbstract& handle) {
   }
 }
 
-void Epoll::init_backend() {
+void Epoll::init() {
 
 #ifdef EPOLL_CLOEXEC
   backend_fd_ = epoll_create1(EPOLL_CLOEXEC);

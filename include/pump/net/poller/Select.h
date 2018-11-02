@@ -22,7 +22,7 @@ public:
 	explicit Select(EventLoop* loop)
 		: loop_(loop),
 		is_quit_(true),
-		max_fd_(-1)
+		max_fd_(0)
 	{ }
 
 	~Select() override
@@ -35,7 +35,8 @@ PUMP_DECLARE_DELETE_MOVABLE(Select)
 
 	void poll(const timeval* tv, TaskList* io_task_list) override;
 
-	void init_backend() override;
+	void init() override;
+	void destroy() override;
 
 	void add_interests(const WatcherInterface& watcher) override;
 	void modify_interests(const WatcherInterface& watcher) override;

@@ -8,7 +8,11 @@ namespace pump
     typedef unsigned char BYTE_T;
 	
 #ifdef PUMP_PLATFORM_WIN
-    typedef void* SOCKET;
+	#if PUMP_IS_ADDRESS_MODE_X64
+		typedef unsigned long long SOCKET
+	#else
+		typedef unsigned long SOCKET;
+	#endif
 #else
     typedef int SOCKET;
 #endif

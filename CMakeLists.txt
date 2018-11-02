@@ -26,6 +26,7 @@ file(GLOB_RECURSE UTILITY_HEADERS "include/pump/utility/*.h")
 
 ############net_header
 file(GLOB NET_HEADERS "include/pump/net/*.h")
+file(GLOB NET_HEADERS "include/pump/net/*.hpp")
 file(GLOB NET_HANDLER_HEADERS "include/pump/net/handler/*.h")
 file(GLOB NET_PARSER_HEADERS "include/pump/net/parser/*.h")
 file(GLOB NET_SERVER_HEADERS "include/pump/net/server/*.h")
@@ -92,13 +93,11 @@ add_library(node_http_parser STATIC
         ${3rd_DIR}/http-parser/http_parser.h )
 
 
-add_subdirectory(${3rd_DIR}/googletest)
-include_directories(${3rd_DIR}/googletest/googletest/include)
-include_directories(${3rd_DIR}/googletest/googlemock/include)
-
 
 add_library(pump_utiliy ${UTILITY_SRCS} ${UTILITY_HEADERS})
-target_include_directories(pump_utiliy PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
+
+include_directories(${CMAKE_SOURCE_DIR}/include)
+message(${CMAKE_SOURCE_DIR}/include)
 
 add_library(pump_net STATIC
         ${NET_SRCS}
@@ -112,11 +111,6 @@ add_library(pump_net STATIC
         )
 
 target_link_libraries(pump_net pump_utiliy node_http_parser)
-target_include_directories(pump_net PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
-
-add_subdirectory(${3rd_DIR}/googletest)
-include_directories(${3rd_DIR}/googletest/googletest)
-include_directories(${3rd_DIR}/googletest/googlemock)
 
 
 

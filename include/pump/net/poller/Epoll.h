@@ -29,7 +29,7 @@ class Epoll : public PollerInterface
 
   void poll(const timeval* tv, TaskList* io_task_lit) override;
 
-  void init_backend() override;
+  void init() override;
 
   void add_interests(const WatcherInterface& handle) override;
   void modify_interests(const WatcherInterface& handle) override;
