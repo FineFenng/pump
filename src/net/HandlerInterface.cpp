@@ -1,5 +1,5 @@
-#include <pump/net/HandlerInterface.h>
-#include <pump/net/ChannelContext.h>
+#include <pump/net/ChannelHandlerInterface.h>
+#include <pump/net/ChannelHandlerContext.h>
 
 namespace pump { namespace net {
 

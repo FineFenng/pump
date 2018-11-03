@@ -2,7 +2,7 @@
 #define PUMP_NET_CHANNELPIPELINE_H
 
 #include <pump/net/WatcherInterface.h>
-#include <pump/net/ChannelContext.h>
+#include <pump/net/ChannelHandlerContext.h>
 
 namespace pump { namespace net
 {
@@ -25,7 +25,7 @@ public:
 
 	void push_back_handler(WatcherInterface* watcher, Handler* handler)
 	{
-		ChannelContext* ctx = new ChannelContext(watcher, handler);
+		ChannelHandlerContext* ctx = new ChannelHandlerContext(watcher, handler);
 
 
 
@@ -36,8 +36,8 @@ private:
 
 
 	EventLoop* loop_;
-	ChannelContext* head_;
-	ChannelContext* tail_;
+	ChannelHandlerContext* head_;
+	ChannelHandlerContext* tail_;
 };
 }}
 #endif

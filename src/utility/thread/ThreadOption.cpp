@@ -8,7 +8,8 @@ namespace utility {
 
 std::atomic<int> ThreadWrapper::thread_num_(0);
 
-ThreadWrapper::ThreadWrapper(const ThreadWrapper::ThreadFunction& function, const std::string& thread_name)
+ThreadWrapper::ThreadWrapper(const ThreadWrapper::ThreadFunction& function,
+                             const std::string& thread_name)
     : thread_function_(function),
       thread_(),
       thread_name_(thread_name),

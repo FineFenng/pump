@@ -7,7 +7,7 @@
 
 namespace pump { namespace net
 {
-static constexpr unsigned int kDefaultBufferSize = 64 * 1024; // 64Kbytes
+static constexpr unsigned int kDefaultBufferSize = 64 * 1024; // 64KBytes
 
 
 int Buffer::recv_from_fd(SOCKET fd, int* saved_errno)

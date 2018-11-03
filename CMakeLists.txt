@@ -1,5 +1,11 @@
 cmake_minimum_required(VERSION 3.1)
-project(pump)
+project(pump VERSION 0.0.1)
+
+message("PUMP Version Information:")
+message("  Source: ${PROJECT_SOURCE_DIR}")
+message("  Binary: ${PROJECT_BINARY_DIR}")
+message("  Version: ${PROJECT_VERSION}")
+message("  Version (alt): ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -o3")
@@ -61,7 +67,7 @@ set(UTILITY_SRCS
 set(NET_SRCS
     src/net/Acceptor.cpp
     src/net/Buffer.cpp
-    src/net/ChannelContext.cpp
+    src/net/ChannelHandlerContext.cpp
     src/net/ChannelPipeline.cpp
     src/net/EventLoop.cpp
     src/net/SocketAddress.cpp
