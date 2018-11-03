@@ -2,19 +2,21 @@
 #include <iostream>
 
 class Person : public pump::Singleton<Person> {
- public:
-  Person()
-      : name_("fengchao") {}
+public:
+	Person()
+		: name_("fengchao") {
+	}
 
-   std::string name()  {
-    return name_;
-  }
- private:
-  std::string name_;
+	std::string name() const {
+		return name_;
+	}
+
+private:
+	std::string name_;
 };
 
 int main() {
-  Person* person = Person::get_instance();
-  std::cout << person->name();
-  return EXIT_SUCCESS;
+	Person* person = Person::get_instance();
+	std::cout << person->name().c_str();
+	return EXIT_SUCCESS;
 }

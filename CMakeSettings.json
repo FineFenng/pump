@@ -2,13 +2,13 @@
   "configurations": [
     {
       "name": "x86-Debug",
-      "generator": "Visual Studio 15 2017 Win64",
+      "generator": "Ninja",
       "configurationType": "Debug",
       "inheritEnvironments": [
         "msvc_x86"
       ],
-      "buildRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\build\\${name}",
-      "installRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\install\\${name}",
+      "buildRoot": "${projectDir}\\cmake-build-debug\\${name}",
+      "installRoot": "${projectDir}\\cmake_install\\${name}",
       "cmakeCommandArgs": "",
       "ctestCommandArgs": ""
     },
@@ -32,7 +32,7 @@
       "inheritEnvironments": [
         "msvc_x64_x64"
       ],
-      "buildRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\build\\${name}",
+      "buildRoot": "./",
       "installRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\install\\${name}",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-v",

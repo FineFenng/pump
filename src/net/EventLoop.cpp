@@ -36,21 +36,23 @@
  *
  */
 
-namespace pump {namespace net {namespace {
+namespace pump {
+namespace net {
+namespace {
 
-	thread_local EventLoop* t_event_loop = nullptr;
-	thread_local int64_t t_thread_id = pump::utility::GetCurrentThreadId();
+thread_local EventLoop* t_event_loop = nullptr;
+thread_local int64_t t_thread_id = pump::utility::GetCurrentThreadId();
 
 }
 
 EventLoop::EventLoop(int event_loop_id)
 	: thread_id_(t_thread_id),
-	  is_looping_(false),
-	  loop_state_(LoopState::kNormaTaskExecute),
-	  w_wakeup_fd_(0),
-	  r_wakeup_fd_(0),
-	  poll_type_(PollerType::kDefault),
-	  event_loop_id_(event_loop_id) {
+	is_looping_(false),
+	loop_state_(LoopState::kNormaTaskExecute),
+	w_wakeup_fd_(0),
+	r_wakeup_fd_(0),
+	poll_type_(PollerType::kDefault),
+	event_loop_id_(event_loop_id) {
 	if (t_event_loop == nullptr) {
 		t_event_loop = this;
 	}
@@ -238,4 +240,5 @@ void EventLoop::clear_wakeup_fd_buffer() const {
 	char recv_buffer[1024] = {0};
 	int re = ::recv(r_wakeup_fd_, recv_buffer, sizeof(recv_buffer), 0);
 }
-}}
+}
+}

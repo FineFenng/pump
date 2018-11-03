@@ -6,6 +6,8 @@
 #define PUMP_REFPTR_H
 
 #include <type_traits>
+#include <pump/Common.h>
+
 
 namespace pump {
 
