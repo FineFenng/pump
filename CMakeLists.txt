@@ -1,22 +1,27 @@
 cmake_minimum_required(VERSION 3.1)
-project(pump)
+project(pump ${CXX})
 
+###############Compile Options############
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -o3")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -o3")
 
-############generate compile_command.json
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-############generate compile_command.json
+##################Project Variable#################
+set(3RD_DIR "${CMAKE_SOURCE_DIR}/3RD")
+set(TEST_DIR "${CMAKE_SOURCE_DIR}/test")
+set(GOOGLE_TEST_DIR ${CMAKE_SOURCE_DIR}/test/googletest)
+
+
+###############All Target Include Path###########
+include_directories(${CMAKE_SOURCE_DIR}/include)
 
 
 ############common_header 
 file(GLOB HEADERS "include/pump/*.h")
-############common_header 
+file(GLOB HEADERS "include/pump/*.hpp")
 
 ############config_header
 file(GLOB CONFIG_HEADERS "include/pump/config/*.h")
-############config_header
 
 
 ############utility_header
@@ -85,17 +90,15 @@ else (WIN32)
 endif (WIN32)
 ###########net_src
 
-set(3rd_DIR "${CMAKE_SOURCE_DIR}/3rd")
-set(TEST_DIR "${CMAKE_SOURCE_DIR}/test")
-set(GOOGLE_TEST_DIR ${CMAKE_SOURCE_DIR}/test/googletest)
+include_directories(${CMAKE_SOURCE_DIR}/include)
 
-add_subdirectory(${3rd_DIR}/googletest)
-include_directories(${3rd_DIR}/googletest/googletest/include)
-include_directories(${3rd_DIR}/googletest/googlemock/include)
+add_subdirectory(${3RD_DIR}/googletest)
+include_directories(${3RD_DIR}/googletest/googletest/include)
+include_directories(${3RD_DIR}/googletest/googlemock/include)
 
 add_library(pump_utiliy ${UTILITY_SRCS} ${UTILITY_HEADERS})
 
-include_directories(${CMAKE_SOURCE_DIR}/include)
+
 message(${CMAKE_SOURCE_DIR}/include)
 
 add_library(pump_net STATIC
@@ -111,9 +114,10 @@ add_library(pump_net STATIC
 
 
 add_library(node_http_parser STATIC
-        ${3rd_DIR}/http-parser/http_parser.c
-        ${3rd_DIR}/http-parser/http_parser.h
+        ${3RD_DIR}/http-parser/http_parser.c
+        ${3RD_DIR}/http-parser/http_parser.h
         )
+
 
 
 
@@ -124,10 +128,10 @@ target_include_directories(pump_net PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include"
 
 
 ############################Google Test#############################
-#add_subdirectory(${3rd_DIR}/googletest)
-include_directories(${3rd_DIR}/googletest/googletest/include)
-include_directories(${3rd_DIR}/googletest/googlemock/indclude)
-link_libraries(${3rd_DIR}/googletest)
+#add_subdirectory(${3RD_DIR}/googletest)
+include_directories(${3RD_DIR}/googletest/googletest/include)
+include_directories(${3RD_DIR}/googletest/googlemock/indclude)
+link_libraries(${3RD_DIR}/googletest)
 
 
 add_executable(google_test_units ${GOOGLE_TEST_DIR}/google_test_units.cpp)
