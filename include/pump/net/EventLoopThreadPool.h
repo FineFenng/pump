@@ -5,10 +5,9 @@
 
 #include <pump/net/EventLoopThread.h>
 #include <pump/utility/thread/CountDownLatch.h>
-#include "pump/Singleton.h"
 
 namespace pump { namespace net {
-	class EventLoopThreadPool : public pump::Singleton<EventLoopThreadPool> {
+class EventLoopThreadPool {
 	PUMP_DECLARE_DELETE_COPYABLE_AND_MOVABLE(EventLoopThreadPool)
 	public:
 		EventLoopThreadPool(int event_loop_num)
@@ -17,7 +16,6 @@ namespace pump { namespace net {
 			  loop_index_(0) {
 			init_pool();
 		}
-
 
 		~EventLoopThreadPool() = default;
 

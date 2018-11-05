@@ -91,7 +91,7 @@ namespace pump {
 			return *this;
 		}
 
-		void void swap(THIS_TYPE& other) noexcept {
+		void swap(THIS_TYPE& other) noexcept {
 			std::swap(p_, other.p_);
 		}
 
